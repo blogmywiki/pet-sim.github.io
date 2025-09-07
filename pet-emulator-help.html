@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Commodore PET 2001 HELP</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=820, initial-scale=1" />
+	<meta name="description" content="Help for the Commodore PET 2001 online emulator." />
+	<meta name="application-name" content="PET 2001 Help" />
+	<meta property="og:image" content="https://www.masswerk.at/pet/assets/PET2001preview.jpg" />
+	<meta name="twitter:image" content="https://www.masswerk.at/pet/assets/PET2001preview.jpg" />
+	<link rel="image_src" href="https://www.masswerk.at/pet/assets/PET2001preview.jpg" />
+
+	<link rel="shortcut icon" type="image/svg+xm" href="favicon.svg" />
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+<link rel="stylesheet" href="assets/pet2.css" />
+<link rel="stylesheet" href="assets/fonts.css" />
+<style>
+body { font-family: 'Nunito Sans',sans-serif; background-color: #f8f8f8; }
+header { display: block; margin: 0 2em 1em 0; text-align: right; }
+main { display: block; margin: 0; }
+</style>
+<script>
+	function petHelpScrollToLink(link) {
+		var el=document.querySelector(link.getAttribute('href'));
+		if (el) el.scrollIntoView();
+	}
+</script>
+</head>
+<body>
+<header>
+<small>Help file related to the <a href="./" target="at_masswerk_pet">PET 2001 Emulator</a>.<small>
+</header>
+<main>
+	<div id="petHelpContent">
+<!-- HELP -->
+<h1 id="helpTitle">PET 2001 Emulator Guide</h1>
+<p>Topics:</p>
+<span id="petHelpIllustation"></span>
+<ul class="petHelpTopics">
+	<li><a href="#petHelpTopicKbd" onclick="petHelpScrollToLink(this);return false;">Keyboard Input</a></li>
+	<li><a href="#petHelpTopicCtrls" onclick="petHelpScrollToLink(this);return false;">Emulator Controls</a></li>
+	<li><a href="#petHelpTopicSavingFiles" onclick="petHelpScrollToLink(this);return false;">Saving Files</a></li>
+	<li><a href="#petHelpTopicLoadingFiles" onclick="petHelpScrollToLink(this);return false;">Loading Files</a></li>
+	<li><a href="#petHelpTopicBasicFiles" onclick="petHelpScrollToLink(this);return false;">BASIC Source Files</a></li>
+	<li><a href="#petHelpTopicLoadingROMs" onclick="petHelpScrollToLink(this);return false;">Installing Option ROMs</a></li>
+	<li><a href="#petHelpTopicLoadingFromUrlParams" onclick="petHelpScrollToLink(this);return false;">Loading Programs from URL-Parameters</a></li>
+	<li><a href="#petHelpTopicUrlParams" onclick="petHelpScrollToLink(this);return false;">URL-Parameters</a></li>
+	<li><a href="#petHelpTopicUtils" onclick="petHelpScrollToLink(this);return false;">Utilities and Export Options</a></li>
+	<li><a href="#petHelpTopicScreen" onclick="petHelpScrollToLink(this);return false;">Screen Options / Rendering</a></li>
+	<li><a href="#petHelpTopicCopyPaste" onclick="petHelpScrollToLink(this);return false;">Copy &amp; Paste</a></li>
+	<li><a href="#petHelpTopicJoystick" onclick="petHelpScrollToLink(this);return false;">Joysticks</a></li>
+	<li><a href="#petHelpTopicAsm" onclick="petHelpScrollToLink(this);return false;">Assembler and 6502 Machine Code</a></li>
+	<li><a href="#petHelpTopicDebugger" onclick="petHelpScrollToLink(this);return false;">Debugger</a></li>
+	<li><a href="#petHelpTopicEtc" onclick="petHelpScrollToLink(this);return false;">PET Manuals, Trivia, Etc</a></li>
+</ul>
+
+<h2 id="petHelpTopicKbd">Welcome to the PET 2001</h2>
+<p>The Commodore PET 2001 (as in Personal Electronic Transactor + a magic number) was the earliest of the first three ready-to-run home computers that were introduced in 1977, also known as the &ldquo;trinity of 1977&rdquo;. It doesn&lsquo;t have sound (which was soon overcome by some ingenuity) and it features character graphics only, but it&rsquo;s a great little computer and fun to program. This help section is not so much about operating the original computer (for this refer to the <a href="#petHelpTopicEtc">manual section</a>), but about how to operate the emulator.</p>
+
+<h2 id="petHelpTopicKbd">Keyboard Input</h2>
+<h3>Computer Keyboard</h3>
+<p>Support of real keyboards is set up so that you may type as natural as possible. The emulator implements a <em>symbolic</em> keyboard, meaning, special characters are generally what they are on your keyboard.</p>
+<p>This also means that some characters that are shifted keys on your keyboard may not be available as shifted keys in a program, but shifted keys still work for any alphabetical keys and keys on the number &mdash; even the BASIC abbreviation work! In order to enter any other shifted keys (e.g. for PETSCII graphics), simply hold the <kbd>SHIFT</kbd> key and click the respective key on the <em>virtual keyboard</em> below the screen.</p>
+<p><strong>Special Key Mappings</strong></p>
+<p>Not all PETSCII characters have a direct equivalenant on modern keyboards. Therefore, a few special mappings are used (<kbd>ALT</kbd> is <kbd>Option</kbd> on Mac):</p>
+<dl class="narrow">
+	<dt><kbd>STOP</kbd></dt><dd>is mapped to <kbd>ESC</kbd>.</dd>
+	<dt>&uarr;</dt><dd>is mapped to the caret (&ldquo;<kbd>^</kbd>&rdquo;) and to <kbd>TAB</kbd>, as well.<br />(Some games use &ldquo;&uarr;&rdquo;  for fire and this should make for a convenient action key.)<br />
+		Moreover, the first key in the first row (left of &ldquo;<kbd>1</kbd>&rdquo;) and the key next to the right <kbs>SHIFT</kbd> key (and left of &ldquo;<kbd>Z</kbd>&rdquo;) may work, if this is something like &ldquo;<kbd style="margin: 0 0.05em 0 0.15em;">`<span style="margin: 0 0.1em; opacity: 0.35;">/</span>~</kbd>&rdquo;.</dd>
+	<dt>&larr;</dt><dd>is mapped to the underscore (&ldquo;<kbd>_</kbd>&rdquo;).<br />
+		(&ldquo;&uarr;&ldquo; and &ldquo;&larr;&rdquo; are really the same characters as &ldquo;<kbd>^</kbd>&rdquo; and &ldquo;<kbd>_</kbd>&rdquo;, respectively, just in an older ASCII standard.)</dd>
+	<dt><code>&pi;</code></dt><dd><i>Pi</i> is mapped to <kbd>SHIFT</kbd>+<kbd>TAB</kbd> and should generally work as a shifted key for any keys which are regognized as &ldquo;&uarr;&rdquo;.</dd>
+	<dt><kbd>RVS ON</kbd></dt><dd>is mapped to  to <kbd>ALT</kbd> + <kbd>TAB</kbd>.<br />
+		<kbd>RVS ON</kbd> is also mapped to &ldquo;<kbd>&reg;</kbd>&rdquo;, which should be <kbd>ALT</kbd>+<kbd>R</kbd> on most keyboards.<br />
+		If there‘s an <kbd>ALT</kbd> key distinct from an <kbd>ALT-GR</kbd> key, this should work together with <kbd>R</kbd>, as well.</dd>
+	<dt><kbd>RVS OFF</kbd></dt><dd>is mapped to to <kbd>ALT</kbd> + <kbd>SHIFT</kbd> + <kbd>TAB</kbd>.<br />
+		It should also work with <kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>R</kbd>. (May be subject to the type of keyboard used.)</dd>
+	<dt><kbd>DECIMAL</kbd></dt><dd>the <kbd>DECIMAL</kbd> key on the number pad is mapped to the dot (&ldquo;<kbd>.</kbd>&rdquo;), just like on the PET.</dd>
+	<dt><kbd style="font-size: 70%;">NUMPAD</kbd> <kbd>=</kbd></dt><dd>similarly, the <kbd>ENTER</kbd> key on the number pad is mapped to &ldquo;<kbd>=</kbd>&rdquo;.</dd>
+	<dt><kbd>PAUSE</kbd></dt><dd><kbd>ALT</kbd>+<kbd>ESC</kbd> pauses/resumes the emulator.</dd>
+</dl>
+<p>The emulator also supports Unicode character input as may provided by a special keyboard layout. See this <a href="pet-char-mapping.html" target="at_masswerk_pet_charmapping">Unicode-to-PETSCII chart</a> regarding input mapping.</p>
+<p>E.g., here is a Mac OS layout for the Commander X-16 keyboard: <a href="downloads/Commander-X16-PETSCII.dmg">Commander-X16-PETSCII.dmg</a>.<br />(This should work with any US / international keyboard featuring C64/VIC-20-like legends.)<br /><span  style="display:block; margin: 0.25em 0 2em 3em;"><span style="display: inline-block; width: 3em; margin-left: -3em; color: #555;">Note:</span>You may have to log out and in again. If the keyboard layout doesn&rsquo;t show up under the input sources, open the <i>&ldquo;Keyboard&rdquo;</i> preferences, select the tab <i>&ldquo;Input Sources&rdquo;</I>, press the <i>&ldquo;+&ldquo;</i> button, and import <i>&ldquo;Commander-X16&rdquo;</i> from the <i>&ldquo;en&rdquo;</i> language group. The layout should be now available both in the preferences and in the keyboard menu.</span></p>
+
+<h3>Keyboard Modes</h3>
+<p>The emulator features two distinct input modes, selected by the <em>&ldquo;Keyboard&rdquo;</em> menu below the emulated screen:</p>
+<dl style="margin-bottom: 1.5em;">
+	<dt><strong>Edit Mode</strong></dt><dd><p>This guarantees that there is just a single, distinct key pressed at any time. It also implements key repeat, which is not found on the PET 2001 out of the box. This is generally the best mode for programming and any text=oriented activities. The emulator always resets to this mode, in order to prevent confusion.</p></dd>
+	<dt><strong>Games Mode</strong></dt><dd><p>This faithfully emulates the key action of the real PET 2001 and is best for games and any programs that may implement their own keyboard scan routine in order to detect multiple key-presses at once.<p>
+	<p><em>Games Mode</em> features a special input mechanism with <kbd>CAPS LOCK</kbd> engaged, which is used to toggle the following modes on and off:</p>
+	<ul>
+	<li>First, there&rsquo;s the <strong>virtual joystick</strong> mode, which is only active when any <a href="#petHelpTopicJoystick" onclick="petHelpScrollToLink(this);return false;">joystick scheme</a> is enabled: with <kbd>CAPS LOCK</kbd> engaged, the cursor keys and the space bar are mapped to the joystick directions and the fire button, respectively.<br />(This also works with any of the <em>&ldquo;to keyboard&rdquo;</em> modes, which allows you to play any of the games requiring a numeric keypad, even, if your computer doesn&rsquo;t have one.)<br />An activity indicator below the joystick icon provides feedback and doubles as a reminder that the virtual joystick mode is active.</li>
+	<li>Similarly &mdash; and somewhat alternatively &mdash;, there is a <strong>virtual numeric keypad</strong> mode, which emulates a numeric keypad on computers that do not have one. For this, activate the virtual keypad option by clicking its icon <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="22px" viewBox="0 0 22 24" xml:space="preserve" style="inline-block; vertical-align: bottom;" title="Virtual kepad icon"><use xlink:href="#icon-keypad" x="0" y="0"></use></svg> below the PET&rsquo;s virtual screen and use again <kbd>CAPS-LOCK</kbd> to toggle in and out of this mode as required.</p>
+	<p>The keys will be mapped as follows, using the keys <kbd>7</kbd>, <kbd>8</kbd>, <kbd>9</kbd>, and below:</p>
+	<pre style="margin: 1em 0 1em 1.25em;">7  8  9     7  8  9
+U  I  O  &rarr;  4  5  6
+J  K  L     1  2  3
+M           0</pre>
+	<p>Again, there&rsquo;s a small activity indicator for visual feedback.</p>
+	</li>
+	</ul>
+	<p>You may disable any of those mappings momentarily by pressing <kbd>SHIFT</kbd> and the conflicting key. Mind that this does not work with the option for rerouting joystick input to the numeric keypad and <kbd>SHIFT</kbd> as the fire button.</dd>
+</dl>
+<h3>The Virtual Keyboard</h3>
+<p>The virtual keyboard, depicted below the emulated screen works both with touch input and mouse clicks: simply tap or click a key on the keyboard image (visual feedbak is provided). Moreover, holding down the <kbd>SHIFT</kbd> key on the physical keyboard will also affect the virtual keyboard. (So you may conveniently enter PETSCII characters by <kbd>SHIFT</kbd>-kclicking the respective key image.</p>
+<p>In <strong>Edit Mode</strong> the virtual keyboard generates a single, distinctive key-press at any time and <kbd>SHIFT</kbd> keys work as a toggle.</p>
+<p>In <strong>Games Mode</strong> keys are set by multi-touch interaction, just like on the real PET 2001.<br />If your device does not support multi-touch or does not have a touch screen, you can emulate multi-touch by holding down the <kbd>ALT</kbd> key for multiple, concurrent key-presses. (Mind that you have to reload the page for this to work, if you are switching a desktop browser to <em>responsive design mode</em>, as this detected on page-load.)</p>
+<p>Multiple, concurrent key-presses in <em>&ldquo;Games Mode&rdquo;</em> may not work as you might expect with the standard Commodore keyboard scan routine, as this doesn&lsquo;t implement full key-rollover.</p>
+<h3>Business Keyboard</h3>
+<p>The business keyboard is available by selecting any of the &ldquo;CBM 2001/B&rdquo; options from the <em>ROM menu</em>. There are few differences regarding the keyboard mapping:</p>
+<ul>
+	<li>Since the business keyboard features an <kbd>ESC</kbd> key of its own, <kbd>ESC</kbd> is mapped to this and <kbd>STOP</kbd> is mapped to <kbd>ALT + ESC</kbd>.</li>
+	<li>Similarly, <kbd>TAB</kbd> is mapped to <kbd>TAB</kbd>, but you can still use <kbd>ALT + TAB</kbd> for <kbd>RVS ON/OFF</kbd>.</li>
+	<li>Mind that the keys of the numeric keypad, while resulting in the same PETSCII codes as numbers entered by the main key pad have distinctive internal key codes. For games, be sure to use the number pad for this or the virtual numeric keypad.</li>
+	<li>For the business keyboard, the virtual keyboard generally behaves like in <em>&ldquo;Games Mode&rdquo;</em>. You may want to use the <kbd>SHIFT LOCK</kbd> key to enter shifted characters.</li>
+	<li>TO use the <kbd>SHIFT LOCK</kbd> or <kbd>REPEAT</kbd> keys, use the virtual keyboard. These are not mapped otherwise.</li>
+</ul>
+<p>Please mind that the business keyboard doesn&rsquo;t feature any provisions for entering graphics characters (other than those corresponding to to upper-case characters) or pi (&pi;). This is a treat of the original PETs coming with the business keyboard.</p>
+<h3>Click/Touch Cursor Controls</h3>
+<p>The &ldquo;click cursor&rdquo; allows you to freely position the cursor anywhere on the screen, by simply clicking or tapping onto the emulated screen. Repositioning the cursor will also force the editor out of quote/insert mode and reset any active <kbd>RVS ON</kbd> mode.</p>
+<p>To use this feature, please activate the checkbox <em>&ldquo;Click Cursor&rdquo;</em> below the emulated screen. Be aware that accidential clicks/taps may interfere with input statements. So, while this is helpful for editing and sketching up things on the screen, it may be best to leave this option off while running programs.</p>
+<h3>Character Sets</h3>
+<p>The PET 2001 features, like all the Commodore 8-bit computers that followed, two character sets, one for upper case letters and graphics characters (default), and one for upper-case / lower case text and just a limited range of graphics characters. Mind that the original PET 2001, unlike later models, displayed unshifted characters in upper-case in both modes and displayed lower-case letters for shifted characters!</p>
+<p>This is how you change the character set on the PET 2001 (by a POKE to a hardware address, the PCR of the VIA):</p>
+<ul>
+	<li><code>POKE 59468,12</code> &hellip; switch to upper case / graphics.</li>
+	<li><code>POKE 59468,14</code> &hellip; switch to upper case / lower case.</li>
+</ul>
+<p>There&rsquo;s also an item <em>&ldquo;Switch Character Set&rdquo;</em> in the <em>&ldquo;Utils/Export&rdquo;</em> menu (see below) and a respective item in the context menu for the virtual screen that will do the same for you.</p>
+<p>Later ROM revisions implemented the mixed case (&ldquo;business&rdquo;) character set with shifted letters in upper-case, like it is found on later 8-bit Commodore machines. This is automatically implemented with ROM 4.0 (see below) and you can always switch bitween the old and new version of the character ROM by an item of the virtual screen&lsquo;s context menu (see bleow).</p>
+<h4>Japanese Character ROM</h4>
+<p>The Japanese character ROM is available via the <a href="#petHelpTopicScreen">screen&rsquo;s context menu</a>. With this, available character sets are <em>&ldquo;Roman letters / graphics&rdquo;</em> and <em>Roman letters / kana&rdquo;</em>. This is similar to the &ldquo;old&rdquo; character ROM, but replaces lower-case letters by Katakana glyphs, which are available as shifted characters.<br />When this option is in use, the graphical keyboard switches to the Japanese layout, as well.</p>
+
+<h2 id="petHelpTopicCtrls">Emulator Controls</h3>
+<p>The emulator features a set of basic controls, which are found below the virtual screen in two rows.</p>
+<p><strong>First row</strong>:</p>
+<dl>
+	<dt>Reset</dt><dd>Resets the virtual PET in its current configuration. <kbd>SHIFT</kbd>-clicking or <kbd>CTRL</kbd>-clicking this button will reset the machine to default values (the same configuration the machine is using, when the page is initially loaded). If the page was loaded with a special configuration, like a link to a program to load (see below), the latter option will also create a new entry in the browser history.</dd>
+	<dt>Pause</dt><dd>Pauses or resumes the virtual machine, toggling between the respective states.<br />(The virtual machine will also be implictely paused, while a dialog is displayed or when the emulator is in a hidden browser tab.)</dd>
+	<dt>Utils/Export</dt><dd>A menu with various export options and some helpful utilities. This will be covered more extensively below.</dd>
+	<dt>Screen Color</dt><dd>PET 2001s came both with white screens and green phosphor screens. There&lsquo;s also an option for an inverted (dark on white) E-Ink display, not found on the original. Select your favorite screen color here.</dd>
+	<dt>Keyboard Mode</dt><dd>Controls the virtual key repeat added by the emulator. Choose between <em>&ldquo;Editing&rdquo;</em> (repeat on) and <em>&ldquo;Games&rdquo;</em> (repeat off, unmodified input).</dd>
+	<dt>ROM Version</dt><dd><p>ROM versions available are,</p>
+		<p><i>A)</i> For the original PET 2001:</p>
+		<dl class="narrow" style="margin-left: 2em;">
+			<dt>ROM 1</dt><dd>This is the ROM originally delivered with the first batch of PET 2001s, also known as &ldquo;Old ROM&rdquo;. This has a few quirks, like an incomplete IEEE bus implementation (disk operations don&rsquo;t really work, but this is partially fixed in the emulator) and no built-in monitor.</dd>
+			<dt>ROM 2</dt><dd>This is the upgraded ROM for the PET 2001 with BASIC 2.0, also known as &ldquo;New ROM&rdquo;. (The same Commodore BASIC also known from the VIC-20 and the C64, which made its debut on the PET 2001.) This is also the default.</dd>
+		</dl>
+		<p><i>B)</i> For the PET 2001-N:</p>
+		<dl class="narrow" style="margin-left: 2em;">
+			<dt>ROM 4</dt><dd>BASIC 4.0 was only available for the PET 2001-N, the upgraded version of the orignal PET. This ROM version is mostly compatible with ROM 2 and shares most of the zero page addresses, but comes with additional disk commands. Chosing ROM 4 will also activate the new character ROM with unshifted lower-case characters.</dd>
+		</dl>
+		<p><i>C)</i> For the CBM 2001/B with the business keyboard:</p>
+		<dl class="narrow" style="margin-left: 2em;">
+			<dt>ROM 2b</dt><dd>BASIC 2.0 with the business keyboard for the &ldquo;Series 2001/B Business Computer&rdquo; or CBM 2001/B.</dd>
+			<dt>ROM 4b</dt><dd>BASIC 4.0 with the business keyboard for the CBM 2001/B.</dd>
+		</dl>
+	<p>Most programs written with the PET 2001 in mind will require ROM 2, which may be generally the best option. Some very old programs may require ROM 1, while newer ones may use ROM 4 &mdash; if not stated otherwise, it&rsquo;s really a matter of trying. (Please mind that the emulator currently doesn&rsquo;t support any of the additional disk commands that came with Commodore Basic 4.0, but the most basic ones, like <code>DLOAD</code> and <code>DSAVE</code>.)<br /><span class="helpLineSpacer"></span>Changing the ROM version will reset the virtual machine.<br /><span class="helpLineSpacer"></span><em>(Mind that ROM 2 is also known as ROM 3. Officially it was the &ldquo;Level II ROM Set&rdquo; and may be identified by its use of pound marks in the startup message, whereas ROMs 1 and 4 use asterisks.)</em></dd>
+	<dt>RAM Size</dt><dd>Chosse between <em>8K</em>, <em>16K</em> and <em>36K</em> of RAM.<br />While 8K was the standard configuration, some programs will require an extra amount of RAM.<br /><span class="helpLineSpacer"></span>Changing the RAM size will reset the virtual machine.</dd>
+</dl>
+<p><strong>Second row</strong>:</p>
+<dl>
+	<dt>Click Cursor</dt><dd>This option allows you to freely position the cursor on the virtual screen by simply clicking/tapping on the desired location. Repositioning the cursor will also force the editor out of quote/insert mode and reset any active <kbd>RVS ON</kbd> mode. (Since this may interfere with input statements, this option may be best left off while running programs.)</dd>
+	<dt>Prg Library</dt><dd>Displays a list of programs in an overlay. Use the <em>&ldquo;run&rdquo;</em> or <em>&ldquo;online&rdquo;</em> links to try them in the emulator without reloading. (Shift-clicking such a link will create a new entry in your browser history.)<br />Shift-click or ctrl-click the button to open the program library in a new window.</dd>
+	<dt>Mount File</dt><dd>Use the file dialog to locate a program file or archive to mount, ready for use. See below for supported formats. Generally, just dragging and dropping a file onto the virtual screen of the emulator will be simpler und do the same job.</dd>
+	<dt>Directory</dt><dd>A button to access a directory listing may appear in this place, if you loaded/mounted a disk or tape archive (see below).</dd>
+	<dt>File Display</dt><dd>A mounted file will be indicated by a media icon and the file name next to it. Clicking the media icon will trigger the most appropriate action: either load and run a single program or bring up a directory dialog for an archive format.<br />The file icon also serves a file activity indicator and will light up during file access.<br /><span class="helpLineSpacer"></span>In case you would want to reset the mounted media, there&rsquo;s an option for this in context menu of the file display.</dd>
+	<dt>Virtual Keypad</dt><dd>Activates the virtual keypad option (see the section on the <a href="#petHelpTopicKbd">keyboard</a> above). This only affects the keyboard when in <em>Games Mode</em> and with <kbd>CAPS-LOCK</kbd> engaged.</dd>
+	<dt>Joystick</dt><dd>Opens a dialog for selecting the type of <a href="#petHelpTopicJoystick">joystick adapter</a> to use. Also an indicator for whether joystick support is currently active or not.</dd>
+	<dt>Sound Controls</dt><dd>The final element are the sound controls. Mind that the volume is relative to the volume set on your system. A click on the speaker icon mutes and unmutes audio. (Audio will be entirely disconnected, when sound is off, which may be favorable for battery life.) The wave icon at the right of the volume slider activates a bit of experimental post processing, which is meant to work somewhat like the &ldquo;loudness&rdquo; option found on audio equipment.</dd>
+</dl>
+
+<h2 id="petHelpTopicSavingFiles">Saving Files</h2>
+<p>The emulator has a virtual IEEE-488 device attached at address 8, which can be used to load and save files. To save a program, type &ldquo;<strong><code>SAVE</code>&thinsp;<code>&quot;NAME&quot;,8</code></strong>&rdquo; (replace <em>&ldquo;NAME&rdquo;</em> by your actual choice) and the emulator will generate a binary file in <code>.prg</code> format. The file will presented as link, which you can either click to download it directly into your configured download folder, or you may right-click it and chose <em>&ldquo;Save Link As&hellip;&rdquo;</em> (or similar) to save it under a name and location of your choosing.</p>
+<p>There&rsquo;s also an option <em>&ldquo;Export PRG-File From Memory &rdquo;</em> in the <em>&ldquo;Utils/Export&rdquo;</em> menu, which does essentially the same, without requiring an explicit command to be typed into the virtual machine.</p>
+<p>(Note that IEEE-488 doesn&rsquo;t work very well with ROM version 1.)</p>
+
+<h2 id="petHelpTopicLoadingFiles">Loading Files</h2>
+<p>There are several ways of loading a file into the emulator:</p>
+<ul>
+	<li><p>Mounting a file and typing &ldquo;<strong><code>LOAD</code>&thinsp;<code>&quot;NAME&quot;,8</code></strong>&rdquo; into the emulated PET. This will load any previously mounted file into the emulator.</p>
+	<p><u>Note on ROM 1.0 (old Rom):</u><br />IEEE-support isn&rsquo;t great with ROM version 1 and requires pessing the <kbd>STOP</kbd> key. The emulator will press the <kbd>STOP</kbd> key for you automatically and will, in case the file starts at the usual BASIC start at <code>$0401</code>, attempt to adjust the BASIC system pointers according to the program. If all works well, there shouldn&rsquo;t be any notable difference in operations.</p>
+	<u>Note on binary and BASIC program types:</u><br />Unlike with later Commodore 8-bit computers, files are always loaded absolute on the PET. In order to run BASIC programs from other Commodore machines, the emulator uses drive number 8 to force a program to be loaded to the usual start address of BASIC at $0401, as in &ldquo;<strong><code style="white-space:nowrap;">LOAD</code>&thinsp;<code>&quot;8:NAME&quot;,8</code></strong>&rdquo;. Unlike with the better known C64, there is no secondary drive address on the PET!</p></li>
+	<li><strong>Dropping a file</strong> on the virtual screen of the emulator. An overlay and a glow around the edges will signal the reponse, as soon as you move a file over the virtual screen. Dropping the file onto the screen will either automatically load the program, if it is a single file format, or show a directory, if it is an archive. Drag &amp; drop is probably the simplest option.</li>
+	<li>If you have loaded previously an archive file, there will be a button &ldquo;<strong>Disk Directory</strong>&rdquo; or &ldquo;<strong>Tape Directory</strong>&rdquo;. Clicking this button will bring up a dialog to select the program and any options. The emulator also provides an appropriate directory listing for these archives to BASIC on &ldquo;<code style="white-space: nowrap;">LOAD &quot;$&quot;,8</code>&rdquo;.</li>
+	<li>You may load a program or archive by a special <strong>URL-link</strong> or directly from the <a href="prgs/" target="_blank">Program Library</a>.</li>
+	<li>Finally you may click the media acount to the left of the displayed file name. This will trigger the most appropriate action, either reset and load + run a single file or bring up a directory dialog for an archive format.</p>
+</ul>
+
+<h3 id="petHelpTopicMountingFiles">Mounting Files</h3>
+<p>You may mount a file either via the <em>&ldquo;Mount File&rdquo;</em> button, which will give you access to your normal system file dialog or per drag and drop. Archive formats, like disk images, will bring up a directory dialog. The emulator supports full access via &ldquo;<code>LOAD</code>&rdquo;. There&rsquo;s also full support for disk directories in drive 8 (including wildcards and type selectors). Tape archives (&ldquo;<code>.t64</code>&rdquo;) are handled like disks mounted in drive 8. Binary PRG-files will load and start automatically, when dropped, but not when mounted via the <em>&ldquo;Mount File&rdquo;</em> dialog.</p>
+
+<h3 id="petHelpTopicFileFormats">Supported File Formats</h3>
+<p>There are a number of file formats supported by the emulator, commonly known by their file extension:</p>
+<ul>
+	<li><strong>Program Files</strong> (<code>.prg</code>, <code>.pet</code>):<br />This is the standard format for program files on Commodore 8-bit machines. It&rsquo;s the same format the original machines used to save files on tape or on floppy disks.<br />These files will be normally run automatically by the emulator. Hold <code>SHIFT</code> while dropping such a file onto the emulator to just load a program without running it automatically.</li>
+	<li><strong>Disk Archives</strong> (<code>.d64</code>, <code>.d80</code>, <code>.d82</code>):<br />D64 has somewhat become the standard format for floppy disk images for Commodore machines. D80 and D82 archives (images of 8050 and 8052 disk drive formats) are often related to files for the 80xx series and will probably require ROM 4.<br />Loading a disk image file will bring up a directory listing, where you may chose a prorgam to run and select some options.<br />Options are:
+		<dl>
+			<dt>Load as BASIC</dt><dd>Forces the virtual machine to load this file as a normal BASIC program. Normally, a program will be laoded as a binary file at the address found at the very beginning of the program-file, which is usually what you want (same as &ldquo;<code>LOAD &quot;NAME&quot;,8,1</code>&rdquo; on later Commodore machines). However, you may want to run a BASIC program which was meant for a different Commodore 8-bit machine, which uses a different start address for BASIC programs. Check this option in order to do so and the PET will adjust the program to the usual start address.</dd>
+			<dt>Reset</dt><dd>This will reset the virtual machine prior to loading the program.</dd>
+			<dt>Auto-Run</dt><dd>Automatically run the program after loading. Otherwise, you&rsquo;ll have to type &ldquo;<code>RUN</code>&rdquo; and press <kbd>ENTER</kbd> manually. However, you may want to inspect the program by typing &ldquo;<code>LIST</code>&rdquo; or using any of the Utilities (see below), in which case this option should be off.</dd>
+			<dt>Min. RAM Size</dt><dd>Lets you manually choose a RAM configuaration (the file size listed along the file names may provide a hint). Otherwise, the emulator will make a smart guess, which may not be that smart, anyway.</dd>
+		</dl>
+	Each of the items in a directory list features a context menu that allows you to directly extract a given file from an archive and to save it as a separate file to your drive.<br />In case the archive was loaded from the <em>Program Library</em>, an item&rsquo;s context menu will also include an option for a direct link to run this item. (Presets for the ROM version, sound and screen color are determined from current settings.)</li>
+	<li><strong>T64 Tape Archives</strong> (<code>.t64</code>):<br />T64 is for tape archives what D64 is for disk archives. The directory dialog for this has the same options as above.<br />(Documentation for this format is somewhat lacking. The implementation has been tested with version $100 files and works, like VICE, for type 1 files, which are programs, only. Other file types, while parsed, will be ignored in the catalog. File sizes are checked to work around a common bug with early T64-files. Mind that T64 tape images are intended for the C64, however, some programs, like the type-in ones from books and magazines, will run on a PET with little adjustment. You probably want to load those programs as BASIC files and LIST them before running to check for POKE-commands, etc.)</li>
+	<li><strong>P00 Files</strong> (<code>.p00</code>&hellip;<code>.p99</code>):<br />This is a single-file format commonly found on DOS, but it&rsquo;s also used to store PET programs in some rare cases.</li>
+	<li><strong>BASIC Source Files</strong> (<code>.txt</code>, <code>.text</code>, <code>.bas</code>, <code>.ba</code>):<br>
+		Load BASIC source files in plain text. Edit files in your favorite editor or copy them from type-in listings and simply drop them onto the emulator (or load it by the file-upload dialog). The editor will use the same algorithm as the real machine to transform them into regular, binary Commodore BASIC programs. The source code may be either in lower case or in upper case (or even mixed). The usual abbreviations for commands are recognized (works best in lower case source texts). PETSCII special characters may be escaped in curly brackets (&ldquo;<code>{&hellip;}</code>&rdquo;), see below for details.</li>
+	<li><strong>6502 Assembler Source Files</strong> (<code>.a</code>, <code>.as</code>, <code>.asm</code>, <code>.a65</code>, <code>.s</code>, <code>.src</code>):<br>
+		The emulator features a built-in 6502 assembler (more on this below). The emulator will present a listing of the 2-pass assembly process, and, in case that the build was sucessful, will present some options for what to do next (like load the program, inject it directly into memory, or export it as a file.)</li>
+	<li><strong>QBASIC-like Source Files</strong> (<code>.qb</code>, <code>.qba</code>, <code>.qbas</code>):<br>
+		These files are run through a special preprocessor to transform them to regular Commodore BASIC files. This supports auto line numbering, labels using &ldquo;<code>[&hellip;]</code>&rdquo;, and comments with &ldquo;<code>'</code>&rdquo; (apostrophe). If this transformation succeeds, the resulting source code will be processed like a normal plain-text BASIC source (see above).</li>
+</ul>
+<p>The emulator will accept only files with any of the file extensions listed above and will handle the files based on that extension.</p>
+
+<p>A places to look for program files may be <a href="http://www.zimmers.net/anonftp/pub/cbm/pet/ALLFILES.html" target="_blank" rel="noopener">www.zimmers.net/anonftp/pub/cbm/pet/ALLFILES.html</a> (have a look at the sections demos/Cursor/ and  games/). Download files to your computer and then drop them onto the emulator.</p>
+<p><strong>Techical Notes &mdash; How it Works</strong><br />Technically, loading files is implemented by a special IEEE data input buffer. When you mount a file, this buffer is filled with the contents of that file along with the start address, and the next <code>LOAD</code> command will use this as the source. Even if filenames do not match. (There&rsquo;s also a small default file with instructions, which will be loaded whenever you attempt to load a file without mounting anything prior to this.) If you load a file from an archive, like a disk image, and there is a matching file, the file will be transferred to the buffer on a first step. Otherwise, you will just reload what happens to be in the buffer, which is the last file loaded. (There is currently no facility to report a missing file to the virtual PET.) Auto-load and auto-run are implemented by automatically typing the respective commands into the virtual PET, as soon as it is ready to accept input and flashes its cursor. Thus, the procedure is identical to manual typing these commands.<br />Dropping a file or loading a file from a directory dialog chains these steps (mounting a file, loading it, and running it) into a single, automated flow.</p>
+
+<p id="petHelpTopicSaveStates"><strong><em>Developer Info: Save States</em></strong><br />
+If you want to export a save state for your users, you can do so by saving a program with a filename ending in the file extension &quot;<code>.SAV</code>&quot; to device address 8 (default floppy drive). Any such file will be downloaded to the user&rsquo;s local download folder with this very file extension. When you later try to load a program with such a file extension, the user will be prompted for the file. The existing mount point will remain undisturbed and a special, temporary mount point will be used instead. Thus, you can still load overlays, etc, from an archive, like a disk image, and the user can still rerun the program by clicking the file icon.</p>
+<p>In the event that the user leaves the dialog without selecting a file and a temporary save file has been loaded before, this one will be reused. If there isn&rsquo;t such a file, a zero byte will be loaded into the very last byte of the off-screen part of the video RAM at <code>0x83FF</code>, dec. <code>33791</code>. If you&rsquo;re loading a saved state from a machine language program, you may preset and then check this byte for success.</p>
+<p>Mind that this will not really work from within BASIC, as your program will start over after issueing a <code>LOAD</code> command. (You could, however, try to set some control values and flags in a safe memory space, like the cassette buffer in order to preserve state. The same goes for setting up some values to save as a program in the first place.)</p>
+
+<h2 id="petHelpTopicBasicFiles">BASIC Source Files</h2>
+<p>Editing BASIC source file using your own, favorite text editor and simply dropping them onto the emulator is probably the most comfortable way of programming a PET 2001. (No chiclet keyboard, and, while the BASIC editor was certainly nice for its time, your text editor is probably better at it.) Just be sure to save the file as a plain text-file (<a href="pet-char-mapping.html" target="at_masswerk_pet_charmapping">Unicode</a> is supported, of course).</p>
+<p>BASIC source files maybe in either character case, the emulator will try to figure out the correct case for each of the lines. If a line starts in lower case, it will assume lower-case text. Otherwise, it will assume upper-case text (default). Meaning, you may even mix case between lines, as it may happen with copy &amp; paste. Empty lines will be simple ignored.</p>
+<p>The usual rules for BASIC text apply: You may use &ldquo;<code>?</code>&rdquo; for <code>PRINT</code> and even the usal Commodore BASIC abbreviation, like &ldquo;<code>pO</code>&rdquo; or &ldquo;<code>poK</code>&rdquo; for &ldquo;<code>POKE</code>&rdquo;. Mind that BASIC only accepts lines of up to 80 bytes length (that is, after tokenizing any BASIC keywords to single bytes). The emulator will abort with an error message, if a line exceeds the maximum length. Also mind that the maximum line number in Commodore BASIC is <code>63999</code>!</p>
+
+<h3 id="petHelpTopicEscapes">Escapes for PETSCII Characters in BASIC source Files</h3>
+<p>While the emulator recognizes <a href="pet-char-mapping.html" target="at_masswerk_pet_charmapping">Unicode substitutes</a> for PETSCII characters (including the new &ldquo;symbols for legacy computing&rdquo; range), not all PETSCII characters can be expressed in Unicode. Hence, any special PETSCII characters should be escaped in a special markup. (Mind that graphics characters may appear in BASIC only inside strings.) The emulator uses curly brackets for this (&ldquo;<code>{&hellip;}</code>&rdquo;), which may embrace either a PETSCII character code in decimal or hex notation or a label.</p>
+<dl>
+	<dt><code>{ddd}</code></dt><dd>Decimal character code escape, like &ldquo;<code>{147}</code>&rdquo; (clear screen) or <code>{18}</code> (rvs on).</dd>
+	<dt><code>{$hh}</code></dt><dd>Character code in hexadecimal notation (with a leading dollar symbol), like &ldquo;<code>{$93}</code>&rdquo; (clear screen).</dd>
+	<dt><code>{label}</code></dt><dd>Most of the common labels for PETSCII screen control characters, like &ldquo;<code>{HOME}</code>&rdquo;, and their abbreviations are supported. This should work naturally. Any spaces or dashes are ignored. See below for an extensive list.</dd>
+	<dt><code>{<em>n</em> label}</code></dt><dd>The emulator even &ldquo;understands&ldquo; markup with leading quantifier, as in <code>{4 SPACES}</code> or <code>{12 DOWN}</code>, as may be found in some listings (but will never export them for compatibility reasons.) This works also with decimal or hexadecimal character codes.</dd>
+</dl>
+<p>(In case the emulator fails to parse an escaped character code or dosen&rsquo;t recognize a label, it will simply ignore it.)</p>
+
+<h4>Labels for PETSCII Screen Control Characters</h4>
+<p>The PET 2001 uses fewer control characters than later machines, just 12 in total, of which onl 7 may appear in strings. Here they are are, together with a few extra characters and the labels that may be used for them (spaces, etc in names are ignored, as well as case):</p>
+
+<div class="colList codeList">
+<li>Home (19, $13):<br />
+HOME<br />
+HOM<br />
+HM<br />
+CRSR HOME<br />
+CHOME<br />
+CH</li>
+
+<li>Clear Screen (147, $93):<br />
+CLEAR<br />
+CLEAR SCREEN<br />
+CLEAR SCR<br />
+CLS<br />
+CS<br />
+CLEAR HOME<br />
+CLR HOME<br />
+CLRHM<br />
+CLRH<br />
+CLR<br />
+CLH<br />
+SC</li>
+
+<li>Cursor Down (17, $11):<br />
+DOWN<br />
+CRSR DOWN<br />
+CRSR DWN<br />
+DWN<br />
+DN<br />
+CD</li>
+
+<li>Cursor Up (145, $91):<br />
+UP<br />
+CRSR UP<br />
+CU</li>
+
+<li>Reverse On (18, $12):<br />
+RVS ON<br />
+RVS<br />
+RV ON<br />
+RON</li>
+
+<li>Reverse Off (146, $92):<br />
+RVS OFF<br />
+RV OFF<br />
+ROFF<br />
+ROF</li>
+
+<li>Insert (148, $94):<br />
+INSERT<br />
+INST<br />
+INS</li>
+
+<li>PI (255, $FF):<br />
+PI</li>
+
+<li>Stop (3, $03):<br />
+STOP<br />
+STP</li>
+
+<li>Space (32, $20):<br />
+SPACE<br />
+SPC<br />
+SP<br />
+BLANK<br />
+BL</li>
+
+</div>
+<p>As you may see, there&rsquo;s an abbreviation for everyone and most of the common abbreviations will be recognized. Just use what ever you are used to or what&rsquo;s in the type-in listing. (The emulator will use the very first label in each of the lists, when exporting a program using labels, see below. Spaces or &pi; will never be replaced by markup in any of those exports, as these are printable characters.)</p>
+<p>Finally, there is also a special label &ldquo;<strong><code>{ASM START}</code></strong>&rdquo; (alternatively &ldquo;<code>{ASMSTART}</code>&rdquo; or &ldquo;<code>{ASM_START}</code>&rdquo;.) This will terminate the interpretation of BASIC source text immediately (with the rest of the line ignored) and inserts an ASCII string of the next memory address after the tokenized BASIC program. Any following source text is assumed to be 6502 assembler code. (In case no code is found, a simple <code>0x60</code> &ldquo;<code>RTS</code>&rdquo; instruction is appended.)<br />This allows for a combined BASIC and assembler source, where you can transition from BASIC to machine language by &ldquo;<code>SYS {ASM START}</code>&rdquo; or to append this address to a final &ldquo;<code>DATA</code>&rdquo; statement to be read from BASIC and to be used as a call address anywhere inside the program.<br />See the <a href="pet-assembler-help.html">assembler documentation</a> for details and examples.</p>
+
+
+<h3 id="petHelpTopicQB">QBASIC-Style Preprocessor</h3>
+<p>Source files with a file extension of &ldquo;<code>.qb</code>&rdquo;, &ldquo;<code>.qba</code>&rdquo;, &ldquo;<code>.qbas</code>&rdquo; will be run through a special preprocessor. This supports</p>
+<ul>
+	<li>auto line numbering (starting at 10),</li>
+	<li>labels and targets in square brackets (&ldquo;<code>[&hellip;]</code>&rdquo;)<br />(only one leading label per line allowed),</li>
+	<li>apostrophe-comments (starting with &ldquo;<code>'</code>&rdquo;) will be replaced by regular <code>REM</code> statements<br />(a colon will be inserted, as needed).</li>
+</ul>
+<p>In other words, you don&rsquo;t have to care about line numbers anymore, using labels for jump targets instead.<br />Any REM statements or strings are left untouched and are used as-is. Any bare labels at the end that are used as a target will result in an additional <code>END</code> statement. If the transformation succeeds without errors, the source is then processed like a normal plain-text BASIC source (see above).</p>
+<p>Example:<br />The source file</p>
+<pre style="padding-left: 1.5em;">'test
+        print &quot;{cls}&quot;;'clear screen
+[label] print &quot;hello world &quot;;
+        goto [label]</pre>
+<p>results in the intermediate program text</p>
+<pre style="padding-left: 1.5em;">10 rem test
+20 print &quot;{cls}&quot;;:rem clear screen
+30 print &quot;hello world &quot;;
+40 goto 30</pre>
+<p>which is then tokenized to</p>
+<pre style="padding-left: 1.5em;">10 REM TEST
+20 PRINT &quot;<span style="display:inline-block;background-color: #111;color: #e0edfd;height: 15px;line-height:15px;">&hearts;</span>&quot;;:REM CLEAR SCREEN
+30 PRINT &quot;HELLO WORLD &quot;;
+40 GOTO 30</pre>
+
+
+<h2 id="petHelpTopicLoadingROMs">Installing Option ROMs</h2>
+<p>Similarly to loading files, you may also install option ROMs or overwrite installed ROMs by dragging and dropping a binary ROM-image (with file extension &ldquo;<code>.bin</code>&rdquo; or &ldquo;<code>.rom</code>&rdquo;) or using the mount dialog.<br />Only a single ROM image can be installed at once and you will have to provide either a start address (in hex) or a ROM socket designator (as in &ldquo;H<i>n</i>&rdquo;, &ldquo;D<i>n</i>&rdquo; or &ldquo;UD<i>n</i>&rdquo;).<br />To install multiple ROM images, pause the emulator first to avoid any crashes.</p>
+<p>ROM addresses and sizes are normalized to multiples of <code>0x800</code> (2K).<br />Common option ROM addresses are <code>0x9000</code> (D3, UD3, UD11) and <code>0xA000</code> (D4, UD4, UD11).</p>
+<p>Mind that you cannot replace the character ROM. Any installed ROMs are reset and lost, when changing the ROM configuration (using the ROM-menu).</p>
+<p>Note: Of the original PET 2001s, only the PET 2001-N (the later model with the &ldquo;real&rdquo; keyboard) came with sockets for option ROMs (D3 and D4). So there will be no option ROMs for the orignal ROM 1.0 configuration and you&rsquo;ll probably need ROM 4.0.</p>
+
+<h2 id="petHelpTopicLoadingFromUrlParams">Loading Programs from URL-Parameters</h2>
+<p>The emulator will load any of the programs from the <a href="prgs/" target="_blank" title="Open the Program Library in a new tab/window">Program Library</a> using special hot-links. For security reasons, this option is restricted to files in this specific server directory and will not work with external resources.</p>
+<p>Parameters are (either as a query string or as hash/fragment, separated by &ldquo;<code>&amp;</code>&rdquo;:</p>
+
+<ul>
+	<li><span class="petHelpListItemCaption"><code>prg=&lt;filename&gt;</code>, also <code>program=</code>, <code>load=</code>, <code>run=</code></span><br />
+		Will load a program or BASIC source files. Binary programs will be run automatically, use &ldquo;<code>run</code>&rdquo; spefically to auto-run a text file. If there&rsquo;s no file extension supplied, &ldquo;<code>.prg</code>&rdquo; will be assumed.<br />Files may be located in disk or tape archives, an individual file inside an archive may be specified using a slash (<code>/</code>) as a path separator. If no file name is found, a directory list dialog will be displayed.</li>
+	<li><span class="petHelpListItemCaption"><code>disk=&lt;filename&gt;</code>, also <code>floppy=</code>, <code>d64=</code>, <code>d80=</code>, <code>d82=</code>, <code>dsk=</code></span><br />
+		Will load the specified disk archive and display a director list.</li>
+	<li><span class="petHelpListItemCaption"><code>t64=&lt;filename&gt;</code></span><br />As above for T64 tape archives.</li>
+</ul>
+
+
+<h2 id="petHelpTopicUrlParams">General URL-Parameters</h2>
+
+<p>Generally, default options may be specified in URL parameters, as well.<br />As above, parameters are (either as a query string or as hash/fragment, separated by &ldquo;<code>&amp;</code>&rdquo;.</p>
+
+<ul class="petHelpParams">
+	<li><span class="petHelpListItemCaption"><code>keyboard=&lt;option&gt;</code>, also <code>kbd=</code>&hellip;, <code>kbdmode=</code>&hellip;</span><br />
+		Configures the keyboard mode (key repeat). Valid options are &ldquo;<code>repeat</code>&rdquo;, &ldquo;<code>edit</code>&rdquo;, &ldquo;<code>editing</code>&rdquo; (key repeat on) and &ldquo;<code>norepeat</code>&rdquo;, &ldquo;<code>games</code>&rdquo;, &ldquo;<code>gaming</code>&rdquo; (key repeat off).</li>
+	<li><span class="petHelpListItemCaption"><code>repeat=&lt;option&gt;</code></span><br />
+		As above, but uses a truthy value, like &ldquo;<code>yes</code>&rdquo;, &ldquo;<code>no</code>&rdquo;, &ldquo;<code>off</code>&rdquo;, &ldquo;<code>true</code>&rdquo;, &ldquo;<code>false</code>&rdquo;, &ldquo;<code>1</code>&rdquo; or &ldquo;<code>0</code>&rdquo; to set the option.</li>
+	<li><span class="petHelpListItemCaption"><code>color=&lt;option&gt;</code>, also <code>clr=</code>&hellip;, <code>screen=</code>&hellip;</span><br />
+		Sets the screen color. Valid options are &ldquo;<code>white</code>&rdquo;, &ldquo;<code>green</code>&rdquo;, and &ldquo;<code>ink</code>&rdquo; or &ldquo;<code>e-ink</code>&rdquo;.</li>
+	<li><span class="petHelpListItemCaption"><code>ram=&lt;size-in-K&gt;</code></span><br />
+		Sets the RAM size. Valid options are &ldquo;<code>8</code>&rdquo; (default), &ldquo;<code>16</code>&rdquo; and &ldquo;<code>32</code>&rdquo;.</li>
+	<li><span class="petHelpListItemCaption"><code>rom=&lt;version&gt;</code></span><br />
+		Sets the ROM version. Valid options are &ldquo;<code>1</code>&rdquo;, &ldquo;<code>2</code>&rdquo; (default) and &ldquo;<code>4</code>&rdquo;, and &ldquo;<code>2b</code>&rdquo; or &ldquo;<code>4b</code>&rdquo; for the CBM 2001/B with the business keyboard.</li>
+	<li><span class="petHelpListItemCaption"><code>charrom=&lt;version&gt;</code></span><br />
+		Sets the character ROM version. Valid options are &ldquo;<code>old</code>&rdquo; (default), &ldquo;<code>new</code>&rdquo;, as well as &ldquo;<code>ja</code>&rdquo;, &ldquo;<code>jp</code>&rdquo;, &ldquo;<code>ni</code>&rdquo;, &ldquo;<code>kana</code>&rdquo; or  &ldquo;<code>katakana</code>&rdquo; for the Japanese character ROM (or &ldquo;<code>1</code>&rdquo;, &ldquo;<code>2</code>&rdquo;, &ldquo;<code>3</code>&rdquo;, respectively).</li>
+	<li><span class="petHelpListItemCaption"><code>autorun=&lt;option&gt;</code></span><br />
+		Explicitely requests a program that may be loaded by an other parameter to be run automatically, regardless of the file type. Valid options are any truthy values (see <code>repeat</code>).</li>
+	<li><span class="petHelpListItemCaption"><code>list=&lt;option&gt;</code></span><br />
+		Lists a program upon loading, only available for programs loaded from URL-data (see below). Valid options are any truthy values.</li>
+	<li><span class="petHelpListItemCaption"><code>asbasic=&lt;option&gt;</code>, also <code>isbasic=</code>&hellip;, <code>basic=</code>&hellip;</span><br />
+		Explicitely requests a program that may be loaded from a a disk or tape archive (by an other parameter) to be loaded as a BASIC program (to the normal start of BASIC at <code>$0401)</code>.</li>
+	<li><span class="petHelpListItemCaption"><code>persistence=&lt;option&gt;</code><br />
+		Configures the rendering mode of the CRT emulation (see below), either &ldquo;<code>normal</code>&rdquo; (default) or &ldquo;<code>long</code>&rdquo; (also &ldquo;<code>hot</code>&rdquo;) for a more dramatic demo mode.</li>
+	<li><span class="petHelpListItemCaption"><code>pixelaspect=&lt;option&gt;</code>, also <code>pixels=</code>&hellip;<br />
+		Sets the pixel aspect (see bleow) for the CRT emulation. Valid options are &ldquo;<code>square</code>&rdquo; (default) or &ldquo;<code>tall</code>&rdquo; (or &ldquo;<code>1.0</code>&rdquo; and &ldquo;<code>0.9</code>&rdquo;, respectively).</li>
+	<li><span class="petHelpListItemCaption"><code>joystick=&lt;option&gt;</code>, also <code>joysticks=</code>&hellip;</span><br />
+		Configures the type of joystick adapter (see below).<br />One of &ldquo;<code>simple</code>&rdquo;, &ldquo;<code>pet</code>&rdquo; (or &ldquo;<code>dual</code>&rdquo;), &ldquo;<code>stupidpettricks</code>&rdquo;, &ldquo;<code>chuck_johnson</code>&rdquo; (or &ldquo;<code>compute</code>&rdquo;), &ldquo;<code>galaga</code>&rdquo; (also &ldquo;<code>wening</code>&rdquo;), &ldquo;<code>scramble</code>&rdquo; (also &ldquo;<code>jentzen</code>&rdquo;), &ldquo;<code>snes</code>&rdquo; (also &ldquo;<code>texelec</code>&rdquo;), &ldquo;<code>keyboard</code>&rdquo;, &ldquo;<code>keyboard_shift</code>&rdquo;, &ldquo;<code>keyboard_space</code>&rdquo; or &ldquo;<code>ignore</code>&rdquo; (default).<br />(There&rsquo;s also support for &ldquo;<code>cga</code>&rdquo;, &ldquo;<code>c64dtv</code>&rdquo;, also &ldquo;<code>hummer</code>&rdquo;, and &ldquo;<code>vic20</code>&rdquo;, but I&rsquo;ve never seen a PET program written for any these adapters.)</li>
+</ul>
+
+<p>Mind that this allows you to bookmark a preferred configuration, like using the link <a href="./?screen=white&amp;ram=32"><code>?screen=white&amp;ram=32</code></a> for a white screen and 32K of RAM.</p>
+
+<h3 id="petHelpTopicURLData">Programs as URL-Data</h3>
+
+<p>Finally, you may load an entire BASIC source text using URL parameters. The source may be either encoded using X-WWW-Form-URL encoding (AKA form data) or as a base64 string. Again, this me be supplied either as a query string or in hash/fragement. All the above configuration parameters also apply and may be used in conjunction.</p>
+
+<ul class="petHelpTopicParams">
+	<li><span class="petHelpListItemCaption"><code>data=&lt;data-string&gt;</code></span><br />
+		The data in the data string will be extracted, transformed into a binary BASIC program to be loaded into the virtual PET, just as if it came from a disk.<br>
+		The data format is assumed to be normal URL-encoded form data, if no format is specified at the immediate start of the data string.<br />
+		If a prefix &ldquo;<code>base64:</code>&rdquo; or &ldquo;<code>data:&lt;mime-type&gt;;base64</code>&rdquo; is found the following stream will be interpreted as base64 encoded data. (Suitable MIME-types are, text/plain, text/basic, application/text, application/basic, or application/octet-stream.)<br />
+		A file name to be used and displayd for the load command may be supplied by a parameter &ldquo;<code>filename=&lt;string&gt;</code>&rdquo; or &ldquo;<code>name=&lt;string&gt;</code>&rdquo;.
+		</li>
+	<li><span class="petHelpListItemCaption"><code>execute=&lt;data-string&gt;</code>, also <code>exec=</code></span><br />
+		Same as above, however, the supplied data will be auto-typed into the virtual machine and executed in direct mode.</li>
+</ul>
+
+<p>E.g., for a simple hello-world example,<br/>
+<a href="./?data=10%20print%22hello%20world%22&amp;autorun=true" class="petHelpSampleLink"><code>?data=10%20print%22hello%20world%22&amp;autorun=true</code></a>,<br />
+or, using the hash/fragment,<br />
+<a href="./#data=10%20print%22hello%20world%22&amp;autorun=true" class="petHelpSampleLink"><code>#data=10%20print%22hello%20world%22&amp;autorun=true</code></a>.<br />
+(The difference is here, that a normal query string, strating with &ldquo;<code>?</code>&rdquo;, will be sent over the network, while a hash/fragment will be handled inside the browser only.)<br />
+And here&rsquo;s an example for executing a statement in direct mode,<br />
+<a href="./?exec=print(100+20)*5" class="petHelpSampleLink"><code>?exec=print(100+20)*5</code></a>.<br />
+All the usual PETSCII escape may be used (see above), also &ldquo;<code>\pi</code>&rdquo; may be used to escape Pi (&pi;), e.g.,<br /><a href="./?exec=printsin(\pi/6)" class="petHelpSampleLink"><code>?exec=printsin(\pi/6)</code></a></p>
+
+<p>The <em>&ldquo;Utils/Export&rdquo;</em> menu (see below) includes an option to automatically generate a data URL for the BASIC program currently in memory.</p>
+<p>You may also use the <a href="link/" target="_blank">Link Console</a> to assemble a data-URL for the emulator.</p>
+
+<h2 id="petHelpTopicUtils">Utilities and Export Options</h2>
+
+<p>The menu <em>&ldquo;Utils/Export&rdquo;</em> below the emulated screen provides a number of ways to export your work from the virtual machine or to interact with it in oder ways. This is also where the developer tools of the emulator live. As there are:</p>
+
+<h3>Options to Export the Screen Contents</h3>
+<ul>
+	<li><strong>Screen Text As Unicode</strong><br />
+		Transforms the screen contents into Unicode text and presents the result in a clipboard ready for copy &amp; paste. Mind that there isn&rsquo;t a suitable equivalent for every of the PETSCII graphics characters. The emulator will do its best to find a close representation.</li>
+	<li><strong>Screen As Image</strong><br />
+		Exports the current screen as a PNG-image, which will be presented in a dialog ready for copying, or downloading it by drag &amp; drop or by right-clicking the image.</li>
+	<li><strong>Screen As Image, No Margins</strong><br />
+	The above option exports the screen image with a  small amount of padding to include for phosphor bleed. Use this option to get a slightly smaller image, representing the screen contents as-is.</li>
+	<li><strong>Printer Hard-Copy</strong><br />
+		This transforms the screen contents to an image emulating the output of a dot matrix printer. As with real matrix printers, the result will not always be the same&hellip;</li>
+	<li><strong>Screen Memory As Hex-Dump</strong><br />
+	Exports the current contents of the video RAM (screen codes) as a hex-dump, ready for use in an assembler source.</li>
+	<li><strong>Generate BASIC Program</strong><br />
+		Generates a BASIC program to reproduce the current screen, ready to be reused in a program. Think Photoshop in BASIC. A dialog lets you chose line numbers, steps in line numbers, the character case of the generated BASIC source, and the kind of escapes to be used for PETSCII special characters. (You may chose from transforming those to <code>CHR$()</code> statements, which will work everywhere, or any of the special escapes used by the emulator, compare the section on PETSCII escapes above.</li>
+</ul>
+
+<h3>Options to Export Memory Ranges</h3>
+<ul>
+	<li><strong>BASIC As Escaped Listing</strong><br />
+		Generates a listing of the BASIC program currently in memory, ready for copy and paste. Any special PETSCII characters (as found in strings) are ascaped to labels and there are a few options of what kind of labels to use (decimal or hex, and whether or not to use any labeled escapes, like &ldquo;<code>{HOME}</code>&rdquo;, where applicable.)</li>
+	<li><strong>BASIC As Portable Listing</strong><br />
+		As above, but any PETSCII special characters are transformed to <code>CHR$()</code> sequences. This is the most compatible option and should work everywhere. However, mind that there&rsquo;s a small chance that a line may exceed the maximum length and the source may require some manual editing, because of this.<br />The &ldquo;escaped listing&rdquo; may be preferable for the purpose of external editing.</li>
+	<li><strong>Hex-Dump Address Range</strong><br />
+		Generates a hex dump of an arbitrary address range, including ROM code. (The IO range, however, will be skipped.)</li>
+	</li>
+	<li><strong>Hex-Dump Program</strong><br />
+		Generates a hex dump of the current program as defined by the system pointers (TXTTAB between VARTAB). This will be principally the BASIC program, but will also include any assembler code that may have been loaded together with it.</li>
+	</li>
+	<li><strong>Disassemble Address Range</strong><br />
+		Disassembles a given address range, including ROM code. The disassembly is context aware, as of screen or system memory (for which it provides a simple hex dump), tokenized BASIC text, BASIC variables, and 6502 machine code.<br />(BASIC contents will be listed according to its tokenized format, variables are decoded with respect to their structure in memory. The format of 6502 disassembly is close to this of the original MOS 6502 assembler.)</li>
+	<li><strong>Disassemble Program</strong><br />
+		As above, but selects just the range of the program currently in memory based on the values in the system pointers.<br />
+		BASIC programs are disassembled to a meaningful structure, showing tokens and strings (split into lines of up to 6 characters). E.g., the well known program,
+		<pre>10 PRINT CHR$(205.5+RND(1));:GOTO 10</pre>
+		will disassemble to,
+		<pre>0401  1B 04               link: $041B
+0403  0A 00               line# 10
+0405  99                  token PRINT
+0406  20                  ascii &laquo; &raquo;
+0407  C7                  token CHR$
+0408  28 32 30 35 2E 35   ascii &laquo;(205.5&raquo;
+040E  AA                  token +
+040F  BB                  token RND
+0410  28 31 29 29 3B 3A   ascii &laquo;(1));:&raquo;
+0416  89                  token GOTO
+0417  20 31 30            ascii &laquo; 10&raquo;
+041A  00                  -EOL-
+041B  00 00               -EOP- (link = null)</pre></li>
+	<li><strong>Disassemble Variables</strong><br />
+		Provides a disassembly of BASIC variables as they are found in memory.</li>
+	<li><strong>BASIC System Pointers</strong><br />
+		Shows a dialog with the most important system pointers for BASIC memory partioning by label, address, current contents (the address they are pointing to), along with a short description of their meaning.<br />May be useful for debugging.</li>
+	<li><strong>Show BASIC Variable Dump</strong><br />
+		Lists any variables as they are currently in memory. Unlike the disassembly, this view interprets and presents the variables as they would be printed from within BASIC.<br />If you are more interested in states and values of your variables than in the storage format, this is the view for you.</li>
+	<li><strong>Show BASIC String Stack</strong><br />
+		Shows key information about the string stack of BASIC, as it grows down from top of memory, like total bytes available, bytes used, bytes free and the current location of the string stack pointer (<code>FRETOP</code>). If any of the string stack is used, a hex-dump of the string stack in its current form is displayed.</li>
+	<li><strong>Show Memory Map</strong><br />
+		This renders an image showing the current configuration and memory utilization at 1 pixel a bit.<br />Use the mouse pointer to explore addresses and values.<br />You can also download a memory map as a static image.</li>
+</ul>
+
+<h3>Other Utilities and Options</h3>
+<ul>
+	<li><strong>Export PRG-File From Memory</strong><br />
+		Save the current program to your computer as a binary program file. This is essentially the same as entering &ldquo;<code>SAVE &quot;FILENAME&quot;,8</code>&rdquo; in BASIC.</li>
+	<li><strong>BASIC Program As URL</strong><br />
+		This exports a Link, which will load the current BASIC program in memory as a source file. There are options to adjust the format and encoding type of the link. &mdash; Mail your ten-liner to your friends!</li>
+	<li><strong>Renumber BASIC In Memory</strong><br />
+		A renumber utility for BASIC. Enter start line number and step, the emulator will do the rest. This includes line numbers in statements like <code>THEN</code>, <code>GOTO</code>, <code>GOSUB</code>, <code>ON &hellip; GOTO</code>, and <code>ON &hellip; GOSUB</code>.</li>
+	<li><strong>Switch Character Set</strong><br />
+		Switch between the upper case / graphics set and the upper case / lower case set. A prompt will tell you, what action will be performed and what mode the emulated PET is in currently. (Also, it will tell you, what POKE statement would be used in BASIC for this.)</li>
+</ul>
+
+<h2 id="petHelpTopicScreen">Screen Options / Rendering</h2>
+<p>The context menu of the virtual screen provides some helpful shortcuts for interacting with the contents of the emulated PET&rsquo;s screen, but also some options to set the rendering mode of the emulated PET and for the emulation.</p>
+<p>Namely, these are</p>
+<ul>
+	<li><strong>Color Group: Screen Green / Screen: White / Screen: E-Ink (Inverted)</strong><br />
+		A group of options to select the phosphor color for the CRT emulation. (PETs came both with green and white phosphor. &ldquo;E-Ink&rdquo; is a modern addition, showing an inverted dark-on-white display, which may be useful in certain cirumstances.) The current selection is marked by a checkmark.</li>
+	<li><strong>Character Set Group</strong> (<em>&ldquo;Upper Case/Graphics&rdquo;</em>, etc.)<br />
+		This provides a convinient way to switch the character set used by the PET without resorting to akane <code>POKE</code>s.<br />Labels reflect the available options with the character ROM in use (see below).</li>
+	<li><strong>Charater ROM Group</strong><br />
+		Available character ROMs are:
+		<ul class="helpCharRoms">
+			<li><span class="helpDefItem"><b>Old Character ROM</b></span> shifted characters in the mixed case set are lower case.</li>
+			<li><span class="helpDefItem"><b>New Character ROM</b></span> shifted characters in the mixed case set are upper case.</li>
+			<li><span class="helpDefItem"><b>Japanese Character ROM</b></span> shifted characters in the mixed set are Katagana.<br />This option also switches the keyboard layout.</li>
+			<li><span class="helpDefItem"><b>3rd-Party &quot;Computer&quot; Font</b></span> a 3<sup style="line-height:normal;">rd</sup>-party ROM with a &lsquo;computer-esque&rsquo; font.<br />This character ROM is known as &ldquo;901447-10m&rdquo; and comes in the &lsquo;new&rsquo; ROM layout (shifted upper-case).</li>
+		</ul></li>
+	<li><strong>&ldquo;Hot&rdquo; Rendering / Long Persistence | Render with Normal Persistence</strong><br />
+		The emulator tries its best to provide a decent experience of a CRT without being too heavy on the resources and providing a suitable programming environment at the same time. However, the PET&rsquo;s CRT had a relatively slow phosphor, which is addressed in a more dramatic &ldquo;hot&rdquo; rendering mode with a longer persistence, where the CRT is somewhat in overdrive. This may provide a desireable effect for demos, or for an experience more closely to watching the screen in a dark room, or similar.</li>
+	<li><strong>Set Pixel Aspect Ratio To (NTSC|Square)</strong><br />
+		Unlike modern computers, the PET had not square pixels, but elongated, tall pixels with an aspect ratio of 0.912:1, like NTSC. The results of rendering this on a modern display may vary, which is also why the emulator defaults to square pixels. With this you can set the rendering aspect to your personal pleasing.</li>
+</ul>
+
+<h2 id="petHelpTopicCopyPaste">Copy &amp; Paste</h2>
+<p>The implementation of copy &amp; paste may vary with browsers and their specific implementation of security related features.</p>
+<h3>Copy &amp; Paste via the Screen Context Menu</h3>
+<p>The first two items of the context menu of the virtual screen expose copy and paste functionality:</p>
+<ul>
+	<li><strong>Copy As Text</strong><br />This exports the contents of the screen as Unicode.<br />If the browser supports clipboard interaction for this feature, the text will be immediately transferred to the system clipboard. Otherwise, a dialog similar to <em>Utils/export &gt; Screen Text As Unicode</em> will be displayed.</li>
+	<li><strong>Paste To PET</strong><br />If the clipboard feature is supported, this will directly transfer the content of the system clipboard as typed text to the PET. A browser may show an additional button (typically labeled &ldquo;Paste&rdquo; or similar) or a permissions dialog (to be acknowledged once) as a security feature to confirm the interaction. If the clipboard interaction is not directly supported by your browser (e.g., Mozilla Firefox or older browsers), selecting the context menu item will bring up a dialog with a text-area for pasting.</li>
+</ul>
+<h3>Paste via System Commands</h3>
+<p>If the browser supports the feature and there isn&rsquo;t a pop-updialog active, pasting is also supported via the system &ldquo;Paste&rdquo; menu item and its associated shortcut. (Currently, this is supported by all major browsers, as Google Chrome, Mozilla Firefox, Apple Safariat, at least in the respective desktop versions.)</p>
+<h3>Notes on Paste</h3>
+<p>Mind that you may only paste to a PET that is interactive and ready to accept keyboard input, meaning, it must not be paused and there has to be an active cursor.</p>
+<p>Pasted text will be evaluated for case before it is transferred to the emulated PET and may contain the usual <a href="#petHelpTopicEscapes">PETSCII-markup</a> (<code>{ddd}</code>, <code>{$hh}</code>, <code>{label}</code>). To the PET it will appear the same as if the text had been typed in by the keyboard. Pasted text may stretch over multiple lines and may even encompass an entire program. If not present, a closing <kbd>RETURN</kbd> will be added to the text in order execute it.</p>
+<p>Tip: Paste may be used to supply multiple values to input statements of a program, one line per input statement, which may come handy for testing.<br />
+E.g., pasting the following will enter a tiny program, run it, and will pass the values <code>4</code> and <code>5</code> to the executing program:</p>
+<pre style="margin: 1em 0 1em 1.25em;">
+10 PRINT &quot;RECTANGLE&quot;
+20 INPUT &quot;SIDE A&quot;; A
+30 INPUT &quot;SIDE B&quot;; B
+40 PRINT &quot;AREA: &quot;; A*B
+RUN
+4
+5</pre>
+<p>However, mind that transferring a file per drag &amp; drop is still the preferred and also quicker method of loading BASIC source texts.</p>
+
+<h2 id="petHelpTopicJoystick">Joysticks &amp; Joystick Adapters</h2>
+<p>The emulator supports up to two joysticks or gamepads connected to your compter. In <em>Games Mode</em> with the <kbd>CAPS LOCK</kbd> key engaged, the emulator also emulated a joystick from keyboard input, using the cursor keys (arrow keys) for directions and the space bar for the fire button. (Use <kbd>CAPS LOCK</kbd> to toggle between normal keyboard input and joystick emulation for these keys. If a real game controller is found, the keyboard joystick acts as an additional (second) one.)</p>
+<p style="margin: 1.25em 0;">Click the joystick icon <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="22px" viewBox="0 0 22 24" xml:space="preserve" style="inline-block; vertical-align: bottom;" title="Joystick icon"><use xlink:href="#icon-joystick" x="0" y="0"></use></svg> to access the joystick settings and choose an adapter scheme matching your game (or <i>&rdquo;ignore&rdquo;</i> to disable joystick input). There&lsquo;s also a quick access menu with the most important options available as a contextual menu of the joystick icon.</p>
+<p>While the PET doesn&rsquo;t have a joystick port of its own, there was quite a variety of schemes for joystick adapters to connect one or even two joysticks to the user port of the PET. These ranged from connection schemes for two simple joysticks for just left, right, and fire, a single joystick using all four directions connected by varying wiring schemes, to two joysticks, where fire was encoded by triggering both left and right inputs at once.</p>
+<p>Beyond simple, Atari-style joysticks there is also support for the TexElec serial interface for a single SNES gamepad. Mind that browsers may handle gamepads with various success, which may be especially an issue with the full range of SNES buttons.</p>
+<p>Finally, there&rsquo;s are options to reroute any joystick input to the keyboard, where directions translate to the numeric keypad (left: &ldquo;4&rdquo;, right: &ldquo;6&rdquo;, etc) and the fire button to either &ldquo;A&rdquo;, <kbd>SHIFT</kbd>, or <kbd>SPACE</kbd>. This works also with the emulated keyboard joystick, which may come handy, if your computer doesn&rsquo;t feature a numeric keypad. (A small indicator below the joystick icon provides feedback for any rerouted keyboard activity.)</p>
+<p style="margin-top: 1.25em;">Sadly, there&rsquo;s no good way for the emulator to &ldquo;know&rdquo;, which kind of connection/wiring scheme might be expected by a particular program. Open the <em>Joystick Settings</em> by clicking the joystick icon next to the sound controls to select any of the supported adapter schemes.<br />Generally, either <em>&rdquo;SIMPLE&rdquo;</em> or <em>&rdquo;PET&rdquo;</em> will be a good choice to start with.
+<p>Adapters supporting two joysticks come with an additional option with player assignments swapped. (Browsers assign joysticks in the order they become active. If the player/joystick assigment is not as expected, just go to the dialog and choose the respective swapped option.)</p>
+<p>Joystick support is initially <em>off</em> (option <em>&rdquo;ignore&rdquo;</em>), but it may have been set by a program link. You may always disable any joystick handling by choosing <em>&rdquo;ignore&rdquo;</em>, thus prohibiting any interferences this may cause with a particular program. This will also disable the emulated keyboard joystick.</p>
+<p style="margin-top: 1.25em;"><em>Note on browser support and stability:</em><br />I&rsquo;ve one cheap, non-standard SNES-style gamepad that works fine with Firefox, but misassigns A,B,X,Y buttons on Safari. Chrome reports correct buttons for the same gamepad, but fails to read the <em>left</em> and <em>right</em> buttons. Moreover, directions for this gamepad are reported as analog axis on Safari, but (partly) as buttons on Chrome. An old Logitech gamepad works fine with Firefox and Chrome, but gives weird readings on Safari, where all buttons and all axes are triggered at once. Rather than delivering raw data, browsers seem to to apply some voodoo of their own behind the scenes, which may work out or not. Generally, Firefox seems to provide the best and most stable support.<br />If you experience any problems, reconnecting your controller or restarting the browser may help.<br />See also the joystick tests programs <a href="/prgs/#tests" onclick="petCtrl.showPrgLibrary(false,'tests');return false;">here</a>.</p>
+<p><em>Note on &ldquo;Cosmiads Uni&rdquo;</em>:<br />There&rsquo;s a version of &ldquo;Cosmic Cosmiads MK01&rdquo; (Cosmiads Uni) with support a for  joystick via PA0, PA1 &amp; PA5 (here, the &ldquo;SIMPLE&rdquo; adapter scheme) added. Mind that this requires a <code>POKE 2571,79</code> <em>before</em> running the program.</p>
+
+<h2 id="petHelpTopicAsm">Assembler and 6502 Machine Code</h2>
+<p>The emulator features a buil-in 6502 assembler and disassembler. For these, please refer to the separate <strong><a href="pet-assembler-help.html" target="masswerk_at_pet_assembler_help">Assembler Help</a></strong> page.<p>
+<p>Mind that the PET features its own machine monitor in ROM (with the exception of ROM 1). The interrupt vector points to this monitor and executing an instruction of binary zero (<code>0x00</code>, &ldquo;<code>BRK</code>&rdquo;) will summon it to your order. From BASIC, this can be accomplished by jumping with &ldquo;<code>SYS</code>&rdquo; to any location containing a zero-byte.<br />One should be always found at <code>0x400</code> (just before the start of any BASIC text) and can be called by the memorable command &ldquo;<code>SYS 1024</code>&rdquo;.</p>
+<p>Moreover, you can always get a CPU log of the last 1K instructions executed by hitting <kbd>ALT</kbd> + <kbd>SHIFT</kbd> + <kbd>ENTER</kbd> on your keyboard.</p>
+
+
+<h2 id="petHelpTopicDebugger">Debugger</h2>
+<p>Besides the machine language monitor already built-in in the PET&lsquo;s ROM, the emulator also features a debugger / monitor of its own with a special focus on code reverse-engineering. The debugger can be invoked by clicking it&rsquo;s icon at the top right of the screen and can be dismissed by the same button. (This will only be visible whenever there&lsquo;s sufficient space on the screen to display the debugger to the right of the emulated PET.)<br>Moreover, the debugger can be fired up by pressing <kbd>CTRL + ESC</kbd> on the keyboard, which will also halt the emulated PET immediately.</p>
+<p>The top section of the debugger provides a view into the current state of the emulated machine and its 6502 processor:</p>
+<figure>
+	<img src="assets/help-debugger.png" width="318" height="129" alt="top section of the debugger" style="width: 318px; max-width: 100%; height: auto; aspect-ratio: 318/129; mix-blend-mode: multiply;" loading="lazy" />
+</figure>
+<p>Whenever the emulator is stopped (halted), this displays the following features:</p>
+<ul>
+	<li>On the very top are the various registers and flags of the 6502 MPU.</li>
+	<li>To the right, there&lsquo;s a lock icon, which may be clicked to unlock live editing. Once unlocked, you may directly edit any of the registers or flip the state of the flags by clicking them. (This is guarded by this lock icon to prevent involuntary changes to the processor state.)</li>
+	<li>Below, the next instruction to be executed is displayed along with its mnemonic notation.</li>
+	<li>This is followed by an annatotion showing the effect of this instruction with effective operands. (This resolves absolute, indirect, indexed, and even indexed-indirect and indirect-indexed addressing modes.) In the above example, location $9E contains the value 00, which will be loaded into the accumulator (A).</li>
+	<li>Finally, the video status is displayed. Raster lines count from 0 at the top of the visible screen with V-BLANK counting up to this in negative values. (Again, this is the state for the next machine cycle to be executed.)<br />In the above example, the raster is currently in scanline 70 (counting from 0 at the very top), which is the 7<sup style="line-height: 10px;">th</sup> line out of 8 making character row 8 of the screen, and in column 5. (Rows and columns start counting at 0. Beyond column 39 the progress into the H-BLANK interval is indicated by a separate count of 1&ndash;24 out of 24 &quot;invisible&quot; columns.<br />So a screen consists of 25 &times; 8 = 200 lines, forming 25 rows (spanning over 8 lines, each) of 64 columns, of which the first 40 are visible and the remaining 24 are in H-BLANK. The V-BLANK interval spans over 60 lines (here provided in negative numbers counting up to the first visible line).</li>
+</ul>
+<p>Below, you find a trace log, which adds the respective last instruction executed. (It is recommended to clear this frequently, using the <em>&rdquo;Clear&rdquo;</em> button on the bottom right of thgis.)<p>
+<p>Next, there is pane listing breakpoints. Click <em>&rdquo;New&rdquo;</em> to create a new breakpoint. This will be added to the list, each with a checkbox in front to activate/deactivate them individually. Any active breakpoints will trigger and halt the machine, while the debugger is opened, regardless of the run mode of the emulator.</p>
+<p>A row of buttons controlling the run mode:</li>
+<ul>
+	<li><strong>&rdquo;Single Step&rdquo;</strong> exeutes the next instruction and stops immediately.</li>
+	<li><strong>&rdquo;Next Block&rdquo;</strong> allows scanning larger blocks of codes. This will stop at the next JMP, JSR, interrupt, or return instruction.</li>
+	<li><strong>&rdquo;Cont. Run&rdquo;</strong> runs continuously until interrupted by a manula <em>&rdquo;Halt&rdquo;</em> or a breakpoint.</li>
+	<li><strong>&rdquo;Halt&rdquo;</strong> stops the exution.</li>
+</ul>
+<p>The checkbox <em>&rdquo;ignore interrupts&rdquo;</em> skips any interrupts and related interrupt routines (until the next RTI instruction is encountered) from the halt conditions and the trace log. This is default on. Breakpoints in interrupt routines will still trigger, regardless of the state of this checkbox.</p>
+<p>Finally, there is tab group with a few displays to investigate the state of the machine and the context of the current instruction:</p>
+<ul>
+	<li>The <strong>Stack</strong> display displays the processor stack (at $0100&ndash;$01FF) with the location, the stack pointewr currently points at, marked. You may right-click a value to edit it. (Again, this is to prevent accidential changes of the machine state.)</p>
+	<li>The <strong>Memory</strong> display displays the address space (both RAM and ROM) as it is &rdquo;seen&rdquo; by the processor, broken down into memory pages ($00&ndash;$FF) of 256 bytes, each. For consistency, characters are decoded as lower-case/upper-case, regardless of the state and settings of the emulator. Again, you may right click a value to edit it. (Editing is avialbale only where actual RAM is connected to the emulated machine.)<br />The <em>&ldquo;M&rdquo;</em> button at the top-right displays a memory map, where each bit is rendered as a set or unset pixel.</li>
+	<li>The <strong>I/O</strong> display shows the various I/O addresses with common labels and values both in hex and binary. (The display reflects the state on read.)</li>
+	<li>The <strong>Code</strong> display provides a disassembly of the vicinity of the current instruction in a browsable format. The current instruction or the last instruction navigated to is always marked by a green dot next to its address. There are also history buttons and a button to reset this to the location of the current instruction for your convenience.</li>
+</ul>
+<p>Again, these displays are updated and/or editible only, when the emulation is halted. Mind that the keyboard input is disabbled for the emulated PET, whenever the emulator is in interactive state. (As this may pose a challenge for tracking any keyboard input, the use of breakpoints is recommended in these instances.)</p>
+<p style="margin-top:1em;">For further details, see also the <a href="/nowgobang/2024/pet-debugger" target="_blank">visual tour to the debugger</a> on my <a href="/nowgobang/" target="_blank">blog</a>.</p>
+<p style="margin-top:1em;margin-bottom:3px;"><em>Note on Safari macOS (desktop) and editing values by right-clicks:</em></p>
+<p style="padding-left: 1em;">Safari on macOS ignores Apple&rsquo;s own meta tag (<code style="font-size: 13px;">name=&quot;format-detection&quot; content=&quot;telephone=no&quot;</code>) meant to instruct it not to recognize what may resemble phone numbers as such. I guess, we have to file this under &ldquo;bug&rdquo; and live with it. While this somewhat hampers the experience, the functionality is not compromised. For the time being, please ignore that weird extra outline.</p>
+
+<h2 id="petHelpTopicEtc">PET Manuals, Trivia, Etc</h2>
+
+<h3>PET 2001 Manuals</h3>
+<p>For more information on PET 2001 operations, you may download some essential references directly from this site:</p>
+<ul>
+	<li><a href="manuals/PET_User_Manual_(2001-8).pdf" target="_blank">PET 2001-8 Personal Computer User Manual</a> (PDF)<br />
+	Commodore Business Machines, Inc., October 1978</li>
+	<li><a href="manuals/Commodore_PET_2001_Quick_Reference.pdf" target="_blank">Pocket Reference Guide to Commodore&lsquo;s 2001 PET</a> (PDF)<br />
+	Leading Edge Computer Products, 1979</li>
+</ul>
+<p>Further manuals and references can be found at <a href="http://www.zimmers.net/anonftp/pub/cbm/manuals/pet/" target="_blank" rel="noopener">www.zimmers.net/anonftp/pub/cbm/manuals/pet/</a> and <a href="http://www.commodore.ca/commodore-manuals/" target="_blank" rel="noopener">www.commodore.ca/commodore-manuals/</a>.</p>
+
+<h3>Trivia &mdash; Sound on the PET</h3>
+<p>An important thing to note about sound on the PET 2001 is that the  PET has none, <em lang="es">nada</em>, <em lang="it">niente</em>, <em lang="fr">pas de son, du tout</em>.</p>
+<p>However, it was soon discovered that the PET features a 6522 VIA chip for communications with two serial shift registers, which may be put under timer control. Purposefully, the outputs of these are routed to ports at the back of the PET. One of these registers can shift the bits out repetitively at a fixed interval that may be set by a timer. Which, if you think about it, can produce a series of pulses at a frequency of up to 1MHz, the PETs clock speed. In other words, we can produce sound by configuring a series of on/off (high/low) signal pulses and by this sample audio. (Which really matters, which is is audible, is not a specific state of the signal, but the transition between states.)<br />All it needs now is to hook up a speaker to this pin by a resistor and connect this on the other side to the ground level of the computer (maybe adding a capacitor, as well) and, <em>bang!</em>, we have sound. As the pin, at which this signal is available, is called &ldquo;CB2&rdquo;, this is also known as  &ldquo;CB2 sound&rdquo;.</p>
+
+<figure>
+	<img src="assets/invaders-sound.png" width="624" height="352" alt="emulated hard copy of a screen of the Space Invaders for the PET" style="width: 420px; max-width: 100%; height: auto; aspect-ratio: 624/352; mix-blend-mode: multiply;" loading="lazy" />
+	<figcaption>The famous sound instructions from Space Invaders for the PET.</figcaption>
+</figure>
+
+<p>While this is capable of producing quite a variety of timbres, the spectrum is rather limited, especially, when it comes to low frequencies. For decades, rich bass sound has been out of reach for the PET. That is, until lately. In 2021 &rdquo;shiru8bit&rdquo; published his CB2 music album <em><a href="https://shiru8bit.bandcamp.com/album/faulty-robots" target="_blank" rel="noopener" title="'Faulty Robots' on shiru8bit's Bandcamp page">Faulty Robots</a>,</em> which is also available in the <em>&lsquo;Demo&rsquo;</em> section of the <em>Program Library</em>, and in his 2022 demo &ldquo;Back To The PET&rdquo; (also availble in the <em>Program Library</em>). These two programs really redefined what is possible with sound on the PET! (Technically, this is about using additionally a second mode, which puts the CB2 output under &ldquo;manual control&rdquo; and some nifty interrupt management.)</p>
+<p>Speaking of demos, don&rsquo;t miss &ldquo;A Bright Shining Star&rdquo;, presented by Genesis Project, also in 2022. This redefined graphics on the PET, just like Shiru had done it with music. (Be assured, the PET still has character graphics only. But, when the PET goes &rdquo;racing the beam&rdquo;, things previously unknown become possible.)</p>
+<p>&mdash; It may be (proudly) mentioned that this emulator is currently the only one that can run these programs out of the box. <span style="color: #555; margin: 0 0.2em;">:-)</span> &mdash;</p>
+
+<h3>Known Issues / Missing Features</h3>
+<ul>
+	<li>The IEE emulation only supports basic <code>LOAD</code> and <code>SAVE</code> for files. There is currently no support for <code>OPEN</code> and <code>CLOSE</code>, or for programs that load additional data files using these commands.</li>
+	<li>Disk images are read-only. Meaning, you cannot save to them, only to your local computer.</li>
+	<li>There is no support for cassettes. T64 tape archives may be accessed as emulated floppy disks, though.</li>
+</ul>
+
+
+<h3>Things not supported, but maybe nice to have</h3>
+<ul>
+	<li>IEEE support for <code>OPEN</code> and <code>CLOSE</code>.</li>
+</ul>
+<p>Let&rsquo;s see&hellip;</p>
+
+<p rel="author">Norbert Landsteiner, v.2.4.1, April 2024</p>
+<!-- /HELP -->
+	</div>
+</main>
+
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="display: none;" width="0" height="0">
+<defs>
+<symbol id="icon-joystick" viewBox="0 0 48 48">
+<g fill="none" stroke="#333" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5"><path d="M5.988,33.776l0.581,7.349l35.521,-0.025l0.39,-7.595l-36.492,0.271Z"/><path d="M14.184,31.971c-0,-0 4.316,0.646 10.208,0.646c5.892,0 9.278,-0.713 9.278,-0.713l-0.002,-0.816c0,-0 -4.704,0.662 -9.303,0.662c-4.599,0 -10.147,-0.502 -10.147,-0.502l-0.034,0.723Z"/><path d="M15.796,31.271l0.017,-0.998c-0,0 4.922,0.613 8.627,0.613c3.706,-0 8.17,-0.622 8.17,-0.622l0.093,0.978"/><path d="M17.477,30.092l-0.003,-0.663c0,0 3.571,0.653 6.921,0.653c3.349,-0 6.633,-0.726 6.633,-0.726l0.017,0.732"/><path d="M19.509,29.049c-0,-0 2.544,0.507 4.846,0.507c2.302,-0 4.673,-0.444 4.673,-0.444l-0.028,-0.826c-0,-0 -2.73,0.519 -4.673,0.519c-1.942,-0 -4.704,-0.533 -4.704,-0.533l-0.114,0.777Z"/><path d="M19.646,28.233l0.95,-0.571l0.646,0.094l2.557,0.311l0.793,-0.028l2.591,-0.17l0.842,-0.389l0.897,0.724"/><path d="M20.686,27.662l0.987,-26.606l0.507,0.279l1.75,0.344l0.707,-0.012l1.848,-0.279l0.609,-0.324l-0.581,-0.479l-1.91,-0.189l-0.526,-0.021l-1.901,0.219l-0.503,0.462"/><path d="M24.682,28.015l-0.069,-26.289"/><path d="M27.993,27.51l-0.898,-26.394"/><path d="M9.018,32.366l0.013,-1.275c0,-0 1.148,0.226 2.64,0.226c1.491,-0 2.388,-0.221 2.388,-0.221l-0.041,1.342c-0,-0 -1.005,0.056 -2.415,0.056c-1.411,-0 -2.585,-0.128 -2.585,-0.128Z"/><path d="M9.031,31.091l0.625,-0.63c0,-0 0.916,0.253 2.068,0.255c1.153,0.002 1.818,-0.215 1.818,-0.215l0.517,0.595"/><path d="M9.765,30.443c0,0 1.296,-0.23 1.942,-0.209c0.646,0.021 1.848,0.166 1.848,0.166"/><path d="M5.983,33.549l1.341,-1.635l0.369,-0.178l1.322,-0.031"/><path d="M42.352,33.235l-1.586,-1.485l-0.334,-0.108l-6.697,-0.018"/><path d="M7.023,41.212c-0,0 0.235,3.578 0.336,4.506c0.186,1.694 1.357,1.528 1.357,1.528l31.178,-0.306c0,0 1.468,-0.018 1.555,-1.04c0.087,-1.023 0.268,-4.766 0.268,-4.766"/><path d="M15.876,30.17c0,-0 1.124,-0.214 1.544,-0.225"/><path d="M32.582,30.188c-0,0 -0.873,-0.277 -1.527,-0.324"/><path d="M14.22,31.223c-0,0 1.006,-0.354 1.543,-0.366"/><path d="M33.678,31.077c0,0 -0.586,-0.176 -0.997,-0.251"/><path d="M17.507,29.374c0,0 1.016,-0.502 2.04,-0.502"/><path d="M31.068,29.316c-0,-0 -0.792,-0.415 -2.029,-0.4"/></g>
+</symbol>
+<symbol id="icon-keypad" viewBox="0 0 40 40">
+<g fill="none" stroke="#333" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5"><path d="M38.5,3.568c0,-1.969 -1.599,-3.568 -3.568,-3.568l-29.864,0c-1.969,0 -3.568,1.599 -3.568,3.568l-0,32.864c-0,1.969 1.599,3.568 3.568,3.568l29.864,0c1.969,0 3.568,-1.599 3.568,-3.568l0,-32.864Z" opacity="0.25"/><path d="M12.765,5.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,14.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,23.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,32.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M24.451,5.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M24.451,14.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M24.451,23.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,5.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,14.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,23.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/></g>
+</symbol>
+</defs>
+</svg>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Input Mapping (PET 2001 Emulator)</title>
+	<link rel="stylesheet" href="assets/fonts.css" />
+<style>
+body { background-color: #f8f8f8; }
+main
+{
+	max-width: 740px;
+	margin: 0 auto 4em auto;
+	font-family: 'Nunito Sans',sans-serif;
+	font-size: 15px;
+	letter-spacing: 0.002em;
+	color: #333;
+}
+h1
+{
+	font-weight: 400;
+	font-size: 22px;
+	margin: 1.5em 0 2em 0;
+	text-align: center;
+}
+h2
+{
+	font-weight: 400;
+	font-size: 20px;
+	margin: 2.5em 0 0.5em 0;
+	text-align: left;
+	max-width: 720px;
+}
+a
+{
+	color: #d2383d;
+	text-decoration: none;
+	transition: all 0.25s ease;
+}
+a:hover,
+a:focus
+{
+	text-decoration: underline;
+	text-decoration-color: #62a9b9;
+}
+a:active
+{
+	color: #f73d44;
+	text-decoration: underline;
+	text-decoration-color: #f79d3d;
+}
+table
+{
+	border-collapse: collapse;
+	border: #ccc 1px solid;
+	font-family: 'm-1m',monospace;
+	font-size: 15px;
+	width: 100%;
+	max-width: 440px;
+	margin: 2em auto;
+	background-color: #fff;
+}
+table td,
+table th
+{
+	vertical-align: top;
+	padding: 6px 32px;
+	border: #ddd 1px solid;
+	line-height: 1.6em;
+	text-align: center;
+	width: 50%;
+}
+table th
+{
+	font-family: 'Nunito Sans',sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	background-color: #f6f9fe;
+}
+span.char {
+	display: inline-block;
+	width: 4.5em;
+	text-align: right;
+	margin-right: 1em;
+}
+span.kana {
+	font-family: sans-serif;
+	display: inline-block;
+	width: 1.5em;
+	text-align: center;
+	border: 1px #f0f0f0 solid;
+}
+span.pseudo_petscii {
+	font-family: sans-serif;
+	display: inline-block;
+	width: 1.4em;
+	height: 1.4em;
+	line-height: 1.5em;
+	text-align: center;
+	color: #DDE5EB;
+	background-color: #000;
+	font-weight: bold;
+	border-radius: 1px;
+}
+span.unicode
+{
+	display: inline-block;
+	width: 1em;
+	text-align: center;
+	border: 1px #f0f0f0 solid;
+	font-family: 'Iosevka','m-1m',monospace;
+}
+img.unicode
+{
+	width: 1em;
+	height: auto;
+	border: 1px #e0e8fc solid;
+	text-align: center;
+	vertical-align: middle;
+}
+span.petscii
+{
+	display: inline-block;
+	background-image: url('assets/petscii-gfxmap.png');
+	background-size: 512px 128px;
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+}
+span.slc { color: #039; }
+p { margin: 0.5em 0; font-size: 14px; text-align: center; max-width: 720px; }
+p.sep { margin: 2.5em 0; text-align: center; color: #555; }
+p[rel='author'] { text-align: left; max-width: 720px; margin: 2.5em auto; }
+</style>
+</head>
+<body>
+<main>
+<h1><a href="./" target="at_masswerk_pet">PET 2001 Emulator</a> &mdash; Input Mapping for PETSCII Graphics Characters</h1>
+<p>The following mapping for PETSCII graphics work for any text or keyboard input as well as for copy-and-paste:</p>
+
+<table>
+<thead>
+<tr>
+	<th><i>Input</i><br>Unicode</th>
+	<th><i>Emulator</i><br>PETSCII</th>
+</thead>
+<tbody>
+<tr>
+<td><span class="char">U+258C</span><span class="unicode">&#x258C;</span><br><span class="char">U+25E7</span><span class="unicode">&#x25E7;</span></td>
+<td><span class="decimal">161</span> ($A1) <span class="petscii" style="background-position: -35px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2584</span><span class="unicode">&#x2584;</span><br><span class="char">U+2B13</span><span class="unicode">&#x2B13;</span></td>
+<td><span class="decimal">162</span> ($A2) <span class="petscii" style="background-position: -67px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2594</span><span class="unicode">&#x2594;</span></td>
+<td><span class="decimal">163</span> ($A3) <span class="petscii" style="background-position: -99px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2581</span><span class="unicode">&#x2581;</span></td>
+<td><span class="decimal">164</span> ($A4) <span class="petscii" style="background-position: -131px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+258F</span><span class="unicode">&#x258F;</span></td>
+<td><span class="decimal">165</span> ($A5) <span class="petscii" style="background-position: -163px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2591</span><span class="unicode">&#x2591;</span><br><span class="char">U+2592</span><span class="unicode">&#x2592;</span><br><span class="char">U+2593</span><span class="unicode">&#x2593;</span><br><span class="char">U+25A6</span><span class="unicode">&#x25A6;</span><br><span class="char">U+25A9</span><span class="unicode">&#x25A9;</span><br><span class="char slc">U+1FB90</span><img class="unicode" src="assets/unicode/u1fb90.jpg" alt="&#x1fb90;" /></td>
+<td><span class="decimal">166</span> ($A6) <span class="petscii" style="background-position: -195px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2595</span><span class="unicode">&#x2595;</span></td>
+<td><span class="decimal">167</span> ($A7) <span class="petscii" style="background-position: -227px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25D2</span><span class="unicode">&#x25D2;</span><br><span class="char">U+2B19</span><span class="unicode">&#x2B19;</span><br><span class="char slc">U+1FB8F</span><img class="unicode" src="assets/unicode/u1fb8f.jpg" alt="&#x1fb8f;" /></td>
+<td><span class="decimal">168</span> ($A8) <span class="petscii" style="background-position: -259px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25E4</span><span class="unicode">&#x25E4;</span><br><span class="char">U+25E9</span><span class="unicode">&#x25E9;</span><br><span class="char">U+25F8</span><span class="unicode">&#x25F8;</span><br><span class="char slc">U+1FB9C</span><img class="unicode" src="assets/unicode/u1fb9c.jpg" alt="&#x1fb9c;" /><br><span class="char slc">U+1FB99</span><img class="unicode" src="assets/unicode/u1fb99.jpg" alt="&#x1fb99;" /></td>
+<td><span class="decimal">169</span> ($A9) <span class="petscii" style="background-position: -291px -3px;"></span><br><br><br><br><i style="font-size: 14px;">lower-case: <img class="unicode" src="assets/unicode/u1fb99.jpg" alt="&#x1fb99;" style="width: 16px; height: 16px; vertical-align: middle;" /></i></td>
+</tr>
+<tr>
+<td><span class="char">U+25C1</span><span class="unicode">&#x25C1;</span><br><span class="char slc">U+1FB87</span><img class="unicode" src="assets/unicode/u1fb87.jpg" alt="&#x1fb87;" /></td>
+<td><span class="decimal">170</span> ($AA) <span class="petscii" style="background-position: -323px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+251C</span><span class="unicode">&#x251C;</span><br><span class="char">U+2523</span><span class="unicode">&#x2523;</span></td>
+<td><span class="decimal">171</span> ($AB) <span class="petscii" style="background-position: -355px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2597</span><span class="unicode">&#x2597;</span></td>
+<td><span class="decimal">172</span> ($AC) <span class="petscii" style="background-position: -387px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2514</span><span class="unicode">&#x2514;</span><br><span class="char">U+2517</span><span class="unicode">&#x2517;</span><br><span class="char">U+25F3</span><span class="unicode">&#x25F3;</span></td>
+<td><span class="decimal">173</span> ($AD) <span class="petscii" style="background-position: -419px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2510</span><span class="unicode">&#x2510;</span><br><span class="char">U+2513</span><span class="unicode">&#x2513;</span><br><span class="char">U+25F1</span><span class="unicode">&#x25F1;</span></td>
+<td><span class="decimal">174</span> ($AE) <span class="petscii" style="background-position: -451px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2582</span><span class="unicode">&#x2582;</span></td>
+<td><span class="decimal">175</span> ($AF) <span class="petscii" style="background-position: -483px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+250C</span><span class="unicode">&#x250C;</span><br><span class="char">U+250F</span><span class="unicode">&#x250F;</span><br><span class="char">U+25F2</span><span class="unicode">&#x25F2;</span></td>
+<td><span class="decimal">176</span> ($B0) <span class="petscii" style="background-position: -3px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2534</span><span class="unicode">&#x2534;</span><br><span class="char">U+253B</span><span class="unicode">&#x253B;</span></td>
+<td><span class="decimal">177</span> ($B1) <span class="petscii" style="background-position: -35px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+252C</span><span class="unicode">&#x252C;</span><br><span class="char">U+2533</span><span class="unicode">&#x2533;</span></td>
+<td><span class="decimal">178</span> ($B2) <span class="petscii" style="background-position: -67px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2524</span><span class="unicode">&#x2524;</span><br><span class="char">U+252B</span><span class="unicode">&#x252B;</span></td>
+<td><span class="decimal">179</span> ($B3) <span class="petscii" style="background-position: -99px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+258E</span><span class="unicode">&#x258E;</span></td>
+<td><span class="decimal">180</span> ($B4) <span class="petscii" style="background-position: -131px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+258D</span><span class="unicode">&#x258D;</span></td>
+<td><span class="decimal">181</span> ($B5) <span class="petscii" style="background-position: -163px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25C0</span><span class="unicode">&#x25C0;</span><br><span class="char slc">U+1FB88</span><img class="unicode" src="assets/unicode/u1fb88.jpg" alt="&#x1fb88;" /></td>
+<td><span class="decimal">182</span> ($B6) <span class="petscii" style="background-position: -195px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25BD</span><span class="unicode">&#x25BD;</span><br><span class="char slc">U+1FB82</span><img class="unicode" src="assets/unicode/u1fb82.jpg" alt="&#x1fb82;" /></td>
+<td><span class="decimal">183</span> ($B7) <span class="petscii" style="background-position: -227px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25BC</span><span class="unicode">&#x25BC;</span><br><span class="char slc">U+1FB83</span><img class="unicode" src="assets/unicode/u1fb83.jpg" alt="&#x1fb83;" /></td>
+<td><span class="decimal">184</span> ($B8) <span class="petscii" style="background-position: -259px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2583</span><span class="unicode">&#x2583;</span></td>
+<td><span class="decimal">185</span> ($B9) <span class="petscii" style="background-position: -291px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+14A7</span><span class="unicode">&#x14A7;</span><br><span class="char">U+23CC</span><span class="unicode">&#x23CC;</span><br><span class="char">U+259F</span><span class="unicode">&#x259F;</span><br><span class="char slc">U+1FB7F</span><img class="unicode" src="assets/unicode/u1fb7f.jpg" alt="&#x1fb7f;" /><br><span class="char">U+2611</span><span class="unicode">&#x2611;</span><br><span class="char">U+2713</span><span class="unicode">&#x2713;</span><br><span class="char">U+2714</span><span class="unicode">&#x2714;</span><br><span class="char slc">U+1FBB1</span><img class="unicode" src="assets/unicode/u1fbb1.jpg" alt="&#x1fbb1;" /></td>
+<td><span class="decimal">186</span> ($BA) <span class="petscii" style="background-position: -323px -35px;"></span><br><br><br><br><i style="font-size: 14px;">lower-case:</i> <span class="pseudo_petscii">&#x2713;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+2596</span><span class="unicode">&#x2596;</span></td>
+<td><span class="decimal">187</span> ($BB) <span class="petscii" style="background-position: -355px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+259D</span><span class="unicode">&#x259D;</span></td>
+<td><span class="decimal">188</span> ($BC) <span class="petscii" style="background-position: -387px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2518</span><span class="unicode">&#x2518;</span><br><span class="char">U+251B</span><span class="unicode">&#x251B;</span><br><span class="char">U+25F0</span><span class="unicode">&#x25F0;</span></td>
+<td><span class="decimal">189</span> ($BD) <span class="petscii" style="background-position: -419px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2598</span><span class="unicode">&#x2598;</span></td>
+<td><span class="decimal">190</span> ($BE) <span class="petscii" style="background-position: -451px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+259A</span><span class="unicode">&#x259A;</span></td>
+<td><span class="decimal">191</span> ($BF) <span class="petscii" style="background-position: -483px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2500</span><span class="unicode">&#x2500;</span><br><span class="char">U+2501</span><span class="unicode">&#x2501;</span><br><span class="char slc">U+1FB79</span><img class="unicode" src="assets/unicode/u1fb79.jpg" alt="&#x1fb79;" /></td>
+<td><span class="decimal">192</span> ($C0) <span class="petscii" style="background-position: -3px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2660</span><span class="unicode">&#x2660;</span><br><span class="char">U+2664</span><span class="unicode">&#x2664;</span></td>
+<td><span class="decimal">193</span> ($C1) <span class="petscii" style="background-position: -35px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB72</span><img class="unicode" src="assets/unicode/u1fb72.jpg" alt="&#x1fb72;" /></td>
+<td><span class="decimal">194</span> ($C2) <span class="petscii" style="background-position: -67px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB78</span><img class="unicode" src="assets/unicode/u1fb78.jpg" alt="&#x1fb78;" /></td>
+<td><span class="decimal">195</span> ($C3) <span class="petscii" style="background-position: -99px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB77</span><img class="unicode" src="assets/unicode/u1fb77.jpg" alt="&#x1fb77;" /></td>
+<td><span class="decimal">196</span> ($C4) <span class="petscii" style="background-position: -131px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB76</span><img class="unicode" src="assets/unicode/u1fb76.jpg" alt="&#x1fb76;" /></td>
+<td><span class="decimal">197</span> ($C5) <span class="petscii" style="background-position: -163px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB7A</span><img class="unicode" src="assets/unicode/u1fb7a.jpg" alt="&#x1fb7a;" /></td>
+<td><span class="decimal">198</span> ($C6) <span class="petscii" style="background-position: -195px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB71</span><img class="unicode" src="assets/unicode/u1fb71.jpg" alt="&#x1fb71;" /></td>
+<td><span class="decimal">199</span> ($C7) <span class="petscii" style="background-position: -227px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB74</span><img class="unicode" src="assets/unicode/u1fb74.jpg" alt="&#x1fb74;" /></td>
+<td><span class="decimal">200</span> ($C8) <span class="petscii" style="background-position: -259px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+256E</span><span class="unicode">&#x256E;</span></td>
+<td><span class="decimal">201</span> ($C9) <span class="petscii" style="background-position: -291px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2570</span><span class="unicode">&#x2570;</span></td>
+<td><span class="decimal">202</span> ($CA) <span class="petscii" style="background-position: -323px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+256F</span><span class="unicode">&#x256F;</span></td>
+<td><span class="decimal">203</span> ($CB) <span class="petscii" style="background-position: -355px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+14AA</span><span class="unicode">&#x14AA;</span><br><span class="char">U+23BF</span><span class="unicode">&#x23BF;</span><br><span class="char">U+2599</span><span class="unicode">&#x2599;</span><br><span class="char slc">U+1FB7C</span><img class="unicode" src="assets/unicode/u1fb7c.jpg" alt="&#x1fb7c;" /></td>
+<td><span class="decimal">204</span> ($CC) <span class="petscii" style="background-position: -387px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2572</span><span class="unicode">&#x2572;</span></td>
+<td><span class="decimal">205</span> ($CD) <span class="petscii" style="background-position: -419px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2571</span><span class="unicode">&#x2571;</span></td>
+<td><span class="decimal">206</span> ($CE) <span class="petscii" style="background-position: -451px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+14A5</span><span class="unicode">&#x14A5;</span><br><span class="char">U+23BE</span><span class="unicode">&#x23BE;</span><br><span class="char">U+259B</span><span class="unicode">&#x259B;</span><br><span class="char slc">U+1FB7D</span><img class="unicode" src="assets/unicode/u1fb7d.jpg" alt="&#x1fb7d;" /></td>
+<td><span class="decimal">207</span> ($CF) <span class="petscii" style="background-position: -483px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+14A3</span><span class="unicode">&#x14A3;</span><br><span class="char">U+259C</span><span class="unicode">&#x259C;</span><br><span class="char">U+23CB</span><span class="unicode">&#x23CB;</span><br><span class="char slc">U+1FB7E</span><img class="unicode" src="assets/unicode/u1fb7e.jpg" alt="&#x1fb7e;" /></td>
+<td><span class="decimal">208</span> ($D0) <span class="petscii" style="background-position: -3px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25CF</span><span class="unicode">&#x25CF;</span></td>
+<td><span class="decimal">209</span> ($D1) <span class="petscii" style="background-position: -35px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB7B</span><img class="unicode" src="assets/unicode/u1fb7b.jpg" alt="&#x1fb7b;" /></td>
+<td><span class="decimal">210</span> ($D2) <span class="petscii" style="background-position: -67px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2661</span><span class="unicode">&#x2661;</span><br><span class="char">U+2665</span><span class="unicode">&#x2665;</span></td>
+<td><span class="decimal">211</span> ($D3) <span class="petscii" style="background-position: -99px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB70</span><img class="unicode" src="assets/unicode/u1fb70.jpg" alt="&#x1fb70;" /></td>
+<td><span class="decimal">212</span> ($D4) <span class="petscii" style="background-position: -131px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+256D</span><span class="unicode">&#x256D;</span></td>
+<td><span class="decimal">213</span> ($D5) <span class="petscii" style="background-position: -163px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2573</span><span class="unicode">&#x2573;</span><br><span class="char">U+2613</span><span class="unicode">&#x2613;</span><br><span class="char">U+2715</span><span class="unicode">&#x2715;</span></td>
+<td><span class="decimal">214</span> ($D6) <span class="petscii" style="background-position: -195px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25CB</span><span class="unicode">&#x25CB;</span><br><span class="char">U+25EF</span><span class="unicode">&#x25EF;</span></td>
+<td><span class="decimal">215</span> ($D7) <span class="petscii" style="background-position: -227px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2663</span><span class="unicode">&#x2663;</span><br><span class="char">U+2667</span><span class="unicode">&#x2667;</span></td>
+<td><span class="decimal">216</span> ($D8) <span class="petscii" style="background-position: -259px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char slc">U+1FB75</span><img class="unicode" src="assets/unicode/u1fb75.jpg" alt="&#x1fb75;" /></td>
+<td><span class="decimal">217</span> ($D9) <span class="petscii" style="background-position: -291px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25C6</span><span class="unicode">&#x25C6;</span><br><span class="char">U+25C7</span><span class="unicode">&#x25C7;</span><br><span class="char">U+25CA</span><span class="unicode">&#x25CA;</span><br><span class="char">U+2662</span><span class="unicode">&#x2662;</span><br><span class="char">U+2666</span><span class="unicode">&#x2666;</span><br><span class="char">U+29EB</span><span class="unicode">&#x29EB;</span><br><span class="char">U+2B25</span><span class="unicode">&#x2B25;</span></td>
+<td><span class="decimal">218</span> ($DA) <span class="petscii" style="background-position: -323px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+253C</span><span class="unicode">&#x253C;</span><br><span class="char">U+254B</span><span class="unicode">&#x254B;</span><br><span class="char slc">U+1FBAF</span><img class="unicode" src="assets/unicode/u1fbaf.jpg" alt="&#x1fbaf;" /></td>
+<td><span class="decimal">219</span> ($DB) <span class="petscii" style="background-position: -355px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25D0</span><span class="unicode">&#x25D0;</span><br><span class="char">U+2B16</span><span class="unicode">&#x2B16;</span><br><span class="char slc">U+1FB8C</span><img class="unicode" src="assets/unicode/u1fb8c.jpg" alt="&#x1fb8c;" /></td>
+<td><span class="decimal">220</span> ($DC) <span class="petscii" style="background-position: -387px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+007C</span><span class="unicode">|</span><br><span class="char">U+2502</span><span class="unicode">&#x2502;</span><br><span class="char">U+2503</span><span class="unicode">&#x2503;</span><br><span class="char slc">U+1FB73</span><img class="unicode" src="assets/unicode/u1fb73.jpg" alt="&#x1fb73;" /></td>
+<td><span class="decimal">221</span> ($DD) <span class="petscii" style="background-position: -419px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2059</span><span class="unicode">&#x2059;</span><br><span class="char slc">U+1FB95</span><img class="unicode" src="assets/unicode/u1fb95.jpg" alt="&#x1fb95;" /><br><span class="char slc">U+1FB96</span><img class="unicode" src="assets/unicode/u1fb96.jpg" alt="&#x1fb96;" /></td>
+<td><span class="decimal">222</span> ($DE) <span class="petscii" style="background-position: -451px -99px;"></span><br><i style="font-size: 14px;">upper-case: &pi;</i></td>
+</tr>
+<tr>
+<td><span class="char">U+25E5</span><span class="unicode">&#x25E5;</span><br><span class="char">U+25F9</span><span class="unicode">&#x25F9;</span><br><span class="char">U+2B14</span><span class="unicode">&#x2B14;</span><br><span class="char slc">U+1FB9D</span><img class="unicode" src="assets/unicode/u1fb9d.jpg" alt="&#x1fb9d;" /><br><span class="char slc">U+1FB98</span><img class="unicode" src="assets/unicode/u1fb98.jpg" alt="&#x1fb98;" /></td>
+<td><span class="decimal">223</span> ($DF) <span class="petscii" style="background-position: -483px -99px;"></span><br><br><br><i style="font-size: 14px;">lower-case: <img class="unicode" src="assets/unicode/u1fb98.jpg" alt="&#x1fb98;" style="width: 16px; height: 16px; vertical-align: middle;" /></i></td>
+</tr>
+</tbody>
+</table>
+</body>
+<p style="text-align: left;"><span class="slc">*)</span> Range <span class="slc">U+1FB70 &hellip; U+1FBB1</span>: Symbols for Legacy Computing, availability may depend on host OS and browser.</p>
+<p style="text-align: left;">To work around possible limitations regarding 5-byte Unicode and the Symbols for Legacy Computing range (especially for the purpose of keyboard mapping), <b>vertical strokes</b> may be also specified by <b>upper-case Roman numerals</b> (left to right) and <b>horizontal strokes</b> by <b>lower-case Roman numerals</b> (top-down order):</p>
+<table>
+<thead>
+<tr>
+	<th><i>Input</i><br>Unicode</th>
+	<th><i>Emulator</i><br>PETSCII</th>
+</thead>
+<tbody>
+<tr>
+<td><span class="char">U+2160</span><span class="unicode">&#x2160;</span></td>
+<td><span class="decimal">165</span> ($A5) <span class="petscii" style="background-position: -163px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2161</span><span class="unicode">&#x2161;</span></td>
+<td><span class="decimal">212</span> ($D4) <span class="petscii" style="background-position: -131px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2162</span><span class="unicode">&#x2162;</span></td>
+<td><span class="decimal">199</span> ($C7) <span class="petscii" style="background-position: -227px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2163</span><span class="unicode">&#x2163;</span></td>
+<td><span class="decimal">194</span> ($C2) <span class="petscii" style="background-position: -67px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2164</span><span class="unicode">&#x2164;</span></td>
+<td><span class="decimal">221</span> ($DD) <span class="petscii" style="background-position: -419px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2165</span><span class="unicode">&#x2165;</span></td>
+<td><span class="decimal">200</span> ($C8) <span class="petscii" style="background-position: -259px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2166</span><span class="unicode">&#x2166;</span></td>
+<td><span class="decimal">217</span> ($D9) <span class="petscii" style="background-position: -291px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2167</span><span class="unicode">&#x2167;</span></td>
+<td><span class="decimal">167</span> ($A7) <span class="petscii" style="background-position: -227px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2170</span><span class="unicode">&#x2170;</span></td>
+<td><span class="decimal">163</span> ($A3) <span class="petscii" style="background-position: -99px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2171</span><span class="unicode">&#x2171;</span></td>
+<td><span class="decimal">197</span> ($C5) <span class="petscii" style="background-position: -163px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2172</span><span class="unicode">&#x2172;</span></td>
+<td><span class="decimal">196</span> ($C4) <span class="petscii" style="background-position: -131px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2173</span><span class="unicode">&#x2173;</span></td>
+<td><span class="decimal">195</span> ($C3) <span class="petscii" style="background-position: -99px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2174</span><span class="unicode">&#x2174;</span></td>
+<td><span class="decimal">192</span> ($C0) <span class="petscii" style="background-position: -3px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2175</span><span class="unicode">&#x2175;</span></td>
+<td><span class="decimal">198</span> ($C6) <span class="petscii" style="background-position: -195px -67px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2176</span><span class="unicode">&#x2176;</span></td>
+<td><span class="decimal">210</span> ($D2) <span class="petscii" style="background-position: -67px -99px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+2177</span><span class="unicode">&#x2177;</span></td>
+<td><span class="decimal">164</span> ($A4) <span class="petscii" style="background-position: -131px -3px;"></span></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left;">Alternative forms for potentially missing partial fills (2-eighths and 3-eighths blocks from top and from right) are:</p>
+<table>
+<thead>
+<tr>
+	<th><i>Input</i><br>Unicode</th>
+	<th><i>Emulator</i><br>PETSCII</th>
+</thead>
+<tbody>
+<tr>
+<td><span class="char">U+25BD</span><span class="unicode">&#x25BD;</span></td>
+<td><span class="decimal">183</span> ($B7) <span class="petscii" style="background-position: -227px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25BC</span><span class="unicode">&#x25BC;</span></td>
+<td><span class="decimal">184</span> ($B8) <span class="petscii" style="background-position: -259px -35px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25C1</span><span class="unicode">&#x25C1;</span></td>
+<td><span class="decimal">170</span> ($AA) <span class="petscii" style="background-position: -323px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25C0</span><span class="unicode">&#x25C0;</span></td>
+<td><span class="decimal">182</span> ($B6) <span class="petscii" style="background-position: -195px -35px;"></span></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left;">Alternative forms for checkerboard half-fills:</p>
+<table>
+<thead>
+<tr>
+	<th><i>Input</i><br>Unicode</th>
+	<th><i>Emulator</i><br>PETSCII</th>
+</thead>
+<tbody>
+<tr>
+<td><span class="char">U+25D2</span><span class="unicode">&#x25D2;</span><br><span class="char">U+2B19</span><span class="unicode">&#x2B19;</span></td>
+<td><span class="decimal">168</span> ($A8) <span class="petscii" style="background-position: -259px -3px;"></span></td>
+</tr>
+<tr>
+<td><span class="char">U+25D0</span><span class="unicode">&#x25D0;</span><br><span class="char">U+2B16</span><span class="unicode">&#x2B16;</span></td>
+<td><span class="decimal">220</span> ($DC) <span class="petscii" style="background-position: -387px -99px;"></span></td>
+</tr>
+</tbody>
+</table>
+
+<p class="sep">&mdash; <big>&#10086;</big> &mdash;</p>
+
+<h2 id="kana">Katakana</h2>
+<p style="text-align: left;">The following characters are available with the Japanese character ROM. The first Unicode character gives the canonical representation, any following glyphs are accepted synonyms. While the Yen currency sign (&#x00A5;) replaces the backslash in both character sets, any other kana are only displayed with the alternative (lower-case) set.</p>
+
+<table>
+<thead>
+<tr>
+	<th><i>Unicode</th>
+	<th><i>PETSCII</th>
+</thead>
+<tbody>
+<tr>
+<td><span class="char">U+00A5</span> <span class="kana">&#x00A5;</span><br><span class="char">U+FFE5</span> <span class="kana">&#xFFE5;</span><br><span class="char">U+005C</span> <span class="kana">\</span></td>
+<td><span class="decimal">92</span> ($5C) <span class="pseudo_petscii">&#x00A5;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30A2</span> <span class="kana">&#x30A2;</span><br><span class="char">U+30A1</span> <span class="kana">&#x30A1;</span><br><span class="char">U+FF71</span> <span class="kana">&#xFF71;</span><br><span class="char">U+FF67</span> <span class="kana">&#xFF67;</span></td>
+<td><span class="decimal">161</span> ($A1) <span class="pseudo_petscii">&#x30A2;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30A4</span> <span class="kana">&#x30A4;</span><br><span class="char">U+30A3</span> <span class="kana">&#x30A3;</span><br><span class="char">U+FF72</span> <span class="kana">&#xFF72;</span><br><span class="char">U+FF68</span> <span class="kana">&#xFF68;</span></td>
+<td><span class="decimal">162</span> ($A2) <span class="pseudo_petscii">&#x30A4;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30A6</span> <span class="kana">&#x30A6;</span><br><span class="char">U+30A5</span> <span class="kana">&#x30A5;</span><br><span class="char">U+FF73</span> <span class="kana">&#xFF73;</span><br><span class="char">U+FF69</span> <span class="kana">&#xFF69;</span></td>
+<td><span class="decimal">163</span> ($A3) <span class="pseudo_petscii">&#x30A6;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30A8</span> <span class="kana">&#x30A8;</span><br><span class="char">U+30A7</span> <span class="kana">&#x30A7;</span><br><span class="char">U+FF74</span> <span class="kana">&#xFF74;</span><br><span class="char">U+FF6A</span> <span class="kana">&#xFF6A;</span></td>
+<td><span class="decimal">164</span> ($A4) <span class="pseudo_petscii">&#x30A8;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30AA</span> <span class="kana">&#x30AA;</span><br><span class="char">U+30A9</span> <span class="kana">&#x30A9;</span><br><span class="char">U+FF75</span> <span class="kana">&#xFF75;</span><br><span class="char">U+FF6B</span> <span class="kana">&#xFF6B;</span></td>
+<td><span class="decimal">165</span> ($A5) <span class="pseudo_petscii">&#x30AA;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30AB</span> <span class="kana">&#x30AB;</span><br><span class="char">U+30F5</span> <span class="kana">&#x30F5;</span><br><span class="char">U+FF76</span> <span class="kana">&#xFF76;</span></td>
+<td><span class="decimal">166</span> ($A6) <span class="pseudo_petscii">&#x30AB;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30AD</span> <span class="kana">&#x30AD;</span><br><span class="char">U+FF77</span> <span class="kana">&#xFF77;</span></td>
+<td><span class="decimal">167</span> ($A7) <span class="pseudo_petscii">&#x30AD;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30AF</span> <span class="kana">&#x30AF;</span><br><span class="char">U+FF78</span> <span class="kana">&#xFF78;</span></td>
+<td><span class="decimal">168</span> ($A8) <span class="pseudo_petscii">&#x30AF;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30B1</span> <span class="kana">&#x30B1;</span><br><span class="char">U+FF79</span> <span class="kana">&#xFF79;</span></td>
+<td><span class="decimal">169</span> ($A9) <span class="pseudo_petscii">&#x30B1;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+309B</span> <span class="kana">&#x309B;</span><br><span class="char">U+FF9E</span> <span class="kana">&#xFF9E;</span></td>
+<td><span class="decimal">170</span> ($AA) <span class="pseudo_petscii">&#x309B;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30B9</span> <span class="kana">&#x30B9;</span><br><span class="char">U+FF7D</span> <span class="kana">&#xFF7D;</span></td>
+<td><span class="decimal">172</span> ($AC) <span class="pseudo_petscii">&#x30B9;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+309C</span> <span class="kana">&#x309C;</span><br><span class="char">U+302C</span> <span class="kana">&#x302C;</span><br><span class="char">U+302B</span> <span class="kana">&#x302B;</span><br><span class="char">U+FF9F</span> <span class="kana">&#xFF9F;</span></td>
+<td><span class="decimal">175</span> ($AF) <span class="pseudo_petscii">&#x309C;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+5E74</span> <span class="kana">&#x5E74;</span><br><span class="char">U+F98E</span> <span class="kana">&#xF98E;</span></td>
+<td><span class="decimal">180</span> ($B4) <span class="pseudo_petscii">&#x5E74;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+6708</span> <span class="kana">&#x6708;</span><br><span class="char">U+2F49</span> <span class="kana">&#x2F49;</span></td>
+<td><span class="decimal">181</span> ($B5) <span class="pseudo_petscii">&#x6708;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+65E5</span> <span class="kana">&#x65E5;</span><br><span class="char">U+2F47</span> <span class="kana">&#x2F47;</span></td>
+<td><span class="decimal">182</span> ($B6) <span class="pseudo_petscii">&#x65E5;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30BF</span> <span class="kana">&#x30BF;</span><br><span class="char">U+FF80</span> <span class="kana">&#xFF80;</span></td>
+<td><span class="decimal">183</span> ($B7) <span class="pseudo_petscii">&#x30BF;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30ED</span> <span class="kana">&#x30ED;</span><br><span class="char">U+FF9B</span> <span class="kana">&#xFF9B;</span></td>
+<td><span class="decimal">184</span> ($B8) <span class="pseudo_petscii">&#x30ED;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30F3</span> <span class="kana">&#x30F3;</span><br><span class="char">U+FF9D</span> <span class="kana">&#xFF9D;</span></td>
+<td><span class="decimal">185</span> ($B9) <span class="pseudo_petscii">&#x30F3;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30B3</span> <span class="kana">&#x30B3;</span><br><span class="char">U+FF7A</span> <span class="kana">&#xFF7A;</span></td>
+<td><span class="decimal">186</span> ($BA) <span class="pseudo_petscii">&#x30B3;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30B5</span> <span class="kana">&#x30B5;</span><br><span class="char">U+FF7B</span> <span class="kana">&#xFF7B;</span></td>
+<td><span class="decimal">187</span> ($BB) <span class="pseudo_petscii">&#x30B5;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30B7</span> <span class="kana">&#x30B7;</span><br><span class="char">U+FF7C</span> <span class="kana">&#xFF7C;</span></td>
+<td><span class="decimal">188</span> ($BC) <span class="pseudo_petscii">&#x30B7;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30BB</span> <span class="kana">&#x30BB;</span><br><span class="char">U+30E3</span> <span class="kana">&#x30E3;</span><br><span class="char">U+FF94</span> <span class="kana">&#xFF94;</span><br><span class="char">U+30E3</span> <span class="kana">&#x30E3;</span></td>
+<td><span class="decimal">190</span> ($BE) <span class="pseudo_petscii">&#x30BB;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30BD</span> <span class="kana">&#x30BD;</span><br><span class="char">U+FF7F</span> <span class="kana">&#xFF7F;</span></td>
+<td><span class="decimal">191</span> ($BF) <span class="pseudo_petscii">&#x30BD;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30C1</span> <span class="kana">&#x30C1;</span><br><span class="char">U+FF81</span> <span class="kana">&#xFF81;</span></td>
+<td><span class="decimal">193</span> ($C1) <span class="pseudo_petscii">&#x30C1;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30C4</span> <span class="kana">&#x30C4;</span><br><span class="char">U+FF82</span> <span class="kana">&#xFF82;</span></td>
+<td><span class="decimal">194</span> ($C2) <span class="pseudo_petscii">&#x30C4;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30C6</span> <span class="kana">&#x30C6;</span><br><span class="char">U+FF83</span> <span class="kana">&#xFF83;</span></td>
+<td><span class="decimal">195</span> ($C3) <span class="pseudo_petscii">&#x30C6;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30C8</span> <span class="kana">&#x30C8;</span><br><span class="char">U+FF84</span> <span class="kana">&#xFF84;</span></td>
+<td><span class="decimal">196</span> ($C4) <span class="pseudo_petscii">&#x30C8;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30CA</span> <span class="kana">&#x30CA;</span><br><span class="char">U+FF85</span> <span class="kana">&#xFF85;</span></td>
+<td><span class="decimal">197</span> ($C5) <span class="pseudo_petscii">&#x30CA;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30CB</span> <span class="kana">&#x30CB;</span><br><span class="char">U+FF86</span> <span class="kana">&#xFF86;</span></td>
+<td><span class="decimal">198</span> ($C6) <span class="pseudo_petscii">&#x30CB;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30CC</span> <span class="kana">&#x30CC;</span><br><span class="char">U+FF87</span> <span class="kana">&#xFF87;</span></td>
+<td><span class="decimal">199</span> ($C7) <span class="pseudo_petscii">&#x30CC;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30CD</span> <span class="kana">&#x30CD;</span><br><span class="char">U+FF88</span> <span class="kana">&#xFF88;</span></td>
+<td><span class="decimal">200</span> ($C8) <span class="pseudo_petscii">&#x30CD;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30CE</span> <span class="kana">&#x30CE;</span><br><span class="char">U+FF89</span> <span class="kana">&#xFF89;</span></td>
+<td><span class="decimal">201</span> ($C9) <span class="pseudo_petscii">&#x30CE;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30CF</span> <span class="kana">&#x30CF;</span><br><span class="char">U+FF8A</span> <span class="kana">&#xFF8A;</span></td>
+<td><span class="decimal">202</span> ($CA) <span class="pseudo_petscii">&#x30CF;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30D2</span> <span class="kana">&#x30D2;</span><br><span class="char">U+FF8B</span> <span class="kana">&#xFF8B;</span></td>
+<td><span class="decimal">203</span> ($CB) <span class="pseudo_petscii">&#x30D2;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30D5</span> <span class="kana">&#x30D5;</span><br><span class="char">U+FF8C</span> <span class="kana">&#xFF8C;</span></td>
+<td><span class="decimal">204</span> ($CC) <span class="pseudo_petscii">&#x30D5;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30D8</span> <span class="kana">&#x30D8;</span><br><span class="char">U+FF8D</span> <span class="kana">&#xFF8D;</span></td>
+<td><span class="decimal">205</span> ($CD) <span class="pseudo_petscii">&#x30D8;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30DB</span> <span class="kana">&#x30DB;</span><br><span class="char">U+FF8E</span> <span class="kana">&#xFF8E;</span></td>
+<td><span class="decimal">206</span> ($CE) <span class="pseudo_petscii">&#x30DB;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30DE</span> <span class="kana">&#x30DE;</span><br><span class="char">U+FF8F</span> <span class="kana">&#xFF8F;</span></td>
+<td><span class="decimal">207</span> ($CF) <span class="pseudo_petscii">&#x30DE;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30DF</span> <span class="kana">&#x30DF;</span><br><span class="char">U+FF90</span> <span class="kana">&#xFF90;</span></td>
+<td><span class="decimal">208</span> ($D0) <span class="pseudo_petscii">&#x30DF;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E0</span> <span class="kana">&#x30E0;</span><br><span class="char">U+FF91</span> <span class="kana">&#xFF91;</span></td>
+<td><span class="decimal">209</span> ($D1) <span class="pseudo_petscii">&#x30E0;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E1</span> <span class="kana">&#x30E1;</span><br><span class="char">U+FF92</span> <span class="kana">&#xFF92;</span></td>
+<td><span class="decimal">210</span> ($D2) <span class="pseudo_petscii">&#x30E1;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E2</span> <span class="kana">&#x30E2;</span><br><span class="char">U+FF93</span> <span class="kana">&#xFF93;</span></td>
+<td><span class="decimal">211</span> ($D3) <span class="pseudo_petscii">&#x30E2;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E4</span> <span class="kana">&#x30E4;</span><br><span class="char">U+30E3</span> <span class="kana">&#x30E3;</span><br><span class="char">U+FF94</span> <span class="kana">&#xFF94;</span><br><span class="char">U+FF6C</span> <span class="kana">&#xFF6C;</span></td>
+<td><span class="decimal">212</span> ($D4) <span class="pseudo_petscii">&#x30E4;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E6</span> <span class="kana">&#x30E6;</span><br><span class="char">U+FF7A</span> <span class="kana">&#xFF7A;</span></td>
+<td><span class="decimal">213</span> ($D5) <span class="pseudo_petscii">&#x30E6;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E8</span> <span class="kana">&#x30E8;</span><br><span class="char">U+30E7</span> <span class="kana">&#x30E7;</span><br><span class="char">U+FF96</span> <span class="kana">&#xFF96;</span><br><span class="char">U+FF6E</span> <span class="kana">&#xFF6E;</span></td>
+<td><span class="decimal">214</span> ($D6) <span class="pseudo_petscii">&#x30E8;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30E9</span> <span class="kana">&#x30E9;</span><br><span class="char">U+FF97</span> <span class="kana">&#xFF97;</span></td>
+<td><span class="decimal">215</span> ($D7) <span class="pseudo_petscii">&#x30E9;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30EA</span> <span class="kana">&#x30EA;</span><br><span class="char">U+FF99</span> <span class="kana">&#xFF99;</span></td>
+<td><span class="decimal">216</span> ($D8) <span class="pseudo_petscii">&#x30EA;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30EB</span> <span class="kana">&#x30EB;</span><br><span class="char">U+FF99</span> <span class="kana">&#xFF99;</span></td>
+<td><span class="decimal">217</span> ($D9) <span class="pseudo_petscii">&#x30EB;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30EC</span> <span class="kana">&#x30EC;</span><br><span class="char">U+FF9A</span> <span class="kana">&#xFF9A;</span></td>
+<td><span class="decimal">218</span> ($DA) <span class="pseudo_petscii">&#x30EC;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30EF</span> <span class="kana">&#x30EF;</span><br><span class="char">U+30EE</span> <span class="kana">&#x30EE;</span><br><span class="char">U+FF9C</span> <span class="kana">&#xFF9C;</span></td>
+<td><span class="decimal">220</span> ($DC) <span class="pseudo_petscii">&#x30EF;</span></td>
+</tr>
+<tr>
+<td><span class="char">U+30F2</span> <span class="kana">&#x30F2;</span><br><span class="char">U+FF66</span> <span class="kana">&#xFF66;</span></td>
+<td><span class="decimal">223</span> ($DF) <span class="pseudo_petscii">&#x30F2;</span></td>
+</tr>
+</tbody>
+</table>
+
+<p class="sep">&mdash; <big>&#10086;</big> &mdash;</p>
+<p rel="author">Norbert Landsteiner<br />Jan. 2024<br /><a href="https://www.masswerk.at/" target="_top">www.masswerk.at</a></p>
+</main>
+</body>
+</html>

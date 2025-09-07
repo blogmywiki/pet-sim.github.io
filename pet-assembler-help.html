@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PET 2001 Assembler Help</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="Guide to the 6502 assembler of the PET 2001 online emulator." />
+	<meta name="application-name" content="PET 2001 Assembler Help" />
+	<link rel="shortcut icon" type="image/svg+xm" href="favicon.svg" />
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+	<link rel="stylesheet" href="assets/fonts.css" />
+<style>
+
+body { background-color: #f8f8f8; }
+
+main
+{
+	max-width: 740px;
+	margin: 0 auto 4em auto;
+	font-family: 'Nunito Sans',sans-serif;
+	font-size: 15px;
+	letter-spacing: 0.002em;
+	color: #333;
+}
+
+h1
+{
+	font-weight: 400;
+	font-size: 22px;
+	margin: 1.5em 0;
+}
+h2
+{
+	font-weight: 400;
+	font-size: 20px;
+	margin: 2em 0 0.5em 0;
+}
+h3
+{
+	font-weight: 400;
+	font-size: 18px;
+	margin: 1.5em 0 0.25em 0;
+}
+p { margin: 0; }
+p + p {margin-top: 0.5em; }
+ul { padding: 0 0 0 2em; margin: 1em 0; }
+ul > li { padding: 0 0 0.3em 0; }
+ul > li::marker { color: #99c7d9; }
+
+a
+{
+	color: #d2383d;
+	text-decoration: underline;
+	-webkit-text-decoration-color: #ec3b42;
+	-moz-text-decoration-color: #ec3b42;
+	text-decoration-color: #ec3b42;
+	-webkit-transition: all 0.25s ease;
+	-moz-transition: all 0.25s ease;
+	transition: all 0.25s ease;
+}
+a:visited
+{
+	-webkit-text-decoration-color: #8f5658;
+	-moz-text-decoration-color: #8f5658;
+	text-decoration-color: #8f5658;
+}
+a:hover,
+a:focus
+{
+	-webkit-text-decoration-color: #62a9b9;
+	-moz-text-decoration-color: #62a9b9;
+	text-decoration-color: #62a9b9;
+}
+a:active
+{
+	color: #f73d44;
+	-webkit-text-decoration-color: #f79d3d;
+	-moz-text-decoration-color: #f79d3d;
+	text-decoration-color: #f79d3d;
+}
+
+span.q { opacity: 0.81; }
+
+dl.stxList { margin: 1em 0 1em 1em; }
+dl.stxList dt
+{
+	font-family: 'm-1m',monospace;
+	white-space: nowrap;
+	font-style: normal;
+	font-weight: 400;
+	float: left;
+	clear: both;
+	width: 7em;
+	max-width: 7em;
+	overflow-x: hidden;
+	text-overflow: clip;
+	vertical-align: top;
+	line-height: 22.5px;
+}
+dl.stxList dt:after
+{
+	content: '....................................';
+	display: inline;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: clip;
+	font-family: 'Nunito Sans', sans-serif;
+	line-height: 22.5px;
+	padding: 0 0 0 0.25em;
+	color: #ccc;
+}
+dl.stxList dd
+{
+	display: block;
+	margin-left: 7.5em;
+	padding: 0 0 0.2em 0;
+	vertical-align: top;
+	line-height: 22.5px;
+}
+dl.stxList.wide dt { width: 9.5em; max-width: 9.5em; }
+dl.stxList.wide dd { margin-left: 10em; }
+dl.stxList.xwide dt { width: 11em; max-width: 11em; }
+dl.stxList.xwide dd { margin-left: 11.5em; }
+code,pre,td pre,td code { font-family: 'm-1m',monospace; }
+table.xmptable { margin: 1em 0 1.5em 0; }
+table.xmptable td { vertical-align: top; }
+table.xmptable td + td { padding-left: 40px; }
+table.xmptable pre { font-size: 13px; margin: 0 0 0 20px; line-height: 16px; }
+
+pre.example { margin-left: 20px; font-size: 14px; line-height: 17px; }
+
+
+table.opctable { margin: 1.5em 0 1em 1.5em; border-collapse: collapse; }
+table.opctable td
+{
+	white-space: pre;
+	font-family: 'm-1m',monospace;
+	font-size: 14px;
+	line-height: 18px;
+	padding: 0;
+}
+table.opctable tr:nth-child(even) td { background-color: rgba(255,255,255,0.05) }
+table.opctable tr:nth-child(odd) td { background-color: rgba(162,208,239,0.18) }
+table.opctable tr.noBg td { background-color: inherit !important; line-height: 14px; }
+
+table.numberformats { margin: 1em 0 1em 1em; }
+table.numberformats td { vertical-align: top; padding-bottom: 0.25em; }
+table.numberformats td:first-child { width: 6em; font-family: 'Nunito Sans',sans-serif;  }
+table.numberformats td:nth-child(2),
+table.numberformats td:nth-child(3) { font-family: 'm-1m',monospace; }
+table.numberformats tr:nth-child(1) td { font-family: 'Nunito Sans',sans-serif; font-style: italic; }
+
+ul.sourcelist li:first-line { color: #666; }
+ul.sourcelist li pre { margin: 1em 0; padding: 0; white-space: pre-wrap; font-size: 14px; line-height: 17px; }
+ul.toc { list-style: disc; }
+ul.toc li > ul { margin: 0.5em 0 0 0; padding-left: 1.25em; }
+p[rel=author] { margin-top: 4em; }
+
+#petIllustation {
+	float: right;
+	width: 202px;
+	height: 166px;
+	margin: 20px;
+	padding: 0;
+	background-image: url('assets/pet2001-small.svg');
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+figure {
+	display: block;
+	margin: 2em 0;
+	padding: 0;
+	text-align: center;
+}
+figure figcaption {
+	text-align: center;
+	font-style: italic;
+	font-size: 13px;
+	margin: 0.5em 0 0 0;
+	display: block;
+}
+figure { border-radius: 2px; }
+
+p.sep { margin: 2.5em 0; text-align: center; color: #555; }
+pre.symtab { font-size: 13px; margin: 2em 0 2em 20px; line-height: 16px; }
+
+p,li { line-height: 140%; }
+pre span.code-EOP { display: inline; border-radius: 2px; background-color: rgba(247,149,12, 0.3); }
+pre span.code-fill { display: inline; border-radius: 2px; background-color: rgba(162,208,239,0.6); }
+
+</style>
+</head>
+<body>
+<main>
+	<h1>Guide to the 6502 Assembler of the PET 2001 Emulator</h1>
+	<span id="petIllustation"></span>
+	<ul class="toc">
+		<li><a href="#desciption">General Description</a></li>
+		<li><a href="#operations">Theory of Operation</a></li>
+		<li><a href="#syntax">Basic Syntax</a></li>
+		<li><a href="#expressions">Value Expressions</a></li>
+		<li><a href="#pc">The Program Counter</a></li>
+		<li><a href="#offset_literals">Relative Offset Literals</a></li>
+		<li><a href="#labels">Labels and Symbols</a></li>
+		<li><a href="#anonymous_labels">Anonymous (Temporary) Labels</a></li>
+		<li><a href="#pragmas">Pragmas and Directives</a></li>
+		<li><a href="#opts">Options</a></li>
+		<li><a href="#compat">Compatibility</a></li>
+		<li><a href="#illegals">Illegal Opcodes</a></li>
+		<li><a href="#basic">Combining Assembler with BASIC</a>
+			<ul class="toc">
+				<li><a href="#basic_pramble">BASIC Preambles in Assembler Sources</a></li>
+				<li><a href="#asm_continuation">Assembler Code Appended to BASIC Sources</a></li>
+				<li><a href="#asm_fixed_addr">Fixed Start Addresses with BASIC Sources</a></li>
+			</ul>
+		</li>
+		<li><a href="#considerations">Rationale &mdash; General Considerations</a></li>
+		<li><a href="#useful_addr">Some Useful Addresses</a></li>
+	</ul>
+
+	<h2 id="description">General Description</h2>
+	<p>The <a href="./">PET 2001 Emulator</a> features a built-in assembler that is modelled closely after the original MOS 6502 assembler from the 1970s, but has been extended to support a variety of common syntax flavors. Still, it should accept and process sucessfully any original MOS source. It is based on the assembler found <a href="/6502/assembler.html">here</a> and adjusted for the needs and requirements of the PET. Moreover, it provides facilities to compile stand-alone programs that can be loaded, started, and distributed on their own (see <a href="#basic">below</a>, there are also a few sample files to start playing around with).</p>
+	<p>Please mind that that this is still a relatively simple assembler, which cames with a few restrictions and limitations:</p>
+	<ul>
+		<li>There is no support for macros or conditional assembly.</li>
+		<li>As the principal lexer is based on symbols, there must be <em>some</em> separating white space between symbols, but there must be <em>no</em> white-space in any expressions. Otherwise, they will not be recognized as symbols or operand values.</li>
+		<li>As the assembler uses its own encoding engine, there is (currently) no support for PETSCII markups as they are supported for BASIC sources.</li>
+	</ul>
+	<p>Still, it should be good for some quick experiments, without having to worry about another syntax flavor. When it comes to complex projects, you will probably prefer an assembler and/or IDE of your own choice anway.</p>
+	<p>The assembler is fully compatible with the 6502 online assembler found at <a href="/6502/assembler.html">www.masswerk.at/6502/assembler.html</a> and any source code generated by the associated <a href="/6502/disassembler.html">disassembler</a>. However, there is no support for external symbol tables. Please provide any symbol definitions in your source. (Some useful definitions can be found at the very end of this page.)</p>
+	<p>A general description of 6502 opcodes and what these do can be found at here: <a href="/6502/6502_instruction_set.html" target="at_masswerk_6502_instset">6502 Instruction Set</a>.</p> 
+	<p>If you are already familiar with this particular assembler, there are just a few changes:</p>
+	<ul>
+		<li>Encoding formats have been adjusted for the PET, so there are really just two formats, PETSCII and screen codes. While other encoding options are still present, they always refer to either PETSCII or PET screen codes.</li>
+		<li>There are additional, synonymous pragmas and options for PET screen encoding, namely <code>SCR</code> and <code>SCREEN</code> (since any sources apply to the PET only.)</li>
+		<li>Similarly, there is <code>.BASICSTART</code> as a maybe more memorable and telling synonym for <code>.PETSTART</code>.</li>
+		<li>Any special cases related to the BBC Micro have been stripped.</li>
+	</ul>
+
+	<h2 id="operations">Operations</h2>
+	<p>The assembler is invoked by either mounting an assembler source via the mount dialog or by dropping an assembler source on the emulated screen. An assembler source is a text file with a file name extension of either <span class="q">&quot;</span><code>.asm</code><span class="q">&quot;</span>, <span class="q">&quot;</span><code>.a65</code><span class="q">&quot;</span>, <span class="q">&quot;</span><code>.a</code><span class="q">&quot;</span>, <span class="q">&quot;</span><code>.src</code><span class="q">&quot;</span>, or just <span class="q">&quot;</span><code>.s</code><span class="q">&quot;</span>.</p>
+	<p>(The assembler may be also invoked from within a BASIC source, which is covered below in the section on <a href="#basic">integration with BASIC</a>.)</p>
+
+	<p>The assembler is a simple 2-pass assembler, where a first pass determines instruction lengths and addresses, while the second pass resolves final values and generates the object code (the machine language program).<br />
+	As the assembler has processed the suplied source, it will present a listing in a special dialog. In this listing, the first pass shows how the assembler &quot;sees&quot; the source, while the second pass represents what the assembler actually resolves and lists this in a normalized format, which is close to the original MOS notation.</p>
+	<p>The assembler will always fail on the first error, since &mdash; it&rsquo;s the 1970s! :-)</p>
+	<p>If the assembly succeeds, you will be presented with some options below the listing, regarding how to proceed:</p>
+	<figure>
+		<img src="assets/asm-dialog.png" alt="Options provided by the PET 2001 emulator for a successful assembly." width="656" height="135" style="width:656px;max-width:100%;height: auto;" loading="lazy" />
+			<figcaption>Options provided for a successful assembly.</figcaption>
+	</figure>
+	<ul>
+		<li>&ldquo;Load Code As Program&rdquo; will load the resulting code just as if it were a binary PRG file. The associated checkbox gives a choice, whether or not to reset the virtual machine before loading the program. (Somewhat self-referentially, any other information or state of the emulated PET will be lost, if you choose to reset.)</li>
+		<li>&ldquo;Inject Code Into Memory&rdquo; will load the resulting code directly into memory and leave the machine in the same state as it is now. The associated checkbox provides an option to additionally adjust the BASIC system pointers to the start and end of the code. Mind that any variables will be lost, when doing so. (This will option will be disabled, if the emulator detects that the object code is outside the range of safe user RAM, from 0x041 to the top of RAM.)</li>
+		<li>&ldquo;Export Code as PRG File&rdquo; does exactly what it suggest, namely generating a link with the object code as a binary file that you can download to your local computer. For this, it will automatically prepend the start address as the two first bytes of this file, as it is required by the PRG file format common to all Commodore 8/bit machines.</li>
+		<li>Finally, &ldquo;Do Nothing&rdquo; does exactly this, namely closing the dialog without further action. Maybe you just wanted to test something or review the assembly process?</li>
+	</ul>
+
+	<p>To further interact with your code, you may refer to the debugger of the emulator, available by its icon on the top right of the window. Unlock the lock icon to the right of the register display to edit registers and flags. (The debugger is only interactive when the emulated PET is halted.)</p>
+	<figure>
+		<img src="assets/pet-debugger.png" alt="The debugger of the PET 2001 emulator." width="367" height="250" style="width:367px;max-width:100%;height: auto;" loading="lazy" />
+			<figcaption>The debugger of the PET 2001 emulator.</figcaption>
+	</figure>
+	
+	<p>Mind that the PET also comes with a built-in machine monitor in ROM, which is normally hooked to the interrupt vector (IRQ). Therefore, executing any zero-byte (a <code>BRK</code> in 6502 machine code) will invoke the monitor. Such a zero-byte should be always present at address <code>0x400</code>, just before the start of any BASIC text, and can be called by the memorable BASIC command <span class="q">&quot;</span><code>SYS 1024</code><span class="q">&quot;</span>.</p>
+	<figure>
+		<img src="assets/pet-monitor.png" alt="The built-in machine monitor of the PET 2001 (ROM2 and ROM4)." width="650" height="410" style="width:416px;max-width:100%;height: auto;" loading="lazy" />
+			<figcaption>The built-in machine monitor of the PET 2001.<br >$E62E (IRQ) points to machine monitor in ROM2/3,<br />$E455 to the monitor as it is implemented in ROM4.</figcaption>
+	</figure>
+	
+
+	<h2 id="syntax">Basic Syntax</h2>
+	<p>The assembler supports a variety of common 6502 assembler syntax styles. Mind that there <em>must</em> be a seperating white space between labels, opcodes, and any operands. Operands, on the other hand, <em>must not</em> contain any white space. Operands may be simple numeric values, defined symbols, labels, or complex expressions.<br />Compare the <a href="/6502/6502_instruction_set.html" target="at_masswerk_6502_instset">6502 Instruction Set</a> for instruction details and addressing modes.</p>
+	<p>Here, we use &quot;HHLL&quot; to represent a word-sized 16-bit operand, &quot;LL&quot; for a single-byte addresses, and &quot;BB&quot; for any other byte-sized operands. (In actuality, these may be any simple or complex expressions.)</p>
+	<dl class="stxList">
+		<dt>CLC</dt><dd>immediate, no operand.</dd>
+		<dt>ROR A</dt><dd>instruction with accumulator as the operand.</dd>
+		<dt>ROR</dt><dd>same as above. &quot;A&quot; is optional and may be omitted.</dd>
+		<dt>LDA #BB</dt><dd>immediate mode, loading the literal value.</dd>
+		<dt>LDA HHLL</dt><dd>absolute, loads the value from the provided memory address.</dd>
+		<dt>LDA HHLL,X</dt><dd>absolute, X-indexed.</dd>
+		<dt>LDA HHLL,Y</dt><dd>absolute, Y-indexed.</dd>
+		<dt>LDA LL</dt><dd>zero-page address mode (with automatic address mode detection).</dd>
+		<dt>LDA *LL</dt><dd>forced zero-page address mode in the style of the original MOS assembler.</dd>
+		<dt>LDA.b LL</dt><dd>forced zero-page address mode, modern byte-size notation.</dd>
+		<dt>LDA.w LL</dt><dd>forced absolute address mode, modern word-size notation.</dd>
+		<dt>LDA LL,X</dt><dd>zero-page, X-indexed.</dd>
+		<dt>LDA LL,Y</dt><dd>zero-page, Y-indexed.</dd>
+		<dt>LDA (LL,X)</dt><dd>X-indexed, indirect.</dd>
+		<dt>LDA (LL),Y</dt><dd>indirect, Y-indexed.</dd>
+		<dt>LDA (LL)Y</dt><dd>indirect, Y-indexed, old MOS format (no comma).</dd>
+		<dt>JMP (HHLL)</dt><dd>indirect address.</dd>
+		<dt>BEQ HHLL</dt><dd>relative addresses (-127 &le; offset &le; +127) are computed from absolute target addresses.</dd>
+	</dl>
+	<p>Supported synonyms:</p>
+	<dl class="stxList">
+		<dt>LDA.byte LL</dt><dd>forced zero-page address mode.</dd>
+		<dt>LDA.by LL</dt><dd>as above.</dd>
+		<dt>LDA.word LL</dt><dd>forced absolute address mode, word-size.</dd>
+		<dt>LDA.wo LL</dt><dd>as above.</dd>
+		<dt>LDA+1 LL</dt><dd>forced zero-page address mode (like ACME assembler).</dd>
+		<dt>LDA+2 LL</dt><dd>forced absolute address mode, word-size (like ACME assembler).</dd>
+	</dl>
+	<p>Comments:</p>
+	<dl class="stxList">
+		<dt>;comment</dt><dd>comments start with a semicolon and extend to the end of the line.</dd>
+	</dl>
+	<p>The assembler is generally case-insensitive, with the exception of strings and character literals.</p>
+	<p>Generally, there may be just a single instruction on each line.</p>
+	<h2>Values and Numeric Representations</h2>
+	<p>The assembler supports a variety of number formats:</p>
+	<dl class="stxList">
+		<dt>$12EF</dt><dd>hexadecimal <code>[0-9A-F]</code>.</dd>
+		<dt>&amp;12EF</dt><dd>hexadecimal.</dd>
+		<dt>0x12EF</dt><dd>hexadecimal.</dd>
+		<dt>1289</dt><dd>decimal <code>[0-9]</code>.</dd>
+		<dt>0d1289</dt><dd>decimal.</dd>
+		<dt>@1267</dt><dd>octal <code>[0-7]</code>.</dd>
+		<dt>0o1267</dt><dd>octal.</dd>
+		<dt>01267</dt><dd>octal.</dd>
+		<dt>%1010101</dt><dd>binary <code>[01]</code>.</dd>
+		<dt>0b1010101</dt><dd>binary.</dd>
+		<dt>'A</dt><dd>character value of &quot;A&quot; (<code>$41</code> in ASCII)</dd>
+	</dl>
+	<h2 id="expressions">Value Expressions</h2>
+	<p>Anywhere a value mayn occur this may be a complex expression as well. Expressions may include addition, subtraction, multiplication, divisions, and unary minus (<code>+-*/</code> and <code>-</code>).<p>
+	<p>There are also the two special unary byte operators <span class="q">&quot;</span><code>&lt;</code><span class="q">&quot;</span> <nd <span class="q">&quot;</span><code>&gt;</code><span class="q">&quot;</span>:</p>
+	<dl class="stxList">
+		<dt>&lt;$12EF</dt><dd>low-byte value <code>($EF)</code>.</dd>
+		<dt>&gt;$12EF</dt><dd>high-byte value <code>($12)</code>.</dd>
+	</dl>
+	<p>Expressions are evaluated strictly from left to right, without precedence, but may be grouped using round or square brackets <span class="q">(</span><code>(</code><span class="q">&hellip;</span><code>)</code>, <code>[</code><span class="q">&hellip;</span><code>]</code><span class="q">)</span>.<br />The use of square brackets is recommended, though, as round brackets can be ambiguous in the context of certain 6502 instructions and their syntax.</p>
+	<dl class="stxList">
+		<dt>1+2</dt><dd>3</dd>
+		<dt>2*3</dt><dd>6</dd>
+		<dt>1+2*3</dt><dd>9 &nbsp; (<code>1+2 =&gt; 3, 3*3 =&gt; 9</code>)</dd>
+		<dt>1+[2*3]</dt><dd>7 &nbsp; (<code>[2*3] =&gt; 6, 1+6 =&gt; 7</code>)</dd>
+		<dt>1+(2*3)</dt><dd>same as above</dd>
+	</dl>
+	<p>Expressions may include defined symbols and instruction labels.<br /><strong>There must not be any white space in an expression!</strong></p>
+
+	<h2 id="pc">The Program Counter</h2>
+	<p>The program counter (also PC or location counter) represents the memory address of the current instruction. Outside of an instruction, it represents the address, where the next instruction will be inserted. There are several ways to address the program counter:</p>
+	<dl class="stxList wide">
+		<dt>* = $1234</dt><dd>the asterisk represents the &quot;native&quot; (MOS) format. Assigning to it sets the program counter.</dd>
+		<dt>BEQ *+2</dt><dd>the asterisk may be used in expressions as well.</dd>
+		<dt>* = *+4 $EA</dt><dd>when assigning to the program counter, an optional second argument specifies a fill-byte to be applied to any gaps. Here, we advance the program counter by 4 locations and fill the gap with <code>NOP</code> instructions (<code>$EA</code>).</dd>
+		<dt>P% = P%+2</dt><dd>the symbol <span class="q">&quot;</span><code>P%</code><span class="q">&quot;</span> may be used synonymously to the asterisk anywhere the former may occur.</dd>
+		<dt>.ORG $1234</dt><dd>the more modern-style directive <span class="q">&quot;</span><code>.ORG</code><span class="q">&quot;</span> may be used for setting PC, as well. (However, you can't use ist in an expression.)</dd>
+		<dt>.ORG = $1234</dt><dd>you may use <code>.ORG</code> in assignment style, as well.</dd>
+		<dt>.ORG EQU $1234</dt><dd>generally, <span class="q">&quot;</span><code>EQU</code><span class="q">&quot;</span> may be used as the assignment operator, as well.<br />(Mind that there must be white-space around <span class="q">&quot;</span><code>EQU</code><span class="q">&quot;</span> in order for it to be recognized as a token, which is not a requirement with <span class="q">&quot;</span><code>=</code><span class="q">&quot;</span>.)</dd>
+		<dt>.RORG $1234</dt><dd>synonym to <span class="q">&quot;</span><code>.ORG</code><span class="q">&quot;</span> (in many assemblers you are not allowed to alter the origin set by <span class="q">&quot;</span><code>.ORG</code><span class="q">&quot;</span> and this is meant to provide compatibility.)</dd>
+		<dt>BEQ .+2</dt><dd>in expressions, a dot (<code>.</code>) may be used synonymously for the asterisk. However, you can not assign to it. (Strictly speaking, this is local context, but, while the assembler doesn't implement macros, it's the same anyway.)</dd>
+	</dl>
+
+	<h2 id="offset_literals">Relative Offset Literals</h2>
+	<p>As an extension to the standard syntax the assembler also allows relative offset literals for branch instructions (the <a href="/6502/6502_instruction_set.html#modes_relative" target="at_masswerk_6502_instset">relative offset</a> to <code>PC+2</code> as in machine code, instead of the usual target address)  with the <span style="white-space: nowrap;"><span class="q">&quot;</span><code>#</code><span class="q">&quot;</span> prefix</span> (same as immediate mode):</p>
+	<dl class="stxList wide">
+		<dt>BCS #0</dt><dd>equivalent to <span class="q">&quot;</span><code>BCS *+2</code><span class="q">&quot;</span>, results in <span class="q">&quot;</span><code>B0 00</code><span class="q">&quot;</span> (<code>$B0</code>: instruction code for <code>BCS</code>).</dd>
+		<dt>BCS #4</dt><dd>equivalent to <span class="q">&quot;</span><code>BCS *+6</code><span class="q">&quot;</span>, results in <span class="q">&quot;</span><code>B0 04</code><span class="q">&quot;</span>.</dd>
+		<dt>BCS #-4</dt><dd>equivalent to <span class="q">&quot;</span><code>BCS *-2</code><span class="q">&quot;</span>, results in <span class="q">&quot;</span><code>B0 FC</code><span class="q">&quot;</span> (<code>$FC</code>: <code>-4</code> in two's complement).</dd>
+		<dt>BCS #$FC</dt><dd>as above, results in <span class="q">&quot;</span><code>B0 FC</code><span class="q">&quot;</span>.</dd>
+		<dt>BCS #6-(2*5)</dt><dd>expressions allowed, equivalent to <span class="q">&quot;</span><code>BC #-4</code><span class="q">&quot;</span>, results in <span class="q">&quot;</span><code>B0 FC</code><span class="q">&quot;</span>.</dd>
+	</dl>
+	<p>Relative offset literals are automatically constrained to single-byte values in the range of <code>$00&hellip;$FF</code>:</p>
+	<dl class="stxList wide">
+		<dt>BCS #$104</dt><dd>results in <span class="q">&quot;</span><code>B0 04</code><span class="q">&quot;</span>.</dd>
+		<dt>BCS #$1FC</dt><dd>results in <span class="q">&quot;</span><code>B0 FC</code><span class="q">&quot;</span>.</dd>
+	</dl>
+
+	<h2 id="labels">Labels and Symbols</h2>
+	<p>Instruction labels and defined symbols start with a letter character or underscore and may contain, letters, digits, or the undesrcore. Please mind that, for compatibility with older and historic sources, only the first 12 characters are significant. Use option <span class="q">&quot;</span><code>LONGNAMES</code><span class="q">&quot;</span> (see below) to disable this default.</p>
+	<p>Instruction labels may precede an instruction or may be the only entity on a line. They may be optionally end in a trailing colon. Labels may be used anywhere in an expression:</p>
+	<dl class="stxList wide">
+		<dt>LOOP LDA A,X</dt><dd>declares the instruction label <code>LOOP</code>.</dd>
+		<dt>LOOP: LDA A,X</dt><dd>labels may end in a colon (optional).</dd>
+		<dt>BEQ LOOP</dt><dd>using a label as an address value.</dd>
+	</dl>
+	<p>Optional <span class="q">&quot;</span><code>@</code><span class="q">&quot;</span> prefix for further compatibility:</p>
+	<dl class="stxList wide">
+		<dt>@LOOP LDA,X</dt><dd>Labels may be declared an optional  <span class="q">&quot;</span><code>@</code><span class="q">&quot;</span> prefix.</dd>
+		<dt>@LOOP: LDA,X</dt><dd>Same as above, but using a trailing colon.</dd>
+		<dt>BNE @LOOP</dt><dd>Labels may be referred to using an optional  <span class="q">&quot;</span><code>@</code><span class="q">&quot;</span> prefix.</dd>
+	</dl>
+	<p>Symbols are declared by an assignment and may be used as values anywhere.</p>
+	<dl class="stxList wide">
+		<dt>TEST = $2000</dt><dd>declares the symbol <span class="q">&ldquo;</span><code>TEST</code><span class="q">&rdquo;</span>.</dd>
+		<dt>TEST EQU $2000</dd><dd><span class="q">&ldquo;</span><code>EQU</code><span class="q">&rdquo;</span> may be used synonymously.</dd>
+		<dt>C = *+[TEST*2]</dt><dd>assignments may be complex expressions.</dd>
+	</dl>
+	<p>Mind that &mdash; like with most assemblers &mdash; you may not redefine or reuse any symbols or labels per default. However, you may change this behavior by setting option <span class="q">&quot;</span><code>REDEF</code><span class="q">&quot;</span> (see below).</p>
+
+	<h3>Note on hexadecimal values and automatic zero-page mode</h3>
+	<p>Any numeric values provided by at least 4 hexadecimal digits, where the two leading digits are zeros, will be considered to be of word-size and will effect absolute address modes, when used in ambiguuos context. This &quot;word-size tainting&quot; also propagates to expressions and assignments. (E.g., defining the symbol <span class="q">&quot;</span><code>C</code><span class="q">&quot;</span> by <span class="q">&quot;</span><code>C = 0x0002</code><span class="q">&quot;</span> and using this in <span class="q">&quot;</span><code>LDA C+2</code><span class="q">&quot;</span> will result in a word-sized, absolute instruction, while the effective value is well inside single-byte range. Defining <code>C</code> as <span class="q">&quot;</span><code>0x02</code><span class="q">&quot;</span>, on the other hand, would have resulted in a zero-page address mode instruction.)<br />If a label or symbol yet undefined is encountered in a value expression in pass #1, a word-size format will be automatically assumed and addresses will be reserved accordingly. If it is still undefined in pass #2, an error will be thrown. (In assignments to the program counter, however, an expression must resolve in pass #1 already, otherwise the assembly fails.)</p>
+
+	<h2 id="anonymous_labels">Anonymous (Temporary) Labels</h2>
+	<p>The assembler also supports anonymous labels for temporary branch and jump targets:<br />Just mark an instruction by <span class="q">&quot;</span><code>!</code><span class="q">&quot;</span> or <span class="q">&quot;</span><code>:</code><span class="q">&quot;</span> (empty label) and refer to this mark by either <span class="q">&quot;</span><code>!+</code><span class="q">&quot;</span> (or <span class="q">&quot;</span><code>:+</code><span class="q">&quot;</span>) for the next anonymous label as a target or by <span class="q">&quot;</span><code>!-</code><span class="q">&quot;</span> (or <span class="q">&quot;</span><code>:-</code><span class="q">&quot;</span>) for the previous one. You may refer to a target further away by repeating <span class="q">&quot;</span><code>+</code><span class="q">&quot;</span> or <span class="q">&quot;</span><code>-</code><span class="q">&quot;</span>. &nbsp;E.g., <span class="q">&quot;</span><code>BNE !--</code><span class="q">&quot;</span> branches to the second anonymous label before the insertion point. Mind that this counts anonymous labels and not addresses.</p>
+<p>Example:</p>
+<pre class="example">! START  LDA #0        ;first anonymous label
+                       ;anonymous labels may precede a normal label
+         LDX #0
+!                      ;just mark this address
+:        STA $1000,X   ;third label (same address), we may use &quot;:&quot; as well
+         INX
+         BNE !-        ;select the closest previous anonymous label
+         JMP :---      ;jump back 3 anonymous labels (same as START)
+                       ;again, &quot;:&quot; and &quot;!&quot; are synonymous</pre>
+    <p>This will assemble to (with anonymous labels listed in a column of their own):</p>
+<pre class="example">LOC   CODE         LABEL     INSTRUCTION
+
+0800  A9 00      ! START     LDA #$00
+0802  A2 00                  LDX #$00
+0804             !
+0804  9D 00 10   !           STA $1000,X
+0807  E8                     INX
+0808  D0 FA                  BNE $0804
+080A  4C 00 08               JMP $0800</pre>
+	<p style="margin-top: 1.5em">There is also support for an alternative grammar for anonymous targets, marking forward and backward references separately (like it's used by the ACME cross-assembler.)<br />Here, instructions used for forward references are marked by <span class="q">&quot;</span><code>+</code><span class="q">&quot;</span> and those to be used for backward references are marked by <span class="q">&quot;</span><code>&minus;</code><span class="q">&quot;</span>, each contributing to a dedicated list of anonymous labels. These are then referred to as a target address as above, but without any leading <span class="q">&quot;</span><code>!</code><span class="q">&quot;</span> or <span class="q">&quot;</span><code>:</code><span class="q">&quot;</span>. This is an important difference! Please mind that this is not just an alternative syntax, but comes with its own semantics.<br />(Hence, these targets are managed in separate lists. While not recommended, you could mix both grammars in a single source.)</p>
+<pre class="example">* = $800
+         BCS +         ;branch to exit
+         LDY #3
+         LDA $3000
+-        CLC           ;outer loop
+         ADC #5
+         LDX #5
+-        STA $1000,x   ;inner loop
+         DEX
+         BNE -
+         DEY
+         BNE --
++        RTS           ;forward target
+
+LOC   CODE         LABEL         INSTRUCTION
+
+0800                             * = $0800
+0800  B0 13                      BCS $0815   ;branch to exit
+0802  A0 03                      LDY #$03
+0804  AD 00 30                   LDA $3000
+0807  18         -               CLC         ;outer loop
+0808  69 05                      ADC #$05
+080A  A2 05                      LDX #$05
+080C  9D 00 10   -               STA $1000,X ;inner loop
+080F  CA                         DEX
+0810  D0 FA                      BNE $080C
+0812  88                         DEY
+0813  D0 F2                      BNE $0807
+0815  60         +               RTS         ;forward target</pre>
+	<p style="margin-top: 1.5em">Restrictions:<br />This feature is only supported for branch instructions and absolute jump targets. An anonymous target must be the sole operand and cannot be used in an arithmetic expression.</p>
+	<p>Note: Anonymous labels are not listed in symbol tables.</p>
+
+	<h2 id="pragmas">Pragmas and Directives</h2>
+	<p>Pragmas and directives start generally with a dot. For enhanced compatibility, an exclamation mark (<span class="q">&quot;</span><code>!</code><span class="q">&quot;</span>) may be used as well, but will be normalized and show up as a dot in the listing of pass 2. The following examples use the dot for a general/canonical notation.</p>
+
+	<p>Directives for embedding data:</p>
+	<dl class="stxList wide">
+		<dt>.BYTE 1, $02</dt><dd>embeds a single byte or a list of bytes at the current location. Lists are sperated by white-space and/or commas. (An optional <span class="q">&quot;</span><code>#</code><span class="q">&quot;</span>, preceding any values, is ignored.) Values may be complex expressions, as well.</dd>
+		<dt>.DBYTE $12EF</dt><dd>embeds a double byte given in LLHH memory order (little-endian). This inserts the bytes <code>$12</code> and <code>$EF</code> at the current location. Again, complex expressionsare allowed and <span class="q">&quot;</span><code>.DBYTE</code><span class="q">&quot;</span> takes a list of values, as well.</dd>
+		<dt>.WORD $12EF</dt><dd>embeds a word given in HHLL order (human readable, big-endian). This inserts the bytes <code>$EF</code> and <code>$12</code> at the current location. (Also, use this when using previously defined labels and symbols in an expression.)<br />Again, values and expressions may be also provided as a list, as well.</dd>
+		<dt>.TEXT &quot;Abc&quot;</dt><dd>embeds a text literal (case-sensitive) using the current encoding, here always PETSCII.</dd>
+		<dt>.PETSCII &quot;Abc&quot;</dt><dd>embeds a text literal (case-sensitive) using Commodore 8-bit encoding.</dd>
+		<dt>.PETSCR &quot;Abc&quot;</dt><dd>embeds a text literal (case-sensitive) as Commodore 8-bit screen codes.</dd>
+		<dt>.IMAGE &quot;X..XX.X.&quot;</dt><dd>embeds a byte represented by an image string.<br />Characters <span class="q">&quot;</span><code>X</code><span class="q">&quot;</span>, <span class="q">&quot;</span><code>x</code><span class="q">&quot;</span> or <span class="q">&quot;</span><code>#</code><span class="q">&quot;</span> are considered as binary 1, any others as binary 0.<br />E.g., <span class="q">&quot;</span><code>X..XX.X.</code><span class="q">&quot;</span> will be interpreted as <code>%10011010</code> or <code>$9A</code>.</dd>
+	</dl>
+	<p>Supported synonyms:</p>
+	<dl class="stxList wide">
+		<dt>.WO $12EF</dt><dd>synonym for <span class="q">&quot;</span><code>.WORD</code><span class="q">&quot;</span>.</dd>
+		<dt>.BYT $01</dt><dd>synonym for <span class="q">&quot;</span><code>.BYTE</code><span class="q">&quot;</span>.</dd>
+		<dt>.BY $01</dt><dd>synonym for <span class="q">&quot;</span><code>.BYTE</code><span class="q">&quot;</span>.</dd>
+		<dt>.DB $02</dt><dd>synonym for <span class="q">&quot;</span><code>.BYTE</code><span class="q">&quot;</span> (Define Byte).</dd>
+		<dt>.DCB $03</dt><dd>synonym for <span class="q">&quot;</span><code>.BYTE</code><span class="q">&quot;</span> (Define Constant Byte).</dd>
+		<dt>.DBYT $12EF</dt><dd>synonym for <span class="q">&quot;</span><code>.DBYTE</code><span class="q">&quot;</span>.</dd>
+		<dt>.PET &quot;Abc&quot;</dt><dd>synonym for <span class="q">&quot;</span><code>.PETSCII</code><span class="q">&quot;</span>.</dd>
+		<dt>.SCREEN &quot;Abc&quot;</dt><dd>synonym for <span class="q">&quot;</span><code>.PETSCR</code><span class="q">&quot;</span>.</dd>
+		<dt>.SCR &quot;Abc&quot;</dt><dd>synonym for <span class="q">&quot;</span><code>.PETSCR</code><span class="q">&quot;</span>.</dd>
+		<dt>.TX &quot;Abc&quot;</dt><dd>synonym for <span class="q">&quot;</span><code>.TEXT</code><span class="q">&quot;</span>.</dd>
+		<dt>.ASCII &quot;Abc&quot;</dt><dd>here the same as <span class="q">&quot;</span><code>.PETSCII</code><span class="q">&quot;</span>.</dd>
+		<dt>.IMG &quot;X..XX.X.&quot;</dt><dd>synonym for <span class="q">&quot;</span><code>.IMAGE</code><span class="q">&quot;</span>.</dd>
+	</dl>
+	<p>Directives for aligning code or filling space:</p>
+	<dl class="stxList wide">
+		<dt>.ALIGN $100</dt><dd>advances the program counter to the next multiple of the value provided (here, we align to the next memory page). Any gaps will be filled by zero. If no argument is provided <span class="q">&quot;</span><code>.ALIGN</code><span class="q">&quot;</span> aligns to the next even memory location.</dd>
+		<dt>.ALIGN $100 $EA</dt><dd>an optional second byte may specify a byte value to be used to fill any gaps (here <code>$EA</code>, <span class="q">&quot;</span><code>NOP</code><span class="q">&quot;</span>, as used by most Commodre 8-bit machines).</dd>
+		<dt>.FILL $20 $EA</dt><dd>fill the next <em>n</em> bytes using the value provided by the second argument. If no second argument is providing, zero will be used as the fill-byte.</dd>
+		<dt>.REPEAT <em>n</em></dt><dd>repeats the instruction or directive following this directive on the same line <em>n</em> times. An optional <span class="q">&quot;</span><code>STEP</code><span class="q">&quot;</span> parameter defines an increment to be applied to the repeat-counter on each iteration (default <code>1</code>). The repeat-counter is accessibly as <span class="q">&quot;</span><code>R%</code><span class="q">&quot;</span>.<br />E.g.,<pre class="example">.REPEAT 26 .BYTE 'A+R%</pre>will fill the next 26 memory locations with the letters of the alphabet.<pre class="example">ODD_NUMS ;generate list of odd numbers<br />.REPEAT 5 STEP 2 .BYTE 1+R%</pre>will fill the next 5 memory locations with the odd number series 1,3,5,7,9.<br /><br />And this will fill the next 6 bytes by the sequence <code>0x00</code>, <code>0x00</code>, <code>0x02</code>, <code>0x02</code>, <code>0x04</code>, <code>0x04</code>:
+		<pre class="example">.REPEAT 3 STEP 2 *=*+2 R% ;PC += 2, fill-byte R%</pre></dd>
+	</dl>
+	<p>Other directives:</p>
+	<dl class="stxList wide">
+		<dt>.END</dt><dd>ends the source code, any remaining text is ignored. (optional)</dd>
+		<dt>.NOLIST</dt><dd>switches listing output off (e.g, for data sections. This is also available as an option.)</dd>
+		<dt>.LIST</dt><dd>switches listing output on (default,  also available as an option).</dd>
+		<dt>.SKIP</dt><dd>inserts a blank line in the listing (pass #2). This is mostly for compatibility.</dd>
+		<dt>.PAGE</dt><dd>inserts a blank line and a page number in the listing (pass #2). Any comment found at the head of the source code will be used as a title. Again, this is mostly for compatibility.</dd>
+		<dt>.DATA</dt><dd>any such directive is ignored (this merely exists to ensure compatibility with symbol tables used by this stand-alone <a href="/6502/disassembler.html" target="disassembler6502">disassembler</a>.</dd>
+	</dl>
+	<p>Special directives for Commodore BASIC:</p>
+	<dl class="stxList">
+		<dt>.BASICSTART</dt><dd>Generates a short BASIC program, consisting of optional REM-lines and a line with a <span class="q">&quot;</span><code>SYS</code><span class="q">&quot;</span> command, jumping to the next available address immediately following this BASIC text (which starts at <code>0x0401</code>, the BASIC start address off the Commodore PET). The program counter will be advanced to this start address automatically.<br />Without any arguments, just a line with the <code>SYS</code> command will be generated, using the current year as the line number:
+		<pre>.BASICSTART
+&gt; 2023 SYS 1038</pre>
+		If a first, numeric argument is provided, this will be used as a line number for the line holding the <code>SYS</code> statement:
+		<pre>.BASICSTART 10
+&gt; 10 SYS 1038</pre>
+		If a string argument is provided, the assembler will generate a heading line with line number <span class="q">&quot;</span><code>0</code><span class="q">&quot;</span> and a <code>REM</code> statement using this string. If a list of strings (separated by white-space and optionally commas) is provided, or a string contains a line-break (<span class="q">&quot;</span><code>\n</code><span class="q">&quot;</span>), multiple <code>REM</code> lines will be generated:
+		<pre>.BASICSTART 2001 &quot;*** a program ***&quot;, &quot;(c) example.com&quot;
+&gt; 0 REM *** A PROGRAM ***
+&gt; 1 REM (c) EXAMPLE.COM
+&gt; 2001 SYS 1084</pre>
+		(Mind that lower case letters will appear as upper-case and upper-case letters as graphics characters in standard PETSCII upper-case/graphics mode.)</dd>
+		<dt>.PETSTART</dt><dd>Same as <span class="q">&quot;</span><code>.BASICSTART</code><span class="q">&quot;</span> (see above).</dd>
+	</dl>
+
+	<h2 id="opts">Options</h2>
+	<p>Options are a special set of directives switching the behavior of the assembler. Like other pragmas, they start with a dot (<code>.</code>) or an eclamation mark (<code>!</code>).</p>
+	<dl class="stxList wide">
+		<dt>.OPT WORDA</dt><dd>switches automatic zero-page detection for address modes off. All addresses default to word-size and zero-page address modes must be specified manually by a leading asterisk (<span class="q">&quot;</span><code>*</code><span class="q">&quot;</span>) or the byte extension (<span class="q">&quot;</span><code>.b</code><span class="q">&quot;</span>). Use this for fine grain control and/or compatibility with old sources.</dd>
+		<dt>.OPT ZPGA</dt><dd>switches automatic zero-page detection to <em>on</em> (default).</dt>
+		<dt>.OPT ZPA</dt><dd>synonym to option <span class="q">&quot;</span><code>ZPGA</code><span class="q">&quot;</span>.</dt>
+		<dt>.OPT ILLEGALS</dt><dd>enables support for &ldquo;illegal&rdquo; op-codes (see below).</dt>
+		<dt>.OPT LEGALS</dt><dd>disables support for &ldquo;illegal&rdquo; op-codes (default).</dt>
+		<dt>.OPT NOILLEGALS</dt><dd>synonym to option <span class="q">&quot;</span><code>LEGALS</code><span class="q">&quot;</span>.</dt>
+		<dt>.OPT REDEF</dt><dd>allows symbols and labels to be redefined / reused.</dt>
+		<dt>.OPT NOREDEF</dt><dd>reuse of symbols is not allowed and will throw an error (default).</dt>
+		<dt>.OPT ASCII</dt><dd>set character encoding for <span class="q">&ldquo;</span><code>.TEXT</code><span class="q">&rdquo;</span>-directives and character literals<br />Here, this is only included for compatibility reasons and the encoding always defaults to PETSCII.</dt>
+		<dt>.OPT PETSCII</dt><dd>set the default character encoding to PETSCII.</dt>
+		<dt>.OPT PETSCR</dt><dd>set the default character encoding to Coomodore 8-bit screen characters.</dt>
+		<dt>.OPT SCREEN</dt><dd>synonym to option <span class="q">&quot;</span><code>PETSCR</code><span class="q">&quot;</span>.</dt>
+		<dt>.OPT SCR</dt><dd>same as above.</dt>
+		<dt>.OPT NOLIST</dt><dd>switches listing output off.</dt>
+		<dt>.OPT LIST</dt><dd>witches listing output on (default).</dt>
+		<dt>.OPT LONGNAMES</dt><dd>disables the default 12 character limit for the significance of labels and identifiers for unlimited length.</dt>
+	</dl>
+
+	<p>Further, the following options (mostly used by MOS assemblers) are recognized for compatibility, but are otherwise ignored: <code>XREF</code>, <code>NOXREF</code>, <code>COUNT</code>, <code>NOCOUNT</code>, <code>CNT</code>, <code>NOCNT</code>, <code>MEMORY</code>, <code>NOMEMORY</code>, <code>GENERATE</code>, <code>NOGENERATE</code>.</p>
+
+	<h2 id="compat">Compatibility</h2>
+	<p>This assembler is all about a quick assembly session without worrying too much about the specific syntax (starting with the format of the very first MOS cross-assembler and extending to more modern styles). As long as you do not require macros or conditional assembly, you should be able to throw about any style of source code at it.</p>
+	<p>E.g., the following examples are semantically identical and produce the same object code:</p>
+	<table class="xmptable">
+	<tr><td><pre>;MOS/traditional
+
+* = $4000
+TARGET = $20
+
+       LDY *$20
+LOOP   LDA $0080,Y
+       ROL A
+       STA (TARGET)Y
+       DEY
+       BNE LOOP
+       RTS
+.END</pre></td>
+<td><pre>;modern style
+
+.ORG 0x4000
+TARGET EQU 0xC0
+
+       LDY.b 0x20
+LOOP:  LDA.w 0x80,Y
+       ROL
+       STA (TARGET),Y
+       DEY
+       BNE LOOP
+       RTS
+.END</pre></td>
+</tr>
+</table>
+
+	<h2>Processing Example</h2>
+	<p>Here is an example for a complete assembly of a short source:</p>
+
+	<table class="xmptable">
+	<tr><td>Source code:<br /><br />
+<pre id="samplecode">;fill a page with bytes,
+;preserve program
+
+*=$800
+
+start
+      ldx #offset
+loop  txa
+      sta start,x
+      inx
+      bne loop
+      brk
+
+;insert bytes here
+offset=*-start
+.end</pre>
+<br /><br /><br />
+Resulting object code:<br /><br />
+<pre>0800: A2 0A 8A 9D 00 08 E8 D0
+0808: F9 00</pre></td>
+<td>Listing:<br /><br />
+<pre>pass 1
+
+LINE  LOC          LABEL     PICT
+
+   1               ;fill a page with bytes,
+   2               ;preserve program
+
+   4  0800                   * = $800
+   6  0800         START
+   7  0800                   LDX #OFFSET
+   8  0802         LOOP      TXA
+   9  0803                   STA START,X
+  10  0806                   INX
+  11  0807                   BNE LOOP
+  12  0809                   BRK
+  14                         ;insert bytes here
+  15                         OFFSET = *-START
+  16                         .END
+
+symbols
+ LOOP       $0802
+ OFFSET       $0A
+ START      $0800
+
+pass 2
+
+LOC   CODE         LABEL     INSTRUCTION
+
+                   ;fill a page with bytes,
+                   ;preserve program
+
+0800                         * = $0800
+0800               START
+0800  A2 0A                  LDX #$0A
+0802  8A           LOOP      TXA
+0803  9D 00 08               STA $0800,X
+0806  E8                     INX
+0807  D0 F9                  BNE $0802
+0809  00                     BRK
+                             ;insert bytes here
+                             OFFSET = $0A
+                             .END
+
+done (code: 0800..0809).</pre></td>
+	</tr></table>
+
+	<h2 id="illegals">Illegal Opcodes</h2>
+	<p>Support for <a href="/6502/6502_instruction_set.html#illegals" target="at_masswerk_6502_instset">&quot;illegal&quot; opcodes</a> (undefined instructions) is enabled by the pragma <span class="q">&quot;</span><code>.OPT ILLEGALS</code><span class="q">&quot;</span>.</p>
+	<p>The following mnemonics are implemented (supported synonyms given in parenthesis):</p>
+
+	<table border="0" cellspacing="0" cellpadding="0" class="opctable">
+	<tr class="noBg"><td><em>opc (synonyms)</em>    imp imm abs abX abY zpg zpX zpY inX inY</td></tr>
+	<tr class="noBg"><td>&nbsp;</td></tr>
+	<tr><td>ALR (ASR)       <span class="dimm">|</span>     4B                                 <span class="dimm">|</span></td></tr>
+	<tr><td>ANC             <span class="dimm">|</span>     0B                                 <span class="dimm">|</span></td></tr>
+	<tr><td>ANC2            <span class="dimm">|</span>     2B                                 <span class="dimm">|</span></td></tr>
+	<tr><td>ANE (XAA)       <span class="dimm">|</span>     8B                                 <span class="dimm">|</span></td></tr>
+	<tr><td>ARR             <span class="dimm">|</span>     6B                                 <span class="dimm">|</span></td></tr>
+	<tr><td>DCP (DCM)       <span class="dimm">|</span>         CF  DF  DB  C7  D7      C3  D3 <span class="dimm">|</span></td></tr>
+	<tr><td>ISC (ISB, INS)  <span class="dimm">|</span>         EF  FF  FB  E7  F7      E3  F3 <span class="dimm">|</span></td></tr>
+	<tr><td>LAS (LAR, LAE)  <span class="dimm">|</span>                 BB                     <span class="dimm">|</span></td></tr>
+	<tr><td>LAX (ATX)       <span class="dimm">|</span>     AB  AF      BF  A7      B7  A3  B3 <span class="dimm">|</span></td></tr>
+	<tr><td>LXA (LAX imm)   <span class="dimm">|</span>     AB                                 <span class="dimm">|</span></td></tr>
+	<tr><td>RLA             <span class="dimm">|</span>         2F  3F  3B  27  37      23  33 <span class="dimm">|</span></td></tr>
+	<tr><td>RRA             <span class="dimm">|</span>         6F  7F  7B  67  77      63  73 <span class="dimm">|</span></td></tr>
+	<tr><td>SAX (AXS, AAX)  <span class="dimm">|</span>         8F          87      97  83     <span class="dimm">|</span></td></tr>
+	<tr><td>SBX             <span class="dimm">|</span>     CB                                 <span class="dimm">|</span></td></tr>
+	<tr><td>SHA (AXA, AHX)  <span class="dimm">|</span>                 9F                  93 <span class="dimm">|</span></td></tr>
+	<tr><td>SHX             <span class="dimm">|</span>                 9E                     <span class="dimm">|</span></td></tr>
+	<tr><td>SHY (SAY, SYA)  <span class="dimm">|</span>             9C                         <span class="dimm">|</span></td></tr>
+	<tr><td>SLO (ASO)       <span class="dimm">|</span>         0F  1F  1B  07  17      03  13 <span class="dimm">|</span></td></tr>
+	<tr><td>SRE (LSE)       <span class="dimm">|</span>         4F  5F  5B  47  57      43  53 <span class="dimm">|</span></td></tr>
+	<tr><td>TAS (SHS, XAS)  <span class="dimm">|</span>                 9B                     <span class="dimm">|</span></td></tr>
+	<tr><td>USBC            <span class="dimm">|</span>     EB                                 <span class="dimm">|</span></td></tr>
+	<tr><td>NOP             <span class="dimm">|</span> EA  80  0C  1C      04  14             <span class="dimm">|</span></td></tr>
+	<tr><td>DOP (SKB)       <span class="dimm">|</span>     80              04  14             <span class="dimm">|</span></td></tr>
+	<tr><td>TOP (SKW)       <span class="dimm">|</span>         0C  1C                         <span class="dimm">|</span></td></tr>
+	<tr><td>JAM (HLT, KIL)  <span class="dimm">|</span> 02                                     <span class="dimm">|</span></td></tr>
+	</table>
+
+	<p>Notes:</p>
+	<ul style="margin-top: 0.25em;">
+		<li><code>NOP</code>: There are several <code>NOP</code> instructions, but these are the ones commonly used.</li>
+		<li><code>DOP</code>: &quot;double <code>NOP</code><span class="q">&quot;</span> (single-byte operand/address, 2 bytes total).</li>
+		<li><code>TOP</code>: &quot;triple <code>NOP</code><span class="q">&quot;</span> (word-address, 3 bytes total).</li>
+		<li><code>JAM</code>: freezes the CPU (again, there are several equivalent instructions).</li>
+	</ul>
+
+	<h2 id="basic">Combining Assembler with BASIC</h2>
+	<p>There are two general approaches to combing BASIC text with assembler code, one from the assembler side and another, probably more versatile one from the BASIC side of things. An important thing to note is that with both approaches you <em>do not</em> set the program counter, as its value will be determined by the assembler. Both methods produce a stand-alone program that can be saved or exported by other means as a single binary file.</p>
+	<h3 id="basic_pramble">BASIC Preambles in Assembler Sources</h3>
+	<p>The first one is the pragma <span class="q">&quot;</span><code>.BASICSTART</code><span class="q">&quot;</span> already described above. You can add an optional line number for the final SYS statement and any number of strings, which will be prepended in <code>REM</code> statements starting at line number 0. The assembler will generate the required tokenized BASIC code with a <code>SYS</code> statement pointing to immediately after this short BASIC program and set the program counter for the assembly accordingly.</p>
+	<p>Example</p>
+<ul class="sourcelist">
+<li>Source (assembler text &ldquo;proud-demo.asm&rdquo;)
+<pre>.BASICSTART 100 &quot;*** my great program ***&quot;,&quot;(c) by me and me alone&quot;
+
+RTS ; that's it</pre></li>
+<li>Assembler Listing
+<pre>pass 1
+
+LINE  LOC          LABEL     PICT
+
+   1  0401                   .BASICSTART 100 &quot;*** my great program ***\n(c) by me and me alone&quot;
+   3  044A                   RTS ; that's it
+
+pass 2
+
+LOC   CODE         LABEL     INSTRUCTION
+
+0401                         .BASICSTART 100 &quot;*** my great program ***\n(c) by me and me alone&quot;
+>>>>  COMPILING BASIC PREAMBLE...
+0401  20 04                  $0420 ;LINE LINK
+0403  00 00                  $0000 ;LINE NO. (&quot;0&quot;)
+0405  8F 20                  ;&quot;REM &quot;
+0407  2A 2A 2A               ;TEXT &quot;***&quot;
+040A  20 4D 59               ;TEXT &quot; MY&quot;
+040D  20 47 52               ;TEXT &quot; GR&quot;
+0410  45 41 54               ;TEXT &quot;EAT&quot;
+0413  20 50 52               ;TEXT &quot; PR&quot;
+0416  4F 47 52               ;TEXT &quot;OGR&quot;
+0419  41 4D 20               ;TEXT &quot;AM &quot;
+041C  2A 2A 2A               ;TEXT &quot;***&quot;
+041F  00                     $00   ;EOL
+0420  3D 04                  $043D ;LINE LINK
+0422  01 00                  $0001 ;LINE NO. (&quot;1&quot;)
+0424  8F 20                  ;TOKEN REM, &quot; &quot;
+0426  28 43 29               ;TEXT &quot;(C)&quot;
+0429  20 42 59               ;TEXT &quot; BY&quot;
+042C  20 4D 45               ;TEXT &quot; ME&quot;
+042F  20 41 4E               ;TEXT &quot; AN&quot;
+0432  44 20 4D               ;TEXT &quot;D M&quot;
+0435  45 20 41               ;TEXT &quot;E A&quot;
+0438  4C 4F 4E               ;TEXT &quot;LON&quot;
+043B  45                     ;TEXT &quot;E&quot;
+043C  00                     $00   ;EOL
+043D  48 04                  $0448 ;LINE LINK
+043F  64 00                  $0064 ;LINE NO. (&quot;100&quot;)
+0441  9E 20                  ;TOKEN SYS, &quot; &quot;
+0443  31 30 39               ;TEXT &quot;109
+0446  38                     ;TEXT &quot;8&quot;
+0447  00                     $00   ;EOL
+0448  00 00                  $0000 ;END OF BASIC TEXT (EMPTY LINK)
+>>>>  START OF ASSEMBLY AT $044A (&quot;SYS 1098&quot;)
+044A  60                     RTS ; that's it
+
+done (code: 0401..044A).</pre></li>
+<li>Listing in BASIC (<code>0x044A</code> = dec. <code>1098</code>)
+<pre>LIST
+
+ 0 REM *** MY GREAT PROGRAM ***
+ 1 REM (C) BY ME AND ME ALONE
+ 100 SYS 1098
+READY.</pre></li>
+</ul>
+<p>Here&rsquo;s another example (probably a bit more healthy and stable),</p>
+<ul class="sourcelist">
+<li><a href="examples/hearts.asm" target="_blank">hearts.asm</a> (click for the source file)
+<pre>.basicstart 100 "with love..."
+
+       lda #211      ;screen code inverted heart
+       ldx #0
+loop:  sta $8000,x   ;fill the screen
+       sta $8100,x
+       sta $8200,x
+       sta $8300,x
+       dex
+       bne loop
+       rts           ;done</pre></li>
+</ul>
+
+<h3 id="asm_continuation">Assembler Code Appended to BASIC Sources</h3>
+<p>The other, probably more capable approach is appending an assembler source to a BASIC source file</p>
+<p>This achieved by the special BASIC source tag <span class="q">&quot;</span><code>{ASM START}</code><span class="q">&quot;</span> (also <span class="q">&quot;</span><code>{ASM_START}</code><span class="q">&quot;</span> or <span class="q">&quot;</span><code>{ASMSTART}</code><span class="q">&quot;</span>). This will immediately terminate the processof tokenizing the BASIC program with the rest of the line ignored and will insert an ASCII sequence for the memory address following immediately after the BASIC program that is currently generated. Any source text following this will be assumed to be 6502 assembler code. (If no such code is found, a simple <code>RTS</code> instruction will be appended.)</p>
+<p>The general idea is that you put this behind a <span class="q">&quot;</span><code>SYS</code><span class="q">&quot;</span> command to form a final statement that leads to the execution of the following machine language program.</p>
+<p>Example</p>
+<ul class="sourcelist">
+<li><a href="examples/hearts-demo-1.txt" target="_blank">hearts-demo-1.txt</a> (click for the source file)
+<pre>100 REM HEARTS DEMO 1
+110 PRINT &quot;READY FOR SOME HEARTS?&quot;
+120 GET K$:IF K$=&quot;&quot; GOTO 130
+130 SYS {ASMSTART}
+
+;routine to fill the screen with hearts
+       lda #83      ;screen code for heart character
+       ldx #0
+loop:  sta $8000,x
+       sta $8100,x
+       sta $8200,x
+       sta $8300,x
+       dex
+       bne loop
+       rts          ;return to BASIC</pre></li>
+<li>BASIC Listing
+<pre>LIST
+
+ 100 REM HEARTS DEMO 1
+ 110 PRINT &quot;READY FOR SOME HEARTS?&quot;
+ 120 GET K$:IF K$=&quot;&quot; GOTO 130
+ 130 SYS 1112
+READY.</pre></li>
+</ul>
+
+<p>Here, the emulator behaves as it usually does, whenever we drop a BASIC source file onto it: the code will be transformed and loaded seamlessly, but you will be asked, whether you would want to review the assembler listing or not. In case there should be an error and the assembly fails, the listing will be presented anyways.<br />Mind that this can be used to push any configurations, etc, to dialogs written in BASIC, where this may be easier to handle than in assembler.</p>
+<p>Notably, this can also be used without this assembler, just omit the assembler part, export the resulting program either as binary or as a hex-dump and use it in the assembler of your choice, replacing the final <code>RTS</code> (0x60) instruction by your code.</p>
+
+<p>Another way of using this is by appending the assembler code to a final <code>DATA</code> statement, from where we can read the jump address to be used from anywhere in the BASIC program. Here, rather than using BASIC as a means to start our assembler program, we use the assembler to provide some fast routine(s) for BASIC.</p>
+
+<p>Example<br />(Here, we deposite a screen code to be used for filling the screen in address 255 before calling our routine. This is either screen code 83 for a heart character or 211 for an inverted heart character. We use this to blink the screen three times and finally clear it by filling it using a space character. Mind how the call address is read into variable <code>A</code> from the final <code>DATA</code> statement.)</p>
+<ul class="sourcelist">
+<li><a href="examples/hearts-demo-2.txt" target="_blank">hearts-demo-2.txt</a> (click for the source file)
+<pre>100 REM HEARTS DEMO 2
+110 READ A: REM READ CALL ADDRESS
+120 PRINT &quot;READY FOR SOME HEARTS?&quot;
+130 GET K$:IF K$=&quot;&quot; GOTO 130
+140 FOR I=0 TO 4
+150 POKE 255, 83:SYS A
+160 FOR D=0 TO 300:NEXT D
+170 POKE 255,211:SYS A
+180 FOR D=0 TO 300:NEXT D
+190 NEXT I
+200 POKE 255,32:SYS A
+210 PRINT &quot;THIS WAS FUN!&quot;
+220 DATA {ASMSTART}
+
+;routine to fill the screen with char in $ff
+       lda $ff ;unused zeropage addr
+       ldx #0
+loop:  sta $8000,x
+       sta $8100,x
+       sta $8200,x
+       sta $8300,x
+       dex
+       bne loop
+       rts</pre></li>
+</ul>
+<p>Using <em>&ldquo;Disassemble Program&rdquo;</em> from the emulator&rsquo;s <em>&ldquo;Utils/Export&rdquo;</em> menu, we get the result of our combined BASIC and assembler efforts as in memory:</p>
+<ul class="sourcelist">
+<li>Program Disassembly ($0401-$0511)
+<pre>                         .[tokenized BASIC text]
+
+0401  15 04               link: $0415
+0403  64 00               line# 100
+0405  8F                  token REM
+0406  20 48 45 41 52 54   ascii &laquo; HEART&raquo;
+040C  53 20 44 45 4D 4F   ascii &laquo;S DEMO&raquo;
+0412  20 32               ascii &laquo; 2&raquo;
+0414  00                  -EOL-
+0415  32 04               link: $0432
+0417  6E 00               line# 110
+0419  87                  token READ
+041A  20 41 3A 20         ascii &laquo; A: &raquo;
+041E  8F                  token REM
+041F  20 52 45 41 44 20   ascii &laquo; READ &raquo;
+0425  43 41 4C 4C 20 41   ascii &laquo;CALL A&raquo;
+042B  44 44 52 45 53 53   ascii &laquo;DDRESS&raquo;
+0431  00                  -EOL-
+0432  51 04               link: $0451
+0434  78 00               line# 120
+0436  99                  token PRINT
+0437  20 22 52 45 41 44   ascii &laquo; &quot;READ&raquo;
+043D  59 20 46 4F 52 20   ascii &laquo;Y FOR &raquo;
+0443  53 4F 4D 45 20 48   ascii &laquo;SOME H&raquo;
+0449  45 41 52 54 53 3F   ascii &laquo;EARTS?&raquo;
+044F  22                  ascii &laquo;&quot;&raquo;
+0450  00                  -EOL-
+0451  68 04               link: $0468
+0453  82 00               line# 130
+0455  A1                  token GET
+0456  20 4B 24 3A         ascii &laquo; K$:&raquo;
+045A  8B                  token IF
+045B  20 4B 24            ascii &laquo; K$&raquo;
+045E  B2                  token =
+045F  22 22 20            ascii &laquo;&quot;&quot; &raquo;
+0462  89                  token GOTO
+0463  20 31 33 30         ascii &laquo; 130&raquo;
+0467  00                  -EOL-
+0468  76 04               link: $0476
+046A  8C 00               line# 140
+046C  81                  token FOR
+046D  20 49               ascii &laquo; I&raquo;
+046F  B2                  token =
+0470  30 20               ascii &laquo;0 &raquo;
+0472  A4                  token TO
+0473  20 34               ascii &laquo; 4&raquo;
+0475  00                  -EOL-
+0476  88 04               link: $0488
+0478  96 00               line# 150
+047A  97                  token POKE
+047B  20 32 35 35 2C 20   ascii &laquo; 255, &raquo;
+0481  38 33 3A            ascii &laquo;83:&raquo;
+0484  9E                  token SYS
+0485  20 41               ascii &laquo; A&raquo;
+0487  00                  -EOL-
+0488  9C 04               link: $049C
+048A  A0 00               line# 160
+048C  81                  token FOR
+048D  20 44               ascii &laquo; D&raquo;
+048F  B2                  token =
+0490  30 20               ascii &laquo;0 &raquo;
+0492  A4                  token TO
+0493  20 33 30 30 3A      ascii &laquo; 300:&raquo;
+0498  82                  token NEXT
+0499  20 44               ascii &laquo; D&raquo;
+049B  00                  -EOL-
+049C  AE 04               link: $04AE
+049E  AA 00               line# 170
+04A0  97                  token POKE
+04A1  20 32 35 35 2C 32   ascii &laquo; 255,2&raquo;
+04A7  31 31 3A            ascii &laquo;11:&raquo;
+04AA  9E                  token SYS
+04AB  20 41               ascii &laquo; A&raquo;
+04AD  00                  -EOL-
+04AE  C2 04               link: $04C2
+04B0  B4 00               line# 180
+04B2  81                  token FOR
+04B3  20 44               ascii &laquo; D&raquo;
+04B5  B2                  token =
+04B6  30 20               ascii &laquo;0 &raquo;
+04B8  A4                  token TO
+04B9  20 33 30 30 3A      ascii &laquo; 300:&raquo;
+04BE  82                  token NEXT
+04BF  20 44               ascii &laquo; D&raquo;
+04C1  00                  -EOL-
+04C2  CA 04               link: $04CA
+04C4  BE 00               line# 190
+04C6  82                  token NEXT
+04C7  20 49               ascii &laquo; I&raquo;
+04C9  00                  -EOL-
+04CA  DB 04               link: $04DB
+04CC  C8 00               line# 200
+04CE  97                  token POKE
+04CF  20 32 35 35 2C 33   ascii &laquo; 255,3&raquo;
+04D5  32 3A               ascii &laquo;2:&raquo;
+04D7  9E                  token SYS
+04D8  20 41               ascii &laquo; A&raquo;
+04DA  00                  -EOL-
+04DB  F1 04               link: $04F1
+04DD  D2 00               line# 210
+04DF  99                  token PRINT
+04E0  20 22 54 48 49 53   ascii &laquo; &quot;THIS&raquo;
+04E6  20 57 41 53 20 46   ascii &laquo; WAS F&raquo;
+04EC  55 4E 21 22         ascii &laquo;UN!&quot;&raquo;
+04F0  00                  -EOL-
+04F1  FC 04               link: $04FC
+04F3  DC 00               line# 220
+04F5  83                  token DATA
+04F6  20 31 32 37 38      ascii &laquo; 1278&raquo;
+04FB  00                  -EOL-
+04FC  00 00               -EOP- (link = null)
+
+                         .[end of BASIC text]
+
+                         * = $04FE
+04FE  A5 FF              LDA $FF
+0500  A2 00              LDX #$00
+0502  9D 00 80   L0502   STA $8000,X
+0505  9D 00 81           STA $8100,X
+0508  9D 00 82           STA $8200,X
+050B  9D 00 83           STA $8300,X
+050E  CA                 DEX
+050F  D0 F1              BNE L0502
+0511  60                 RTS
+                         .end</pre></li>
+</ul>
+
+<p>This mechanism can be used to integrate multiple machine language routines, but you will have to add any offset to the base address returned in the final <code>DATA</code> statement on your own.</p>
+<p>Note: I&rsquo;m not aware that this has been done before, so this could be well a genuine invention, since this requires some kind of engine capable of handling both BASIC source text and assembler code at once.</p>
+
+<h3 id="asm_fixed_addr">Fixed Start Addresses with BASIC Sources</h3>
+<p>In case you really want to use a fixed start address for your routine, you may either put the <span class="q">&quot;</span><code>{ASMSTART}</code><span class="q">&quot;</span> behind a dummy command or best in a <span class="q">&quot;</span><code>REM</code><span class="q">&quot;</span> statement. (Mind that hiding it in a string won&rsquo;t work, as any such text is ignored by the parser.)</p>
+
+<p>In the following example, the space between <code>$0475</code>, the end of the BASIC program, and  <code>$0480</code> (decimal <code>1152</code>), the explicitly provided start of the 6502 code, will be filled by zero-bytes:</p>
+
+<ul class="sourcelist">
+<li><a href="examples/hearts-demo-3.txt" target="_blank">hearts-demo-3.txt</a> (click for the source file)
+<pre>100 REM HEARTS DEMO 3
+110 PRINT &quot;READY FOR SOME HEARTS?&quot;
+120 GET K$:IF K$=&quot;&quot; GOTO 130
+130 SYS 1152
+140 REM ML RANGE STARTS AT {ASMSTART}
+
+* = $0480
+
+;routine to fill the screen with hearts
+       lda #83      ;screen code for heart character
+       ldx #0
+loop:  sta $8000,x
+       sta $8100,x
+       sta $8200,x
+       sta $8300,x
+       dex
+       bne loop
+       rts          ;return to BASIC</pre></li>
+<li>This will result in the following hex-dump (<em>&rdquo;Utils/Export&rdquo;</em> &rarr; <em>&ldquo;Hex-Dump Program&rdquo;</em>):
+<pre>0400: <span style="color:#aaa;">..</span> 15 04 64 00 8F 20 48   ..... H
+0408: 45 41 52 54 53 20 44 45  EARTS DE
+0410: 4D 4F 20 33 00 34 04 6E  MO 3.4..
+0418: 00 99 20 22 52 45 41 44  .. &quot;READ
+0420: 59 20 46 4F 52 20 53 4F  Y FOR SO
+0428: 4D 45 20 48 45 41 52 54  ME HEART
+0430: 53 3F 22 00 4B 04 78 00  S?&quot;.K...
+0438: A1 20 4B 24 3A 8B 20 4B  . K$:. K
+0440: 24 B2 22 22 20 89 20 31  $.&quot;&quot; . 1
+0448: 33 30 00 56 04 82 00 9E  30.V....
+0450: 20 31 31 35 32 00 74 04   1152...
+0458: 8C 00 8F 20 4D 4C 20 52  ... ML R
+0460: 41 4E 47 45 20 53 54 41  ANGE STA
+0468: 52 54 53 20 41 54 20 31  RTS AT 1
+0470: 31 34 32 <span class="code-EOP"><span class="code-EOP">00</span> <span class="code-EOP">00 00</span></span> <span class="code-fill">00 00</span>  142.....
+0478: <span class="code-fill">00 00 00 00 00 00 00 00</span>  ........
+0480: A9 53 A2 00 9D 00 80 9D  .S......
+0488: 00 81 9D 00 82 9D 00 83  ........
+0490: CA D0 F1 60              ...`</pre>
+(Orange: end of BASIC text, blue: filled by assembler until start of 6502 code at <code>0x480</code>.)</li>
+</ul>
+<p>The various parts still form a homogeneous program as indicated by the system pointers <code>TXTTAB</code> (start of BASIC text) = <code>$0401</code> and <code>VARTAB</code> (start of BASIC variables) = <code>$0494</code>.<br />
+(Use <em>&rdquo;Utils/Export&rdquo;</em> &rarr; <em>&ldquo;Show BASIC System Pointers&rdquo;</em> to view these pointers.)</p>
+
+<h2 id="considerations">Rationale &mdash; General Considerations</h2>
+<p>I&rsquo;ve always looked with respectful envy at those BASIC dialects featuring in-line assembly, like BBC BASIC. Could we have similar for Commodore BASIC? I&rsquo;d argue that this isn&rsquo;t the way to go about this on the Commodore 8-bits, since the BASIC runtime shuffles variables around in memory, as new variables are encountered. This is especially true for subscripted variables (arrays), which are often used for a scheme like this, and there is no such thing as a stable location in memory.</p>
+<p>The Commodore way of doing this &mdash; at least for me &mdash; is appending any machine language code to the BASIC program, but including it in the program range as set by the two system pointers <code>TXTTAB</code> and <code>VARTAB</code>, the former holding the start address of the tokenized BASIC text in memory (usually <code>0x401</code> on the PET), the latter providing the start of the memory available for variables, just after the last byte of BASIC text. This way, the machine language part is still an integral part of the program and won&rsquo;t be affected by the runtime.</p>
+<p>However, mind that, should your machine language routine(s) make use of some tables, you&rsquo;d better reserve the space required. Since, if you were merely addressing some space beyond your program blindly, this potentially clashes with any variables managed by the BASIC runtime.</p>
+
+<p class="sep">&mdash; <big>&#10086;</big> &mdash;</p>
+
+<p id="useful_addr">Finally, some useful addresses (new ROM / BASIC 2.0)</p>
+<pre class="symtab">; PET 2001 system addresses (ROM 2.0)
+
+USRPOK   = $00  ;$4C constant (JMP instruction)
+USRADD   = $01  ;USR function addr. lo, hi ($02)
+COUNT    = $05  ;BASIC input buffer pointer (&quot;#&quot; subscript)
+VAUYP    = $07  ;variable flag, type: $FF=string, $00=numeric
+INTFLG   = $08  ;integer flag: $80=integer, $00=floating point
+GARBFL   = $09  ;flag for DATA, LIST quote, memory
+SUBFLG   = $0A  ;flag for subscript, FNx
+INPFLG   = $0B  ;input/read flag: $00=input, $40=get, $98=read
+TANSGN   = $0C  ;flag ATN sign, comparision evaluation
+LINNUM   = $11  ;BASIC integer address for SYS, GOTO, etc (lo, hi)
+INDEX    = $1F  ;pointer for number transfer (lo, hi)
+RESHO    = $23  ;product staging area for multiplication
+TXTTAB   = $28  ;pointer: start of BASIC text in memory
+VARTAB   = $2A  ;pointer: end of BASIC, start of variables
+ARYTAB   = $2C  ;pointer: end of variables, start of arrays
+STREND   = $2E  ;pointer: end of arrays
+FRETOP   = $30  ;pointer: top of memory, bottom of strings
+FRESPC   = $32  ;utility string pointer
+MEMSIZ   = $34  ;pointer: limit of BASIC memory
+CURLIN   = $36  ;current BASIC line number
+OLDLIN   = $38  ;previous BASIC line number
+OLDTXT   = $3A  ;pointer to BASIC statement for CONT
+DATLIN   = $3C  ;line number, current DATA item
+DATPTR   = $3E  ;pointer to current DATA item
+INPPTR   = $40  ;input vector
+VARNAM   = $42  ;current variable name
+VARPNT   = $44  ;current variable address
+FORPNT   = $46  ;variable pointer for FOR/NEXT
+TEMPF1   = $54  ;misc numeric storage area
+TEMPF2   = $59  ;misc numeric storage area
+FACEXP   = $5E  ;floating point accumulator 1: exponent
+FACHO    = $5F  ;floating point accumulator 1: mantissa (4 bytes)
+FACSGN   = $63  ;floating point accumulator 1: sign
+SGNFLG   = $64  ;series evaluation constant pointer
+BITS     = $65  ;accumulator hi-order propagation word
+ARGEXP   = $66  ;floating point accumulator 2: exponent
+ARGHO    = $67  ;floating point accumulator 2: mantissa (4 bytes)
+ARGSGN   = $6B  ;floating point accumulator 2: sign
+ARISGN   = $6C  ;sign comparison (primary vs. secondary)
+FACOV    = $6D  ;low-order rounding byte for FAC #1
+FBUFPT   = $6E  ;cassette buffer length/series pointer
+CHRGET   = $70  ;subroutine to get the next character
+CHRGOT   = $76  ;character found by CHARGET
+TXTPTR   = $77  ;pointer to source text for CHARGET
+RNDX     = $88  ;round storage and work area
+TIME     = $8D  ;jiffy clock in 1/60 sec for TI and TI$ (lo, hi)
+CINV     = $90  ;IRQ vector (lo, hi), hardware interrupt
+CBINV    = $92  ;BRK interrupt vector (lo, hi)
+NMINV    = $94  ;NMI interrupt vector (lo, hi)
+STATUS   = $96  ;status word ST
+LSTX     = $97  ;which key? matrix coordinates of last key down: row/col, $FF=no key
+SFDX     = $98  ;shift key: 1=pressed
+STKEY    = $9B  ;last read from keyboard scan: STOP and RVS flags
+SVXT     = $9C  ;timing constant buffer
+VERCK    = $9D  ;flag: LOAD=0, VERIFY=1
+NDX      = $9E  ;index into keyboard buffer
+RVS      = $9F  ;screen reverse flag
+C3PO     = $A0  ;IEEE output flag: $FF=character waiting
+INDX     = $A1  ;pointer: end-of-line for input
+LXSP     = $A3  ;cursor log (row, col)
+BSOUR    = $A5  ;IEEE output character buffer
+BLNSW    = $A7  ;flag: 0=flashing cursor, else no cursor
+BLNCT    = $A8  ;countdownfor cursor timing
+GDBLN    = $A9  ;character under cursor
+BLNON    = $AA  ;cursor blink flag
+SYNO     = $AB  ;EOT bit received
+NXTBIT   = $AB  ;-- &quot; --
+CRSW     = $AC  ;input from screen/input from keyboard
+LDTND    = $AE  ;number of open files, pointer into file table
+DFLTN    = $AF  ;input device (normally 0)
+DFLTO    = $B0  ;output CMD device (normally 3)
+PRTY     = $B1  ;tape character parity
+DPSW     = $B2  ;byte received flag
+BUFPNT   = $BB  ;tape buffer #1 count ($BC: tape buffer #2 count)
+INBIT    = $BD  ;write leader count, read pass 1/pass 2
+BITCI    = $BE  ;write new byte, read error flag
+RINONE   = $BF  ;write start bit, read bit seq error
+FNMIDX   = $C0  ;pass 1 error log pointer
+PTR1     = $C0  ;-- &quot; --
+PTR2     = $C1  ;pass 2 error correction pointer
+RIDATA   = $C2  ;current function: 0=scan, $01-$0F=count, $40=load, $80=end
+RIPRTY   = $C3  ;read checksum, write leader length
+PNT      = $C4  ;pointer to screen line (lo, hi)
+PNTR     = $C6  ;column position of cursor on above line
+SAL      = $C7  ;utility pointer for tape buffer, scrolling
+EAL      = $C9  ;tape end address / end of current program
+QTSW     = $CD  ;flag for quote mode: 0=direct mode, else programmed cursor
+BITTS    = $CE  ;timer 1 enabled for tape read, 0=disabled
+FNLEN    = $D1  ;number of characters in file name
+LA       = $D2  ;current logical file number
+SA       = $D3  ;current secondary address, or R/W command
+FA       = $D4  ;current device number
+LNMX     = $D5  ;line length (39 or 79) for screen
+TAPE1    = $D6  ;start of tape buffer (address lo, hi)
+TBLX     = $D8  ;current line with cursor
+DATAX    = $D9  ;last key input, buffer checksum, bit buffer
+FNADR    = $DA  ;pointer to current file name
+INSRT    = $DC  ;number of keyboard INSERTs outstanding
+ROPRTY   = $DD  ;write shift word / receive input character
+FSBLK    = $DE  ;number of blocks remaining for read/write
+MYCH     = $DF  ;serial buffer word
+LDTB1    = $E0  ;screen line table, hi order addr. and line wrap
+CAS1     = $F9  ;interrupt driver flag for cassette #1 status switch
+CAS2     = $FA  ;interrupt driver flag for cassette #2 status switch
+STAL     = $FB  ;tape start address (lo, hi)
+MEMUSS   = $FD  ;pointer for monitor (MLM)
+
+BAD      = $0100  ;start of processor stack, tape error log
+BUF      = $0200  ;MLM area
+TBUFFR   = $027A  ;tape (cassette) buffer
+TIMOUT   = $03FC  ;
+
+; kernal addresses
+OPEN     = $FFC0
+CLOSE    = $FFC3
+CHKIN    = $FFC6  ;set input device
+CHKOUT   = $FFC9  ;set output device
+CLRCHN   = $FFCC  ;restor I/O
+CHRIN    = $FFCF  ;read a byte from input
+CHROUT   = $FFD2  ;write a byte to output
+LOAD     = $FFD5
+SAVE     = $FFD8
+VERIFY   = $FFDB
+SYS      = $FFDE
+STOP     = $FFE1  ;check STOP key (affects A only, zero-flag set: STOP pressed)
+GETIN    = $FFE4  ;get a character
+CLALL    = $FFE7  ;abort all I/O
+INCTIME  = $FFEA  ;update clock, scan and store key
+
+; hardware addresses
+VIDEO    = $8000
+
+PIA1_PA	 = $E810
+PIA1_CRA = $E811
+PIA1_PB	 = $E812
+PIA1_CRB = $E813
+PIA2_PA	 = $E820
+PIA2_CRA = $E821
+PIA2_PB	 = $E822
+PIA2_CRB = $E823
+
+VIA_DRB	 = $E840
+VIA_DRA	 = $E841
+VIA_DDRB = $E842
+VIA_DDRA = $E843
+VIA_T1CL = $E844
+VIA_T1CH = $E845
+VIA_T1LL = $E846
+VIA_T1LH = $E847
+VIA_T2CL = $E848
+VIA_T2CH = $E849
+VIA_SR	 = $E84A
+VIA_ACR	 = $E84B
+VIA_PCR	 = $E84C
+VIA_IFR	 = $E84D
+VIA_IER	 = $E84E
+VIA_ANH	 = $E84F</pre>
+
+<p class="sep">&mdash; <big>&#10086;</big> &mdash;</p>
+
+<p rel="author">Norbert Landsteiner<br />Feb. 2023<br /><a href="https://www.masswerk.at/" target="_top">www.masswerk.at</a></p>
+
+</main>
+</body>
+</html>

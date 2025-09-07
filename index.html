@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Commodore PET 2001</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=820" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="description" content="An online emulator of the Commodore PET 2001 computer." />
+	<meta name="application-name" content="PET 2001 (v.2.0)" />
+	<meta property="og:image" content="https://www.masswerk.at/pet/assets/PET2001preview.jpg" />
+	<meta name="twitter:image" content="https://www.masswerk.at/pet/assets/PET2001preview.jpg" />
+	<link rel="image_src" href="https://www.masswerk.at/pet/assets/PET2001preview.jpg" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-title" content="PET 2001" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="white" />
+	<link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png" />
+	<link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png" />
+	<link rel="apple-touch-icon" sizes="167x167" href="assets/apple-touch-icon-167x167.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon-180x180.png" />
+	<link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+	<link rel="stylesheet" href="assets/pet2.css?v=2025-04-28" />
+	<link rel="stylesheet" href="assets/fonts.css" />
+
+<script type="text/javascript" defer src="js2/cpu6502_masswerk_at.js?v=2025-04-19"></script>
+<script type="text/javascript" defer src="js2/pet2001roms.js?v=2024-12-18"></script>
+<script type="text/javascript" defer src="js2/pet2001ieee.js?v=2023-02-28"></script>
+<script type="text/javascript" defer src="js2/pet2001io.js?v=2024-06-11"></script>
+<script type="text/javascript" defer src="js2/pet2001video.js?v=2025-08-03"></script>
+<script type="text/javascript" defer src="js2/pet2001.js?v=2025-03-27"></script>
+<script type="text/javascript" defer src="js2/pet2001keyboard.js?v=2025-03-27"></script>
+<script type="text/javascript" defer src="js2/pet2001audio.js?v=2024-11-25"></script>
+<script type="text/javascript" defer src="js2/petutils.js?v=2025-07-23"></script>
+<script type="text/javascript" defer src="js2/petdebug.js?v=2025-08-05"></script>
+<script type="text/javascript" defer src="js2/pet2001ctrl.js?v=2025-08-05"></script>
+<script type="text/javascript">
+	var petHelpVersion = '2025-03-28', petPrgLibVersion = '2025-07-28';
+	window.name = 'at_masswerk_pet';
+</script>
+</head>
+<body>
+<main>
+	<h1><span id="petImg" onclick="petCtrl.toggleElement('imgOverlay'); return false;" role="img" aria-label="small image of a PET 2001"></span> <span id="apptitle">Commodore PET 2001 Series</span> <input type="button" value="Help" onclick="petCtrl.toggleHelp(); return false;" role="button" aria-label="Modal help dialog" /> 
+		<span id="demos" title="Some inspirational content&hellip;" role="button" aria-label="Modal dialog to launch some PET demos"><svg id="favorites" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 32 32" role="button" onclick="petCtrl.showDemoPane();" title="Some inspirational content&hellip;"><path d="M16,1l3.762,10.822l11.455,0.234l-9.13,6.922l3.318,10.966l-9.405,-6.544l-9.405,6.544l3.318,-10.966l-9.13,-6.922l11.455,-0.234l3.762,-10.822Z" /></svg></span></h1>
+	<div id="petScreen" role="presentation" aria-label="virtual screen"><canvas id="petScreenCanvas" width="650" height="410"></canvas><noscript>JavaScript required.</noscript></div>
+
+	<div id="petControls" class="notranslate" role="group" aria-label="emulation controls"><!--
+		--><input type="button" onclick="petCtrl.resetButton(event.shiftKey || event.ctrlKey || event.metaKey);petCtrl.refocus(this);return false;" id="btnReset"
+			title="Resets the emulator.&#10;Shift-click to reset to default values."
+			value=" Reset " /><!--
+		--><input type="button" onclick="petCtrl.pauseButton();petCtrl.refocus(this);return false;" id="btnPause"
+			value=" Pause " /><!--
+		--><select onchange="petCtrl.petExport(this);this.selectedIndex=0;petCtrl.refocus(this);" id="menuUtils" class="gap">
+			<option value="" selected>Utils/Export</option>
+			<optgroup label="Screen">
+				<option value="screen as text">Screen Text As Unicode</option>
+				<option value="image">Screen As Image</option>
+				<option value="image marginless">Screen As Image, No Margins</option>
+				<option value="hardcopy">Printer Hard-Copy</option>
+				<option value="screen as hex" title="Generates a hex-dump of the screen memory. May come handy for assembler data.">Screen Memory as Hex-Dump</option>
+				<option value="screen as basic" title="Generates a portable BASIC program that will reproduce the contents currently on the screen by PRINT statements.">Generate BASIC Program</option>
+			</optgroup>
+			<optgroup label="Memory">
+				<option value="list basic escaped" title="Exports a BASIC listing where any PETSCII characters are escaped as {ddd}. Perfect for editing and drag-and-drop operations.">BASIC As Escaped Listing</option>
+				<option value="list basic" title="Exports a BASIC listing where any PETSCII characters are translated to CHR$-expressions.">BASIC As Portable Listing</option>
+				<option value="hex-dump">Hex-Dump Address Range</option>
+				<option value="hex-dump program">Hex-Dump Program</option>
+				<option value="disassemble">Disassemble Address Range</option>
+				<option value="disassemble program">Disassemble Program</option>
+				<option value="disassemble variables">Disassemble Variables</option>
+				<option value="basicPointers">Show BASIC System Pointers</option>
+				<option value="basicVariables">Show BASIC Variable Dump</option>
+				<option value="basicStringStack">Show BASIC String Stack</option>
+				<option value="memoryMap">Show Memory Map</option>
+			</optgroup>
+			<optgroup label="Other">
+				<option value="export prg" title="Export the program currently in memory as a PRG-file.">Export PRG-File From Memory</option>
+				<option value="link-basic" title="Generate an executable data-URL.">BASIC Program As URL</option>
+				<!--<option value="link-screen">Screen as URL</option>-->
+				<option value="renumber">Renumber BASIC In Memory</option>
+				<option value="charset">Switch Character Set</option>
+			</optgroup>
+		</select><!--
+		--><select onchange="petCtrl.setColor(this.options[this.selectedIndex].value);petCtrl.refocus(this);" id="menuScreenColor" class="gap">
+			<option value="green" selected>Screen: Green</option>
+			<option value="white">Screen: White</option>
+			<option value="ink">Screen: E-Ink</option>
+		</select><!--
+		--><select onchange="petCtrl.setKeyRepeat(this.options[this.selectedIndex].value==='true');petCtrl.refocus(this);" id="menuKeyRepeat">
+			<option value="true" selected title="Key repeat emulation: on (ideal for editing)">Keyboard: Editing</option>
+			<option value="false" title="Key repeat emulation: off (ideal for games)">Keyboard: Games</option>
+		</select><!--
+		--><select onchange="petCtrl.romSelection();petCtrl.refocus(this);" id="menuRom">
+			<optgroup label="PET 2001">
+				<option value="1" title="BASIC 1.0 &ndash; &quot;Old ROM&quot;">ROM&thinsp;1</option>
+				<option value="2" title="BASIC 2.0 &ndash; &quot;New ROM&quot;" selected>ROM&thinsp;2</option>
+			</optgroup>
+			<optgroup label="PET 2001-N">
+				<option value="4" title="BASIC 4.0">ROM&thinsp;4</option>
+			</optgroup>
+			<optgroup label="CBM 2001/B">
+				<option value="2b" title="BASIC 2.0 with business keyboard">ROM&thinsp;2b</option>
+				<option value="4b" title="BASIC 4.0 with business keyboard">ROM&thinsp;4b</option>
+			</optgroup>
+		</select><!--
+		--><select onchange="petCtrl.ramsizeSelection();petCtrl.refocus(this);" id="menuRam">
+			<option value="8">RAM: 8K</option>
+			<option value="16" selected>RAM: 16K</option>
+			<option value="32">RAM: 32K</option>
+		</select><br /><!--
+		--><input type="checkbox" id="cbxClickCursor" onchange="petCtrl.observeScreenClicks(this.checked);petCtrl.refocus(this);" title="Position the cursor by clicking or tapping anywhere on the screen." />
+		<label for="cbxClickCursor" id="labelClickCursor" title="Position the cursor by clicking or tapping anywhere on the screen.">Click-Cursor</label>
+		<input type="button" onclick="petCtrl.showPrgLibrary(event.shiftKey || event.ctrlKey || event.metaKey); return false;" id="btnPrgLibrary" value=" Prg Library " title="Show a list of programs to load and run.&#10;Shift-click to open in a new window." />
+		<input type="button" onclick="petCtrl.showMountDialog();return false;"
+			value=" Mount File " title="Mount a file or disk image ..." id="btnFileMount" />
+		<input type="button" onclick="petCtrl.displayDirectory('disk');return false;" id="btnDiskDirectory" hidden
+			value=" Disk Directory " title="Show the disk directoryDialog ..." />
+		<input type="button" onclick="petCtrl.displayDirectory('tape');return false;" id="btnTapeDirectory" hidden
+			value=" Tape Directory " title="Show the tape directoryDialog ..." />
+		<svg id="fileIcon" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 18 18" xml:space="preserve" onclick="petCtrl.activateMountedMedia();return false;" title="Click to activate the mounted file&hellip;"><rect id="fileIconBg" x="1" y="1" width="16" height="16" stroke="none" fill="none" /><use xlink:href="#icon-none" x="0" y="0"></use></svg>
+	 	<label id="mountedFile">File: none.</label><!--
+	 	--><span id="virtualKeypadBtn" title="Virtual Keypad On/Off" onclick="petCtrl.toggleVirtualKeypad();return false;" role="button"><svg id="keypadIcon" x="0px" y="0px" width="20px" height="22px" viewBox="0 0 20 22" xml:space="preserve"><use id="keypad-bg" xlink:href="#icon-keypad-bg" x="0" y="0" opacity="0"></use><use xlink:href="#icon-keypad" x="0" y="0"></use><line id="keypad-disabled" x1="20" y1="3" x2="2" y2="22" stroke="rgb(150,150,150)" stroke-width="0.8" stroke-linecap="round" /></svg><span id="keypadIndicator"></span></span><!--
+		--><span id="joystickSettings" title="Joystick Settings&hellip;" onclick="petCtrl.openJoystickDialog();return false;" role="button"><svg id="joystickIcon" x="0px" y="0px" width="20px" height="22px" viewBox="0 0 22 24" xml:space="preserve"><use id="joystick-bg"xlink:href="#icon-joystick-bg" x="0" y="0" opacity="0"></use><use xlink:href="#icon-joystick" x="0" y="0"></use><line id="joystick-disabled" x1="19" y1="4" x2="1" y2="23" stroke="rgb(150,150,150)" stroke-width="1" stroke-linecap="round" /></svg><span id="kbdJoyStickIndicator"></span></span><!--
+		--><span id="soundCtrl"><input type="checkbox" id="soundCbxOnOff" /><label for="soundCbxOnOff" title="Sound On/Off"></label><input type="range" id="soundVolume" min="0" max="100" value="0" /><input type="checkbox" id="soundCbxFX" /><label for="soundCbxFX" title="Postprocessing On/Off (Loudness)"></label></span><!--
+	--></div>
+	<div id="petKeyboard" role="img" aria-label="graphical keyboard"></div>
+	<div id="credits">
+		<p><em>Credits:</em><br/>
+		<a href="https://en.wikipedia.org/wiki/Commodore_PET" target="_blank" rel="noopener">Commodore PET 2001</a> by Commodore International / Commodore Business Machines (CBM), 1977-1979.<br />
+		Emulation based on an original Commodore PET 2001 emulation by &copy; 2014 <a href="http://www.thomasskibo.com/6502/pet2001/" target="_blank" rel="noopener">Thomas Skibo</a> (all rights reserved, redistribution permitted; here used with kind permission). Meanwhile, most parts of the emulator have been rewritten or replaced by alternative solutions. The I/O and IEEE implementation is still much Tom Skibo's code.<br/>CPU, audio &amp; CRT emulation, keyboard implementation, file, disk and tape image handling, BASIC &amp; 6502 assembler &amp; disassembler, utilities and enhanced interface by Norbert Landsteiner (mass:werk), 2017&ndash;2023, <a href="/">www.masswerk.at</a>.<br />
+		PET keyboard image (SVG, rerendered to PNG by me) by <a href="http://commons.wikimedia.org/wiki/User:Lovelac7" target="_blank" rel="noopener">Lovelac7</a>, 2008, <a href="https://commons.wikimedia.org/wiki/File:PET_Keyboard.svg" target="_blank" rel="noopener">Wikimedia</a> / <a href="https://en.wikipedia.org/wiki/en:Creative_Commons" target="_blank" rel="noopener">Creative Commons</a>. Image of PET 2001 computer (edited) by <a href="http://www.flickr.com/photos/tomislavmedak/3803230853/" target="_blank" rel="noopener">Tomislav Medak</a>, 2009, <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank" rel="noopener">Creative Commons</a>.</p>
+
+		<p><em>Running Files:</em><br/>
+		You may run programs by simply dragging and dropping files onto the virtual screen of the emulator.<br />
+		Supported file formats are:</p>
+		<ul>
+			<li>generic CBM prg-format (file extensions &quot;.prg&quot; or &quot;.pet&quot;),</li>
+			<li>P00-files (file extensions &quot;.p00&quot; &hellip; &quot;.p99&quot;),</li>
+			<li>programs on D64 / D80 / D82 disk images (&quot;.d64&quot;, &quot;.d80&quot;, &quot;.d82&quot;)</li>
+			<li>T64 tape archives (&quot;.t64&quot;),</li>
+			<li>BASIC source files (text files with extensions &quot;.txt&quot;, &quot;.ba&quot; or &quot;.bas&quot;).</li>
+			<li><a href="pet-assembler-help.html" target="masswerk_at_pet_assembler_help" title="See the associated documentation&hellip;">6502 assembler</a> sources (text files with extensions &quot;.a&quot;, &quot;.as&quot;, &quot;.asm&quot;, &quot;.a65&quot;, &quot;.s&quot; or &quot;.src&quot;) and BASIC source files with <a href="pet-assembler-help.html#asm_continuation" target="masswerk_at_pet_assembler_help"  title="See the associated section the assembler help page&hellip;">appended</a> assembler source code.</li>
+			<li>QBASIC-like source files (text files with extensions &quot;.qb&quot;, &quot;.qba&quot;, &quot;.qbas&quot;) will be <a href="#" onclick="petCtrl.toggleHelp('petHelpTopicQB'); return false;">preprocessed</a> and transformed to regular Commodore BASIC sources. This supports auto line numbering, labels with &ldquo;<code>[&hellip;]</code>&rdquo;, and comments with &ldquo;<code>'</code>&rdquo;.</li>
+		</ul>
+		<p>Binary files will be run automatically (hold SHIFT to override), while BASIC source files are just loaded in order to allow for an inspection of the generated BASIC program.
+		(BASIC source files may be both in lower and upper case, case is evaluated on a per-word basis. While common <a href="pet-char-mapping.html" target="at_masswerk_pet_charmapping">Unicode substitutes</a> for non-alphabetic PETSCII characters should work, it is recommended to use &quot;chr$()&quot; or the special <a href="#" onclick="petCtrl.toggleHelp('petHelpTopicEscapes'); return false;">PETSCII escapes</a>.)<br />
+		You may also provide a BASIC source text as URL-Data. Simply export a link for you program using the option <em>&ldquo;BASIC Program As URL&rdquo;</em> from the <em>Utils/Export</em> menu.<br />
+		For best gaming experiences set the keyboard to &quot;Games&quot;-mode (accurate keyboard emulation without simulated key repeat) from the pop-up menu at the bottom of the virtual screen.</p>
+		<p>Directories are fully emulated for disk images and tape archives (emulated as disks in drive 8), including LOAD (and DLOAD) commands and directory listings from BASIC, wildcards and type selectors. Please mind that the emulated IEEE interface currently doesn&rsquo;t support advanced BASIC 4.0 disk commands. (E.g., please use the traditional &ldquo;<code>LOAD &quot;$&quot;,8</code>&rdquo; instead of &ldquo;<code>DIRECTORY</code>&rdquo;.)</p>
+		<p><em>Installing Option ROMs:</em><br/>
+		Similarly to loading files, you may also install option ROMs or overwrite installed ROMs by dragging and dropping a binary ROM-image (with file extension &ldquo;<code>.bin</code>&rdquo; or &ldquo;<code>.rom</code>&rdquo;) or using the mount dialog.<br />Only a single ROM image can be installed at once and you will have to provide either a start address (in hex) or a ROM socket designator (&ldquo;H<i>n</i>&rdquo;, &ldquo;D<i>n</i>&rdquo;, &ldquo;UD<i>n</i>&rdquo;). To install multiple ROMs, pause the emulator first. Any installed ROMs are reset and lost, when changing the ROM configuration (using the ROM-menu).</p>
+		<p style="margin-top: 0.5em;">Note: Of the original PET 2001s, only the PET 2001-N (the later model with the &ldquo;real&rdquo; keyboard) came with sockets for option ROMs. So there will be no option ROMs for the orignal ROM 1.0 configuration and you&rsquo;ll probably need ROM 4.0.</p>
+		<p><em>Tip of the Day:</em><br/>
+			Have a look at the emulated screen&rsquo;s context menu for some quick screen and editing options.</p>
+		
+		<p><em>New:</em><br />
+			Configurable joystick to PET keyboard custom key mappings.<br />
+			Business keyboard with BASIC 2.0 and BASIC 4.0 with &ldquo;ROM 2b&rdquo; and &ldquo;ROM 4b&rdquo;, respectively.<br />
+			Please mind that <kbd>RUN/STOP</kbd> is <kbd>ALT+ESC</kbd> with the business keyboard, since this features an ESC key of its own.</p>
+		<p><em>Some Notable Features:</em></p>
+		<ul>
+			<li>cycle accurate sound, video and CPU emulation &mdash; we run all of the <button onclick="petCtrl.showDemoPane(true);" class="asLink">demos</button> :-)</li>
+			<li>various ROM-sets for BASIC 1, 2 (default) and 4</li>
+			<li>business keyboard with ROM 4b (&ldquo;b&rdquo; as in &ldquo;business&rdquo;)</li>
+			<li>drag&amp;drop loading of BASIC sources (as text files) with support for common tags and <a href="pet-char-mapping.html" target="at_masswerk_pet_charmapping">Unicode substitutes</a> for PETSCII characters, including the legacy computing range</li>
+			<li>drag&amp;drop 6502 assembler (supporting both stand-alone source files or ASM code appended to a BASIC source file, see the <a href="pet-assembler-help.html" target="masswerk_at_pet_assembler_help" title="See the associated documentation&hellip;">assembler help</a> for syntax and BASIC integration)</li>
+			<li>a built-in <a href="#" onclick="petCtrl.toggleHelp('petHelpTopicDebugger'); return false;">debugger</a> (click the icon on the top right or press <kbd>CTRL+ESC</kbd>, which also halts the PET)</li>
+			<li>BASIC renumbering</li>
+			<li>BASIC variables dump</li>
+			<li>context aware disassembly (including 6502 code, BASIC text and variable memory &mdash; explore what your program is made of) and hex-dumps</li>
+			<li>support for joysticks/gamepads and various adapter schemes (incl. SNES serial controllers)</li>
+			<li>keyboard joystick emulation (cursor keys and SPACE with CAPS LOCK in <em>&ldquo;Games&rdquo;</em> mode)</li>
+			<li>numeric keypad emulation (with CAPS LOCK and keypad option in <em>&ldquo;Games&rdquo;</em> mode)</li>
+			<li>support for common disk image and file formats</li>
+			<li>consistent use of context menus for major control elements, wherever this makes sense</li>
+			<li>program export and file extraction from archives (via an item&rsquo;s context menu)</li>
+			<li>copy &amp; paste to and from the screen and export of screen contents as text or image (also see the screen&rsquo;s context menu)</li>
+			<li>support for locally stored <a href="#" onclick="petCtrl.toggleHelp('petHelpTopicSaveStates'); return false;">save states</a> (temporary mount points)</li>
+			<li>support for option ROMs.</li>
+			<li>support for the Japanese character ROM (Katagana) &mdash; use the screen&rsquo;s context menu to activate, see the <a href="pet-char-mapping.html#kana" target="at_masswerk_pet_charmapping">character info</a> for supported Unicode imput.</li>
+		</ul>
+		<p>Many thanks to <a href="prgs/#games-dragon"  onclick="petCtrl.showPrgLibrary(false, 'games-dragon'); return false;" title="See JasonCook's latest PET game&hellip;">Jason Cook</a> for beta testing version 2.0 and helpful discussions!</p>
+		<p>See <a href="prgs/" style="margin-left: 0.2em; margin-right: 0.2em;">here</a> for some games (with hotlinks to load them into the emulator) and PET 2001 manuals.</p>
+		<div id="donate">If you like to support further development, consider to donate (via PayPal.com):
+		<div id="donate-button" class="donate-link">
+			<!-- PayPal Code -->
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="TS4C8TG5XBLB4">
+			<input type="image" src="assets/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+			</form>
+			<!-- /PayPal Code -->
+		</div>
+		<p>Or you can buy me a coffee:
+		<a class="donate-link" href="https://www.buymeacoffee.com/masswerk" target="_blank" style="margin-left: 0.8em;" rel="noopener"><img src="assets/buymeacoffee-yellow.png" width="108" height="30" alt="Buy Me A Coffee" style="height: 30px !important;width: 108px !important; vertical-align: middle;" ></a></p>
+		</div>
+	</div>
+</main>
+
+<section id="debug">
+<button id="debugLock" class="closed" title="lock/unlock register editing"><svg x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40">
+<path id="debugLock-closed" d="M14.011,20.053c-0,-0 0.082,-0.776 0.082,-5.796c0,-6.874 11.946,-6.924 11.946,-0.05c-0,4.857 0.036,5.915 0.036,5.915l-1.507,0.019l-0,-5.502c-0,-5.492 -9.092,-5.39 -9.092,0.102c0,4.804 0.084,5.356 0.084,5.356" style="fill:none;stroke:currentColor;stroke-width:1px;"/><path id="debugLock-open" d="M15.565,20.005c-0,0 -0.083,-2.73 -0.083,-7.75c0,-6.874 -11.945,-6.924 -11.945,-0.05c-0,4.857 -0.036,6.411 -0.036,6.411l0.871,0.008l-0.019,0.492l0.655,0l-0,-6.479c-0,-5.492 9.091,-5.39 9.091,0.102c0,4.805 -0.084,7.311 -0.084,7.311" style="fill:none;stroke:currentColor;stroke-width:1px;"/><path d="M29.041,20.74l0,11.748c0,0.36 -0.292,0.652 -0.652,0.652l-16.692,0c-0.36,0 -0.653,-0.292 -0.653,-0.652l0,-11.748c0,-0.361 0.293,-0.653 0.653,-0.653l16.692,-0c0.36,-0 0.652,0.292 0.652,0.653Z" style="fill:none;stroke:currentColor;stroke-width:1.5px;"/>
+</svg></button>
+<table id="debugRegs">
+	<thead>
+		<tr><td title="program counter">PC</td><td title="accumulator (A register)">AC</td><td title="X register">XR</td><td title="Y register">YR</td><td title="status register">SR</td><td title="stack pointer">SP</td><td class="debugFlags"><span title="negative">N</span><span title="overflow">V</span><span>-</span><span title="break">B</span><span title="decimal">D</span><span title="interrupt inhibit">I</span><span title="zero">Z</span><span title="carry">C</span></td></tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="text" data-reg="pc" maxlength="4" value="0000" /></td>
+			<td><input type="text" data-reg="a" maxlength="2" value="00" /></td>
+			<td><input type="text" data-reg="x" maxlength="2" value="00" /></td>
+			<td><input type="text" data-reg="y" maxlength="2" value="00" /></td>
+			<td><input type="text" data-reg="sr" maxlength="2" value="00" /></td>
+			<td><input type="text" data-reg="sp" maxlength="2" value="00" /></td>
+			<td class="debugFlags"><span data-flag="n">-</span><span data-flag="v">-</span><span>1</span><span data-flag="b">-</span><span data-flag="d">-</span><span data-flag="i">-</span><span data-flag="z">-</span><span data-flag="c">-</span></td>
+  		</tr>
+  	</tbody>
+</table>
+<p id="debugDisass" title="next instruction">----</p>
+<p id="debugHint" title="instruction preview with effective operands">&hellip;</p>
+<p id="debugVideo" title="video status (next cycle)">&hellip;</p>
+<div id="debugLog">
+	<p class="debugTitle">Log</p>
+	<p id="debugTraceTitle"><span title="address">addr</span> <span title="instruction">instr</span>     <span title="disassembly">disass</span>       |<span title="accumulator">AC</span> <span title="X register">XR</span> <span title="Y register">YR</span> <span title="stack pointer">SP</span>|<span title="status flags">nvdizc</span>|<span title="cycle count">#</span></p>
+	<textarea id="debugTrace" rows="7" cols="49" wrap="virtual" readonly dir="ltr" translate="no" spellcheck="false"></textarea>
+	<a href="#" role="button" id="debugShowCPULog" title="show CPU log of last steps executed">Show CPU Log</a> <a href="#" role="button" id="debugTraceClear" title="clear log">Clear</a>
+</div>
+<p class="debugTitle">Breakpoints &amp; Brackets <a href="#" role="button" style="margin-left: 0.75em;" id="debugBreakpointsNew" title="set a new breakpoint">New</a></p>
+<div id="debugBreakpoints"></div>
+<p id="debugInterrupts"><span><input type="checkbox" id="debugIgnoreInterruptsCbx" /> <label for="debugIgnoreInterruptsCbx" title="applies to 'Single Step' and 'Next Block' modes only">ignore interrupts</label></span><span><input type="checkbox" id="debugTrapIllegalsCbx" /> <label for="debugTrapIllegalsCbx" title="halt on 'illegal' instructions">trap &quot;illegal&quot; instructions</label></span></p>
+<div id="debuggerBtns"><button id="debugBtnStep" title="execute next instruction">Single Step</button><button id="debugBtnNext" title="run until next jump, subroutine, interrupt, return">Next Block</button><button id="debugBtnCont" title="continuous run">Cont. Run</button><span class="right"><button id="debugBtnHalt" title="halt execution">Halt</button></span></div>
+<div id="debugDisplays">
+	<ul id="debugTabs">
+		<li id="debugTabStack" class="active">Stack</li>
+		<li id="debugTabMem">Memory</li>
+		<li id="debugTabIO">I/O</li>
+		<li id="debugTabCode">Code</li>
+	</ul>
+	<div id="debugPanes">
+		<div id="debugPaneStack" class="active">
+			<div id="debugDisplayStack" class="debugDisplay"></div>
+			<p class="note">processor stack: $100 &ndash;$1FF, right-click values to edit.</p>
+		</div>
+		<div id="debugPaneMem">
+			<div class="debugDisplayCtrl"><label for="debugMemPage">Page (00&hellip;FF):</label> <input id="debugMemPage" type="text" value="00" maxlength="4" />
+				<button id="debugMemBtn" class="debugPaneBtn">show</button>
+				<span class="debugPaneMiddle">
+					<button id="debugPageBtnPrev" class="debugPaneBtn" title="Previous Memory Page"><span class="debugRoundBtn">&lt;</span></button>
+					<button id="debugPageBtnNext" class="debugPaneBtn" title="Next Memory Page"><span class="debugRoundBtn">&gt;</span></button>
+				<span>
+				<button id="debugMemMapBtn" class="debugPaneRight" title="show visual map&hellip;">M</button></div>
+			<div id="debugDisplayMem" class="debugDisplay"></div>
+			<p class="note" id="debugMemNote">right-click memory values to edit.</p>
+		</div>
+		<div id="debugPaneIO">
+			<div id="debugDisplayIO" class="debugDisplay"></div>
+		</div>
+		<div id="debugPaneCode">
+			<div class="debugDisplayCtrl"><button id="debugCodeBtnPC" class="debugPaneBtn"><span class="debugRoundBtn">&gt;</span>List from current PC</button>
+				<span class="debugPaneRight">
+					<button id="debugCodeBtnPrev" class="debugPaneBtn" title="History: Back"><span class="debugRoundBtn">&lt;</span></button>
+					<button id="debugCodeBtnNext" class="debugPaneBtn" title="History: Forward"><span class="debugRoundBtn">&gt;</span></button>
+				<span>
+			</div>
+			<div id="debugDisplayCode" class="debugDisplay"></div>
+			<button id="debugCodeBtnMore" class="debugPaneBtn">more</button>
+		</dib>
+	</div>
+</div>
+</section>
+
+<div id="viewMode" role="listbox">
+	<span id="viewModeLight" role="option" title="Light Mode" aria-label="light mode" aria-selected="true" onclick="petCtrl.setDarkMode(false);return false;"><svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 65 65" xml:space="preserve" aria-hidden="true"><use xlink:href="#mode-light" x="0" y="0"></use></svg></span><span id="viewModeDark" role="option" title="Dark Mode" aria-label="dark mode" onclick="petCtrl.setDarkMode(true);return false;"><svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 65 65" xml:space="preserve" aria-hidden="true"><use xlink:href="#mode-dark" x="0" y="0"></use></svg></span><div id="debugToggle" onclick="petCtrl.toggleDebugger();" title="Debugger On/Off"><svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" xml:space="preserve" aria-hidden="true"><use xlink:href="#icon-debug" x="0" y="0"></use></svg></div><div id="fullscreenToggle" title="Toggle Full Screen"></div>
+</div>
+
+<section id="petHelp" hidden>
+	<div id="petHelpWrapper">
+	<div id="petHelpTop">
+		<small>PET 2001 Help (<a href="pet-emulator-help.html" target="_pet2001HelpWindow">open in a separate window</a>)</small>
+		<input type="button" value="Close" onclick="petCtrl.toggleHelp(); return false;" />
+	</div>
+	<div id="petHelpContentWrapper">
+	<script>
+		function petHelpScrollToLink(link) {
+			var el=document.querySelector(link.getAttribute('href'));
+			if (el) el.scrollIntoView();
+		}
+	</script>
+	<div id="petHelpContent">
+<!-- /HELP -->
+<p style="margin-top: 2em; color: #777779;"><i>Loading&hellip;</i></p>
+<!-- /HELP -->
+	</div></div>
+	<div id="petHelpBottom">
+		<a href="#helpTitle" onclick="petHelpScrollToLink(this);return false;">to top</a>
+	</div>
+	</div>
+</section>
+<!-- dialogs -->
+<div id="imgOverlay" hidden onclick="petCtrl.toggleElement('imgOverlay'); return false;">
+	<img id="imgOverlay-2001" src="assets/PET2001preview.jpg" width="660" height="534" alt="PET 2001" />
+	<img id="imgOverlay-2001b" src="assets/PET2001business.png" width="660" height="534" alt="Series 2001/B Business Computer" />
+	<img id="imgOverlay-2001n" src="assets/PET2001n.jpg" width="660" height="534" alt="Series 2001-N Professional Computer" />
+</div>
+<div id="textExport" class="dialog" hidden>
+	<div id="textExportContent" class="dialogContent">
+		<p id="textExportTitle" class="dialogTitle"></p>
+		<p id="memExportCtrl" class="dialogCtrl">
+			<select id="memExportType">
+				<option value="hex-dump">Hex-Dump</option>
+				<option value="disassemble">Disassemble</option>
+			</select>
+			<label for="memExportStart">From (HHLL):</label><input type="text" size="5" maxlength="4" id="memExportStart" onkeyup="if (event.keyCode==13) petCtrl.updateTextExport();" />
+			<label for="memExportEnd">To (HHLL):</label><input type="text" size="5" maxlength="4" id="memExportEnd" onkeyup="if (event.keyCode==13) petCtrl.updateTextExport();" />
+			<input type="button" value="Generate" onclick="petCtrl.updateTextExport(); return false;" />
+		</p>
+		<p id="textExportEscapeCtrl" class="dialogCtrl">
+			Escape as:
+			<input type="checkbox" id="textExportCbxEscapeHex" style="margin-right: 0.4em; margin-left: 0.6em;" /><label for="textExportCbxEscapeHex" style="margin-right: 1em;">hex codes</label>
+			<input type="checkbox" id="textExportCbxEscapeLabels" style="margin-right: 0.6em;" checked /><label for="textExportCbxEscapeLabels" style="margin-right: 1.2em;">use text labels where applicable</label>
+			<input type="button" value="Update" onclick="petCtrl.updateEscapedListing(); return false;" />
+		</p>
+		<textarea id="textExportClipboard" rows="25" cols="50" dir="ltr" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly></textarea>
+		<p id="textExportCaseCtrl"><input type="checkbox" id="textExportCbxLowerCase" onchange="petCtrl.updateTextExportCase();" /> <label for="textExportCbxLowerCase">Lower Case</p>
+		<p id="textExportBtns"><input type="button" class="btnTextSelect" value="Select All" onclick="petCtrl.selectTextarea(this); return false;" /><input type="button" value="Done" onclick="petCtrl.hideTextExport(); return false;" /></p>
+	</div>
+</div>
+<div id="textImport" class="dialog" hidden>
+	<div id="textImportContent" class="dialogContent">
+		<p id="textImportTitle" class="dialogTitle"></p>
+		<textarea id="textImportClipboard" rows="25" cols="50" dir="ltr" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+		<p id="textImportBtns"><input type="button" value="Cancel" onclick="petCtrl.closeTextImport(false); return false;" /> <input type="button" value="OK" onclick="petCtrl.closeTextImport(true); return false;" /></p>
+	</div>
+</div>
+<div id="directoryDialog" class="dialog" hidden>
+	<div id="directoryContent">
+		<p id="directoryTitle" style="text-align: center;"></p>
+		<div id="directoryList"></div>
+		<p id="directoryOptions"><span><input type="checkbox" id="directoryCbxAsBasic" style="margin-right: 0.75em;" /><label for="directoryCbxAsBasic" title="Force BASIC mode (start address = $401)">load as BASIC</label><input type="checkbox" id="directoryCbxReset" style="margin-left: 1.125em;margin-right: 0.75em;" /><label for="directoryCbxReset">reset</label><input type="checkbox" id="directoryCbxAutorun" checked style="margin-left: 1.25em;margin-right: 0.75em;" /><label for="directoryCbxAutorun">auto-run</label></span>
+		<span style="text-align: right;"><label for="directoryRamSelect" style="margin-right: 0.35em;">min. RAM:</label><select id="directoryRamSelect">
+			<option value="8" selected>8K</option>
+			<option value="16">16K</option>
+			<option value="32">32K</option>
+		</select></span></p>
+		<p style="text-align: center;"><input type="button" value="Cancel" onclick="petCtrl.closeDirectoryList();" /> &nbsp; <input type="button" value="Load" onclick="petCtrl.loadSelectedDirectoryIndex(directoryCbxAutorun.checked, directoryCbxAsBasic.checked, directoryCbxReset.checked);" /></p>
+	</div>
+</div>
+<div id="downloadLinkPane" class="dialog" hidden>
+	<div id="downloadLinkContent" class="dialogContent">
+		<p class="dialogTitle">Program Save/Export</p>
+		<p id="downloadLinkMessage"></p>
+		<p id="downloadLinkParent"></p>
+		<p style="text-align: center"><input type="button" value="Done" onclick="petCtrl.hideDownloadLink();" /></p>
+	</div>
+</div>
+<div id="directLinkPane" class="dialog" hidden>
+	<div id="directLinkContent" class="dialogContent">
+		<p class="dialogTitle">Direct Link</p>
+		<p id="directLinkMessage">Right-click to copy the link address:</p>
+		<p id="directLinkParent"></p>
+		<p style="text-align: center"><input type="button" value="Done" onclick="petCtrl.hideDirectLink();" /></p>
+	</div>
+</div>
+<div id="urlExport" class="dialog" hidden>
+	<div id="urlExportContent" class="dialogContent">
+	<p id="urlExportTitle" class="dialogTitle">Export Data-URL</p>
+	<div id="urlExportCtrl">
+		<fieldset id=>
+			<legend>Options:</legend>
+			<label for="urlExportEncodingSelect" class="first">Encoding:</label>
+			<select id="urlExportEncodingSelect">
+				<option value="base64" selected>base64</option>
+				<option value="url-encoded">URL-encoded</option>
+			<select>
+			<label for="urlExportFormatSelect">Format:</label>
+			<select id="urlExportFormatSelect">
+				<option value="query" selected>query-string</option>
+				<option value="fragment">URL fragment</option>
+			<select>
+			<input type="checkbox" value="yes" id="urlExportCbxList" title="List the program on load" /><label for="urlExportCbxList">List</label>
+			<input type="checkbox" value="yes" id="urlExportCbxAutorun" checked title="Automatically run the program on load" /><label for="urlExportCbxAutorun">Auto-Run</label>
+		</fieldset>
+		<p id="urlExportCtrlBtn" class="dialogCtrl">
+			<input type="button" value="Update / Apply Link Options" onclick="petCtrl.generateDataLink();" />
+		</p>
+	</div>
+	<p id="urlExportLinkPane">&nbsp;</p>
+	<p style="text-align: center;"><input type="button" value="Done" onclick="petCtrl.hideUrlExport();" /></p>
+	</div>
+</div>
+<div id="srcExport" class="dialog" hidden>
+	<div id="srcExportContent" class="dialogContent">
+		<p id="srcExportCtrl" class="dialogCtrl">
+			<label for="srcExportLineNumber" title="Start numbering lines at">Line Number:</label> <input id="srcExportLineNumber" type="number" value="1000" step="10" />
+			<label for="srcExportLineStep" title="Advance line numbers by this step.">Step:</label> <input id="srcExportLineStep" type="number" value="10" step="1" />
+			<input type="checkbox" checked id="srcExportCbxUpperCase" /> <label for="srcExportCbxUpperCase" title="Generate upper-case source text.">Upper Case</label>
+			<input type="checkbox" checked id="srcExportCbxTrim" /> <label for="srcExportCbxTrim" title="Trim white space at right and bottom.">Trim</label>
+			<label for="srcExportEscapeFormat" title="Format for PETSCII special characters." style="margin-left: 1em;">Escape as:</label>
+			<select id="srcExportEscapeFormat">
+				<option value="portable" selected>CHR$()</option>
+				<option value="dec">{ddd}</option>
+				<option value="hex">{$hh}</option>
+				<option value="dec-labels">{label} / {ddd}</option>
+				<option value="hex-labels">{label} / {$hh}</option>
+			</select>
+			<input type="button" value="Update" onclick="petCtrl.generateScreenAsProgram();" />
+		</p>
+		<textarea id="srcExportClipboard" rows="25" cols="85" dir="ltr" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly></textarea>
+		<p class="dialogButtons"><input type="button" class="btnTextSelect" value="Select All" onclick="petCtrl.selectTextarea(this); return false;" /><input type="button" value="Done" onclick="petCtrl.hideScreenAsProgram();" />&nbsp;</p>
+	</div>
+</div>
+<div id="confirmDialog" class="simpleDialog" hidden>
+	<div id="confirmDialogContent" class="simpleDialogContent">
+		<p id="confirmDialogText"></p>
+		<p id="confirmDialogBtns" class="dialogButtons">
+			<input type="button" id="confirmDialogBtnCancel" value="Cancel" onclick="petCtrl.closeConfirmDialog(false);" />
+			<input type="button" id="confirmDialogBtnOK" value="OK" onclick="petCtrl.closeConfirmDialog(true);" />
+		</p>
+	</div>
+</div>
+<div id="infoDialog" class="simpleDialog" hidden>
+	<div id="infoDialogContent" class="simpleDialogContent">
+		<p id="infoDialogTitle"></p>
+		<p id="infoDialogText"></p>
+		<p id="infoDialogBtns">
+			<input type="button" id="infoDialogBtnOption" value="Option" onclick="petCtrl.closeInfoDialog(1);" />
+			<input type="button" id="infoDialogBtnClose" value="OK" onclick="petCtrl.closeInfoDialog(0);" />
+		</p>
+	</div>
+</div>
+<div id="promptDialog" class="simpleDialog" hidden>
+	<div id="promptDialogContent" class="simpleDialogContent">
+		<p id="promptDialogText"></p>
+		<p id="promptDialogInputPane"><input id="promptDialogInput" type="text" size="30" value="" /></p>
+		<p id="confirmDialogBtns" class="dialogButtons">
+			<input type="button" id="promptDialogBtnCancel" value="Cancel" onclick="petCtrl.closePromptDialog(false);" />
+			<input type="button" id="promptDialogBtnOK" value="OK" onclick="petCtrl.closePromptDialog(true);" />
+		</p>
+	</div>
+</div>
+<div id="renumberDialog" class="simpleDialog" hidden>
+	<div id="renumberDialogContent" class="simpleDialogContent">
+		<p id="renumberDialogTitle" class="dialogTitle">Renumber BASIC Lines and Jump Targets</p>
+		<p id="renumberDialogCtrl" class="dialogCtrl">
+			<label for="renumberDialogLineNumber">Start Line Number:</label> <input id="renumberDialogLineNumber" type="number" value="100" step="1" />
+			<label for="renumberDialogStep">Step:</label> <input id="renumberDialogStep" type="number" value="10" step="1" />
+		</p>
+		<p id="renumberDialogMessage">&nbsp;</p>
+		<p id="renumberDialogCtrlBtns" class="dialogButtons">
+			<input type="button" value="Cancel" onclick="petCtrl.closeRenumberDialog(false);" />
+			<input type="button" value="Renumber" onclick="petCtrl.closeRenumberDialog(true);" />
+		</p>
+	</div>
+</div>
+<div id="asmListing" class="dialog" hidden>
+	<div id="asmListingContent" class="dialogContent">
+		<p id="asmListingTitle" class="dialogTitle">Assembler Listing</p>
+		<p id="asmListingMessage"></p>
+		<textarea id="asmClipboard" rows="25" cols="50" dir="ltr" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly></textarea>
+		<p id="asmListingBtns" class="dialogButtons"><input type="button" class="btnTextSelect" value="Select All" onclick="petCtrl.selectTextarea(this); return false;" /><input type="button" value="&nbsp;Close&nbsp;" onclick="petCtrl.closeAsmListing();return false;" /></p>
+		<div id="asmListingOptions">
+			<p style="margin: 0.5em 0;"><input type="button" value="Select All" onclick="petCtrl.selectTextarea(asmListingContent); return false;" /></p>
+			<p id="asmListingOptionsNow">Now</p>
+			<ul>
+				<li><button id="asmBtnLoad" onclick="petCtrl.closeAsmListing('load');">Load Code As Program</button> <input type="checkbox" id="asmCbxReset" /> <label for="asmCbxReset" title="Reset befor loading.">reset before loading</labe;></li>
+				<li><button id="asmBtnInject" onclick="petCtrl.closeAsmListing('inject');">Inject Code Into Memory</button> <input type="checkbox" id="asmCbxAdjustPointers" /> <label for="asmCbxAdjustPointers" title="Adjust pointers like TXTTAB and VARTAB to the boundaries of the code. Other memory content will be lost.">adjust BASIC system pointers</labe;></li>
+				<li><button id="asmBtnExport" onclick="petCtrl.closeAsmListing('export');">Export Code as PRG File</button> (load address will be auto-adjusted)</li>
+				<li><button id="asmBtnCancel" onclick="petCtrl.closeAsmListing();">Do Nothing</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div id="imgExport" class="dialog" hidden>
+	<div id="imgExportContent" class="dialogContent">
+		<p class="dialogTitle">Drag or right-click to save</p>
+		<p id="imgExportImgWrapper"></p>
+		<p class="dialogButtons">
+			<input type="button" value="Done" onclick="petCtrl.hideImageExport(); return false;" />
+			<span id="imageDownloadBtn" class="hardcopyBtn" role="button" title="Download Image" aria-label="Download Image" onclick="petCtrl.downloadImage();return false;"><svg x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 40" xml:space="preserve" aria-hidden="true"><use xlink:href="#icon-download" x="0" y="0"></use></svg></span>
+		</p>
+	</div>
+</div>
+<div id="memoryMap" class="dialog" hidden>
+	<div id="memoryMapContent" class="dialogContent">
+		<p class="dialogTitle">Memory Map</p>
+		<p id="memoryMapImgWrapper"></p>
+		<p class="dialogButtons">
+			<input type="button" value="Done" onclick="petCtrl.hideMemoryMap(); return false;" />
+			<span id="memoryMapDownloadBtn" class="hardcopyBtn" role="button" title="Download Image" aria-label="Download Image" onclick="petCtrl.downloadMemoryMap();return false;"><svg x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 40" xml:space="preserve" aria-hidden="true"><use xlink:href="#icon-download" x="0" y="0"></use></svg></span>
+		</p>
+	</div>
+</div>
+<div id="hardcopyDialog" class="dialog" hidden>
+	<div id="hardcopyContent" class="dialogContent">
+		<p id="hardcopyTitle"><span id="hardcopyTitlePrinting">Printing Hard Copy&hellip;</span><span id="hardcopyTitleFinished">Drag or right-click to save</span></p>
+		<div id="hardcopyPrinter">
+			<div id="printPaper"><span id="paperTop"></span><span id="paperBody"></span></div>
+			<div id="printAssembly"><div id="printMask"></div><div id="printHead"></div><div id="printCover"></div></div>
+		</div>
+		<p class="dialogButtons" id="hardcopyCtrls">
+			<input type="button" value="Done" onclick="petCtrl.hideHardcopy(); return false;" />
+			<span id="hardcopyDownloadBtn"  class="hardcopyBtn" role="button" title="Download Image" aria-label="Download Image" onclick="petCtrl.downloadHardcopy();return false;"><svg x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 40" xml:space="preserve" aria-hidden="true"><use xlink:href="#icon-download" x="0" y="0"></use></svg></span>
+			<span id="hardcopyPrintBtn" class="hardcopyBtn" role="button" title="Print" aria-label="Print" onclick="petCtrl.printHardcopy();return false;"><svg x="0px" y="0px" width="40px" height="30px" viewBox="0 0 30 40" xml:space="preserve" aria-hidden="true"><use xlink:href="#icon-print" x="0" y="0"></use></svg></span>
+		</p>
+	</div>
+</div>
+<div id="mountDialog" class="simpleDialog" hidden>
+	<div id="mountDialogContent" class="simpleDialogContent mountDialogContent">
+		<p id="mountDialogTitle" class="dialogTitle mountDialogTitle">Mount File</p>
+		<form id="fileInputForm" class="fileInputForm" onsubmit="return false;"><input type="file" id="fileInput" oninput="petCtrl.closeMountDialog(true);" /></form>
+		<p class="mountDialogInstructions">Press the button and choose a file.<br />(In case the file has changed, please, make sure to select it again, even, if it already shows up above.)</p>
+		<p class="mountDialogInstructions">Type &lsquo;<code>LOAD &quot;*&quot;,8</code>&rsquo; and &lsquo;<code>RUN</code>&rsquo; to run a mounted file.<br />Archives, like disk images, will automatically bring up a directory dialog to choose from. You may also access a mounted archive like a normal floppy disk in drive 8.<br />Clicking the media icon to the left of the name of the mounted will also trigger the most appropriate action (load and run a single file or display a directory dialog).</p>
+		<p class="mountDialogInstructions">Mind that you may always drag and drop a file onto the virtual screen (outside of this dialog).</p>
+		<p class="mountDialogBtns"><input type="button" value=" Close " onclick="petCtrl.closeMountDialog(false); return false;" /></p>
+	</div>
+</div>
+<div id="mountTempDialog" class="simpleDialog" hidden>
+	<div id="mountTempDialogContent" class="simpleDialogContent mountDialogContent">
+		<p id="mountTempDialogTitle" class="dialogTitle mountDialogTitle">Load A Saved State</p>
+		<div id="mountTempDialogDropZone" title="Drop a file here."><svg id="mountTempDialogDropZoneIcon" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" xml:space="preserve"><use xlink:href="#icon-none" x="0" y="0" fill="currentColor" stroke="currentColor"></use></svg></div>
+		<form id="fileTempInputForm" class="fileInputForm" onsubmit="return false;"><input type="file" id="fileTempInput" oninput="petCtrl.closeMountTempDialog(true);" /></form>
+		<p class="mountDialogInstructions">Please select a file with your saved state to load.<br />If you close this dialog without selecting a file and you have loaded a saved state previously, this one will be re-used.</p>
+		<p class="mountTempDialogBtns"><input type="button" value=" OK " onclick="petCtrl.closeMountTempDialog(false); return false;" /></p>
+	</div>
+</div>
+<div id="prgLibrary" hidden>
+	<div id="prgLibraryWrapper">
+		<p id="prgLibraryNote">&rarr; Shift-click &ldquo;run&rdquo; links to create a new entry in the browser history.</p>
+		<input id="prgLibraryCtrl" type="button" value="Hide Library" onclick="petCtrl.hidePrgLibrary(); return false;" />
+		<div id="prgLibraryContentWrapper">
+			<iframe id="prgLibraryContent">Loading...</iframe>
+		</div>
+	</div>
+</div>
+<div id="joystickDialog" class="simpleDialog" hidden>
+	<div id="joystickDialogContent" class="simpleDialogContent">
+		<p id="joystickDialogTitle" class="dialogTitle">Joystick Settings</p>
+		<p class="joystickDialogInstructions">Joystick Adapter Type (For Emulated PET):</p>
+		<form id="joystickForm" class="joystickForm" onsubmit="return false;">
+			<p><input type="radio" name="joystick" value="SIMPLE" id="radioJoystickSimple"> <label for="radioJoystickSimple">SIMPLE: single joystick with horizontal directions only</label> <span class="dash">&mdash;</span> left, right, fire<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('SIMPLE');" title="Connection details for the SIMPLE adapter">i</span></p>
+			<p><input type="radio" name="joystick" value="PET" id="radioJoystickPET"> <label for="radioJoystickPET">PET (Joe Travis): dual joysticks</label> <span class="dash">&mdash;</span> left, right, up, down, fire (up + down)<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('PET');" title="Connection details for the PET adapter">i</span></p>
+			<p><input type="radio" name="joystick" value="PET_SWAPPED" id="radioJoystickPETswapped"> <label for="radioJoystickPETswapped">PET (Joe Travis): swapped</label> <span class="dash">&mdash;</span> as above but players swapped</p>
+			<p><input type="radio" name="joystick" value="STUPIDPETTRICKS" id="radioJoystickSPT"> <label for="radioJoystickSPT">STUPID PET TRICKS: dual joysticks</label> <span class="dash">&mdash;</span> left, right, up, down, fire (up + down)<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('STUPIDPETTRICKS');" title="Connection details for the STUPID PET TRICKS adapter">i</span></p>
+			<p><input type="radio" name="joystick" value="STUPIDPETTRICKS_SWAPPED" id="radioJoystickSPTswapped"> <label for="radioJoystickSPTswapped">STUPID PET TRICKS: swapped</label> <span class="dash">&mdash;</span> as above, but players swapped</p>
+			<p><input type="radio" name="joystick" value="GALAGA" id="radioJoystickGalaga"> <label for="radioJoystickGalaga">GALAGA: single</label>  <span class="dash">&mdash;</span> for games by Henrik Wening<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('GALAGA');" title="Connection details for the GALAGA adapter">i</span></p>
+			<p><input type="radio" name="joystick" value="SCRAMBLE" id="radioJoystickScramble"> <label for="radioJoystickScramble">SCRAMBLE: single</label>  <span class="dash">&mdash;</span> for games by A. Jentzen<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('SCRAMBLE');" title="Connection details for the SCRAMBLE adapter">i</span></p>
+			<p><input type="radio" name="joystick" value="CHUCK_JOHNSON" id="radioJoystickCJ"> <label for="radioJoystickCJ">COMPUTE (Chuck Johnson): dual</label> <span class="dash">&mdash;</span> as in &ldquo;Compute&rdquo; Issue 4, 1980<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('CHUCK_JOHNSON');" title="Connection details for the CHUCK JOHNSON adapter">i</span></p>
+			<p class="joystickFormSeparator"></p>
+			<p><input type="radio" name="joystick" value="SNES" id="radioJoystickSNES"> <label for="radioJoystickSNES">SNES serial controller: single</label> <span class="dash">&mdash;</span> all buttons<span class="joystickInfo" role="button" onclick="petCtrl.showJoystickInfo('SNES');" title="Connection details for the SNES adapter">i</span></p>
+			<p class="joystickFormSeparator"></p>
+			<p><input type="radio" name="joystick" value="KEYBOARD_A" id="radioJoystickKbd"> <label for="radioJoystickKbd">JOYSTICK TO KEYBOARD, Button: A</label> <span class="dash">&mdash;</span> <svg id="favorites" x="0px" y="0px" width="11px" height="11px" viewBox="0 0 11 11"><path d="M5.5,0.5L5.5,10.5M0.5,5.5L10.5,5.5M3.5,2.5L5.5,0.5L7.5,2.5M3.5,8.5L5.5,10.5L7.5,8.5M2.5,3.5L0.5,5.5L2.5,7.5M8.5,3.5L10.5,5.5L8.5,7.5" stroke="#111" stroke-width="0.75" stroke-miterlimit="10" fill="none" style="stroke: currentColor;" /></svg> = NUM-pad, fire is mapped to &ldquo;A&rdquo;</p>
+			<p><input type="radio" name="joystick" value="KEYBOARD_SHIFT" id="radioJoystickKbdShft"> <label for="radioJoystickKbdShft">JOYSTICK TO KEYBOARD, Button: SHIFT</label> <span class="dash">&mdash;</span> as above, fire is mapped to SHIFT</p>
+			<p><input type="radio" name="joystick" value="KEYBOARD_SPACE" id="radioJoystickKbdSpace"> <label for="radioJoystickKbdSpace">JOYSTICK TO KEYBOARD, Button: SPACE</label> <span class="dash">&mdash;</span> as above, fire mapped to SPACE</p>
+			<p  class="joystickFormSeparator"></p>
+			<p><input type="radio" name="joystick" value="CUSTOM" id="radioJoystickCustom"> <label for="radioJoystickCustom">CUSTOM MAPPING</label> <span class="dash">&mdash;</span> use a custom mapping to the PET keyboard: &nbsp; <input type="button" value="Configure" onclick="petCtrl.showCustomJoystickDialog(); return false;" /></p>
+			<p  class="joystickFormSeparator"></p>
+			<p><input type="radio" name="joystick" value="IGNORE" id="radioJoystickIgnore"> <label for="radioJoystickIgnore">Ignore</label> <span class="dash">&mdash;</span> joystick handling disabled</p>
+		</form>
+		<p class="joystickDialogInstructions">There is quite a varity of joystick adapters schemes for the PET. A good guess is <em>&ldquo;SIMPLE&rdquo;</em> for simple games like Space Invaders, or <em>&ldquo;PET&rdquo;</em> for those requiring more input options. Modern games may use the <em>&ldquo;Stupid PET Tricks&rdquo;</em> adapter or the SNES gamepad adapter.</p>
+		<p class="joystickDialogInstructions">In &ldquo;Games&rdquo; mode, if there is any adapter selected and the CAPS LOCK key is engaged, a joystick will be emulated from keyboard input: use cursor keys to move, SPACE for the button (fire). If there&lsquo;s already a real gamepad connected, the keyboard joystick acts as a second one.</p>
+		<p class="joystickDialogBtns"><input type="button" value=" Cancel " onclick="petCtrl.closeJoystickDialog(false); return false;" /> <input type="button" value=" Apply " onclick="petCtrl.closeJoystickDialog(true); return false;" /></p>
+	</div>
+</div>
+<div id="joystickCustomDialog" class="simpleDialog" hidden>
+	<div id="joystickCustomDialogContent" class="simpleDialogContent">
+		<p id="joystickCustomDialogTitle" class="dialogTitle">Custom PET Keyboard Mapping</p>
+		<form id="joystickCustomForm" class="joystickForm" onsubmit="return false;">
+			<table>
+			<tr>
+				<td colspan="2" class="dir">
+					<label for="jstckcfUp">Up:</label><input id="jstckcfUp" type="text" size="1" maxlength="1" spellcheck="false" autocorrect="off" placeholder="?" value="8" onfocus="this.select();" oninput="this.value=this.value.toUpperCase();" />
+				</td>
+			</tr>
+			<tr>
+				<td class="dir">
+					<label for="jstckcfLeft">Left:</label><input id="jstckcfLeft" type="text" size="1" maxlength="1" spellcheck="false" autocorrect="off" placeholder="?" value="4" onfocus="this.select();" oninput="this.value=this.value.toUpperCase();" />
+				</td>
+				<td class="dir">
+					<label for="jstckcfRight">Right:</label><input id="jstckcfRight" type="text" size="1" maxlength="1" spellcheck="false" autocorrect="off" placeholder="?" value="6" onfocus="this.select();" oninput="this.value=this.value.toUpperCase();" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="dir">
+					<label for="jstckcfDown">Down:</label><input id="jstckcfDown" type="text" size="1" maxlength="1" spellcheck="false" autocorrect="off" placeholder="?" value="2" onfocus="this.select();" oninput="this.value=this.value.toUpperCase();" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="joystickCustomFormFire">
+					<label for="jstckcfButtonSelect">Fire Button:</label>
+					<select id="jstckcfButtonSelect" onchange="petCtrl.adjustJoystickCustomButtonChar(true);">
+						<option value="char">Custom Character</option>
+						<option value="13">Return</option>
+						<option value="32" selected>Space</option>
+						<option value="1">Shift</option>
+						<option value="95">&larr;</option>
+						<option value="94">&uarr;</option>
+					</select>
+					<input  id="jstckcfButtonChar" type="text" size="1" maxlength="1" spellcheck="false" autocorrect="off" placeholder="?" onfocus="this.select();" oninput="this.value=this.value.toUpperCase();" disabled />
+				</td>
+			</tr>
+			</table>
+		</form>
+		<p class="joystickDialogBtns joystickCustomDialogBtns"><input type="button" value=" Close " onclick="petCtrl.closeJoystickCustomDialog(false); return false;" /> <input type="button" value=" Apply &amp; Exit " onclick="petCtrl.closeJoystickCustomDialog(true); return false;" /></p>
+	</div>
+</div>
+<div id="demoPane" class="dialog" hidden>
+	<div id="demoPaneContent" class="dialogContent">
+		<p class="dialogTitle"><svg x="0px" y="0px" width="17px" height="17px" viewBox="0 0 32 32"><use xlink:href="#icon-star" x="0" y="0"></use></svg> Inspirational Content (Demos) <svg x="0px" y="0px" width="17px" height="17px" viewBox="0 0 32 32"><use xlink:href="#icon-star" x="0" y="0"></use></svg></p>
+		<ul>
+		<li><p><strong>&ldquo;Back To The Pet&rdquo; by shiru8bit, 2022</strong><p>
+			<p>A &ldquo;proper demo&rdquo; that redefined dynamic content on the PET, especially for music!<br />
+			Here presented in a &ldquo;hot&rdquo; rendering mode with long persistence (see the context menu of the emulated screen, there&rsquo;s also an option for the pixel aspect ratio.)</p>
+			<p class="demoLink"><a href="?prg=back2pet&amp;screen=green&amp;persistence=long&amp;rom=4&amp;ram=32k&amp;autorun=true&amp;sound=true" onclick="petCtrl.loadDemo(this.href);return false;">run &ldquo;Back To The Pet&rdquo;&hellip;</a></p></li>
+		<li><p><strong>&ldquo;A Bright Shining Star&rdquo; by Genesis Project, 2022</strong><p>
+			<p>This shows what&rsquo;s possible with graphics on the PET, if you just try hard enough. Be assured, the PET still has character graphics only! (No sound.)</p>
+			<p class="demoLink"><a href="?prg=GP-a-bright-shining-star.prg&amp;screen=green&amp;persistence=normal&amp;rom=4&amp;ram=32k&amp;autorun=true&amp;sound=false" onclick="petCtrl.loadDemo(this.href);return false;">run &ldquo;A Bright Shining Star&rdquo;&hellip;</a> &nbsp;&nbsp; <a href="?prg=GP_a_bright_shining_star.d64/note&amp;screen=green&amp;persistence=normal&amp;rom=4&amp;ram=32k&amp;autorun=true&amp;sound=false" onclick="petCtrl.loadDemo(this.href);return false;">Note </a></p></li>
+		<li><p><strong>&ldquo;Faulty Robots&rdquo; by shiru8bit, 2021</strong><p>
+			<p>A CB2 music album by shiru8bit &mdash; what&rsquo;s more to say!<br />
+			Presented with kind permission by Shiru, head over to <a href="https://shiru8bit.bandcamp.com/album/faulty-robots" target="_blank" rel="noopener" title="'Faulty Robots' on shiru8bit's Bandcamp page">Shiru&rsquo;s Bandcamp page</a> in order to support him. You can read more about this album, the background story of the tracks, and music on the PET in general in this <a href="https://habr.com/en/post/650905/" target="_blank" rel="noopener">blog post</a>.</p>
+			<p class="demoLink"><a href="?prg=frobots4&amp;rom=2&amp;ram=16k&amp;screen=green&amp;persistence=normal&amp;autorun=true&amp;sound=true" onclick="petCtrl.loadDemo(this.href);return false;">run &ldquo;Faulty Robots&rdquo;&hellip;</a></p></li>
+		</ul>
+		<p class="dialogNote">You can always come back to this list by clicking the star icon right of the title.</p>
+		<p style="text-align: center"><input type="button" value="Close" onclick="petCtrl.hideDemoPane();" /></p>
+	</div>
+</div>
+<div id="debugBreakpointDialog" class="simpleDialog" hidden>
+	<div id="infoDialogContent" class="simpleDialogContent">
+		<div id="debugBreakpointDialogContent">
+			<form id="debugBreakpointTabs" onsubmit="return false;">
+				<span>Define:</span> <input type="radio" name="debugBreakpointTab" id="debugBreakpointTabBreakpoint" value="breakpoint" checked onchange="petCtrl.setBreakpointDialogTab();" /><label for="debugBreakpointTabBreakpoint">Breakpoint</label><input type="radio" name="debugBreakpointTab" id="debugBreakpointTabBracket" value="bracket" onchange="petCtrl.setBreakpointDialogTab();" /><label for="debugBreakpointTabBracket">Range Bracket</label>
+			</form>
+			<div id="debugBreakpointDialogBreakpoint" class="debugBreakpointDialogPrompt">
+				<p class="debugBreakpointDialogText">New Breakpoint:</p>
+				<p class="debugBreakpointDialogInputPane"><input id="debugBreakpointDialogInput" class="debugBreakpointDialogInput" type="text" size="10" value="" placeholder="hex address" /></p>
+			</div>
+			<div id="debugBreakpointDialogBracket" class="debugBreakpointDialogPrompt">
+				<p>New Range Bracket (address range):</p>
+				<p class="debugBreakpointDialogInputPane"><label for="debugBreakpointDialogBracketFrom">From</label><input id="debugBreakpointDialogBracketFrom" class="debugBreakpointDialogInput" type="text" size="10" value="" placeholder="hex address" /></p>
+				<p class="debugBreakpointDialogInputPane"><label for="debugBreakpointDialogBracketTo">To</label><input id="debugBreakpointDialogBracketTo" class="debugBreakpointDialogInput" type="text" size="10" value="" placeholder="hex address" /></p>
+				<form class="debugBreakpointDialogInputPane" onsubmit="return false;">
+					<label>Type</label>
+					<input type="radio" name="debugBreakpointRangeType" id="debugBreakpointTypeEnter" value="enter" checked /><label for="debugBreakpointTypeEnter" title="halt on PC enters range">halt on enter</label>
+					<input type="radio" name="debugBreakpointRangeType" id="debugBreakpointTypeLeave" value="exit" /><label for="debugBreakpointTypeLeave" title="halt on PC exits range">halt on exit</label>
+				</form>
+			</div>
+		</div>
+		<p id="infoDialogBtns">
+			<input type="button" id="debugBreakpointDialogBtnCancel" value="Cancel" onclick="petCtrl.closeBreakpointDialog(false);" />
+			<input type="button" id="debugBreakpointDialogBtnOK" value="OK" onclick="petCtrl.closeBreakpointDialog(true);" />
+		</p>
+	</div>
+</div>
+<!-- /dialogs -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="display: none;" width="0" height="0">
+<defs>
+<symbol viewBox="0 0 18 18" id="icon-disk">
+	<path fill="none" stroke="#000000" stroke-width="0.5" style="stroke: currentColor;" stroke-miterlimit="10" d="M0.764,0.5
+		C0.618,0.5,0.5,0.617,0.5,0.762v16.475c0,0.146,0.118,0.263,0.264,0.263h6.186v-0.002c0-0.114,0.105-0.207,0.236-0.207
+		c0.131,0,0.236,0.093,0.236,0.207V17.5h3.061v-0.002c0-0.114,0.106-0.207,0.237-0.207s0.236,0.093,0.236,0.207V17.5h6.281
+		c0.146,0,0.264-0.117,0.264-0.263V5.215h-0.455c-0.032,0-0.06-0.026-0.06-0.059V4.515c0-0.032,0.027-0.058,0.06-0.058H17.5V0.762
+		c0-0.146-0.118-0.262-0.264-0.262H0.764L0.764,0.5z"/>
+	<ellipse cx="8.999" cy="9.085" rx="2.604" ry="2.597" style="fill: currentColor;" />
+	<circle cx="12.236" cy="9.758" r="0.375" style="fill: currentColor;" />
+	<path d="M8.979,12.55c0.469,0,0.848,0.385,0.848,0.863v2.496c0,0.479-0.378,0.865-0.848,0.865c-0.47,0-0.848-0.386-0.848-0.865
+		v-2.496C8.131,12.935,8.509,12.55,8.979,12.55z" style="fill: currentColor;" />
+	<path fill="none" stroke="#000000" style="stroke: currentColor;" stroke-width="0.25" stroke-miterlimit="10" d="M1.554,1.18H9.17
+		c0.15,0,0.271,0.122,0.271,0.272v3.536c0,0.15-0.121,0.272-0.271,0.272H1.554c-0.15,0-0.272-0.122-0.272-0.272V1.452
+		C1.282,1.302,1.404,1.18,1.554,1.18z"/>
+</symbol>
+<symbol viewBox="0 0 18 18" id="icon-tape">
+	<path style="fill: currentColor;" d="M0.5,14.493V3.647h17v10.846H0.5z M17.012,4.136H0.988v9.868h2.755l0.02-1.113h2.481l0.02,1.113h5.471v-1.113h2.521v1.113
+		h2.755V4.136z M12.518,10.447H5.736c-0.958,0-1.739-0.781-1.739-1.739c0-0.958,0.781-1.739,1.739-1.739
+		c0.958,0,1.739,0.781,1.739,1.739c0,0.411-0.136,0.781-0.391,1.075h4.065c-0.234-0.312-0.372-0.685-0.372-1.075
+		c0-0.958,0.782-1.739,1.74-1.739s1.739,0.781,1.739,1.739C14.257,9.667,13.476,10.447,12.518,10.447z M6.499,8.162
+		C6.322,8.2,6.166,8.259,5.991,8.279l-0.02-0.508H5.502L5.463,8.298L4.974,8.182L4.857,8.611l0.45,0.175L5.053,9.217L5.423,9.49
+		C5.521,9.354,5.6,9.217,5.756,9.041C5.893,9.256,5.952,9.392,6.068,9.49L6.44,9.217L6.166,8.826l0.02-0.059
+		C6.322,8.729,6.479,8.67,6.635,8.611C6.597,8.455,6.558,8.298,6.499,8.162z M13.26,8.162c-0.176,0.039-0.352,0.098-0.508,0.118
+		l-0.021-0.508h-0.468l-0.039,0.527l-0.489-0.116l-0.137,0.429l0.47,0.175l-0.274,0.431l0.391,0.273
+		c0.098-0.136,0.177-0.273,0.333-0.449c0.137,0.195,0.195,0.352,0.293,0.469l0.391-0.293l-0.272-0.391l0.019-0.059
+		c0.137-0.039,0.293-0.098,0.449-0.157C13.357,8.455,13.318,8.298,13.26,8.162z"/>
+</symbol>
+<symbol viewBox="0 0 18 18" id="icon-bas">
+	<path style="fill: currentColor;" d="M2.132,16.959V0.727h9.658c0.194,0,0.312,0.059,0.429,0.195l3.351,3.352c0.117,0.098,0.176,0.234,0.176,0.409v12.276
+		H2.132z M15.219,4.8c0-0.098-0.078-0.195-0.175-0.195h-3.176V1.429c0-0.097-0.098-0.195-0.195-0.195H2.638v15.218h12.581V4.8z"/>
+	<path style="fill: currentColor;" d="M3.472,10.446h1.451c0.786,0,1.223,0.498,1.223,1.056c0,0.498-0.132,0.983-0.731,1.104v0.012
+		c0.486,0.036,0.899,0.372,0.899,1.098c0,0.678-0.545,1.241-1.349,1.241H3.472V10.446z M4.725,12.449
+		c0.552,0,0.881-0.294,0.881-0.821c0-0.594-0.348-0.762-0.863-0.762H3.976v1.583H4.725z M4.917,14.5
+		c0.582,0,0.894-0.378,0.894-0.821c0-0.354-0.258-0.81-1.008-0.81H3.976V14.5H4.917z"/>
+	<path style="fill: currentColor;" d="M8.373,10.446h0.516l1.697,4.51h-0.57l-0.45-1.271H7.695l-0.45,1.271h-0.57L8.373,10.446z M8.637,11.082H8.625
+		l-0.762,2.147h1.535L8.637,11.082z"/>
+	<path style="fill: currentColor;" d="M13.664,11.622c-0.024-0.366-0.3-0.804-1.02-0.804c-0.714,0-1.02,0.408-1.02,0.84c0,0.3,0.18,0.581,1.008,0.743
+		c1.133,0.222,1.643,0.498,1.643,1.283c0,0.678-0.479,1.355-1.648,1.355c-1.02,0-1.584-0.504-1.631-1.331h0.51
+		c0.089,0.594,0.491,0.875,1.145,0.875c0.773,0,1.086-0.449,1.086-0.852c0-0.491-0.276-0.647-1.073-0.815
+		c-1.038-0.216-1.542-0.504-1.542-1.259c0-0.738,0.606-1.295,1.518-1.295c1.109,0,1.451,0.605,1.541,1.259H13.664z"/>
+</symbol>
+<symbol viewBox="0 0 18 18" id="icon-bin">
+	<path style="fill: currentColor;" d="M2.132,16.959V0.727h9.658c0.194,0,0.312,0.059,0.429,0.195l3.351,3.352c0.117,0.098,0.176,0.234,0.176,0.409v12.276
+		H2.132z M15.219,4.8c0-0.098-0.078-0.195-0.175-0.195h-3.176V1.429c0-0.097-0.098-0.195-0.195-0.195H2.638v15.218h12.581V4.8z"/>
+	<path style="fill: currentColor;" d="M4.309,10.446H5.76c0.786,0,1.223,0.498,1.223,1.056c0,0.498-0.132,0.983-0.731,1.104v0.012
+		c0.486,0.036,0.899,0.372,0.899,1.098c0,0.678-0.545,1.241-1.349,1.241H4.309V10.446z M5.562,12.449
+		c0.552,0,0.881-0.294,0.881-0.821c0-0.594-0.348-0.762-0.863-0.762H4.812v1.583H5.562z M5.754,14.5
+		c0.582,0,0.894-0.378,0.894-0.821c0-0.354-0.258-0.81-1.008-0.81H4.812V14.5H5.754z"/>
+	<path style="fill: currentColor;" d="M8.046,10.446H8.55v4.51H8.046V10.446z"/>
+	<path style="fill: currentColor;" d="M9.667,10.446h0.546l2.537,3.718h0.012v-3.718h0.504v4.51h-0.546l-2.537-3.718H10.17v3.718H9.667V10.446z"/>
+</symbol>
+<symbol viewBox="0 0 18 18" id="icon-none">
+	<path stroke="#ccc" fill="#ccc" style="stroke: currentColor; fill: currentColor; opacity: 0.25;" d="M2.132,16.959V0.727h9.658c0.194,0,0.312,0.059,0.429,0.195l3.351,3.352c0.117,0.098,0.176,0.234,0.176,0.409v12.276
+		H2.132z M15.219,4.8c0-0.098-0.078-0.195-0.175-0.195h-3.176V1.429c0-0.097-0.098-0.195-0.195-0.195H2.638v15.218h12.581V4.8z"/>
+</symbol>
+<symbol viewBox="0 0 18 18" id="icon-asm">
+	<path style="fill: currentColor;" d="M2.132,16.959V0.727h9.658c0.194,0,0.312,0.059,0.429,0.195l3.352,3.352c0.117,0.098,0.176,0.234,0.176,0.409v12.276
+		H2.132z M15.219,4.8c0-0.098-0.078-0.195-0.175-0.195h-3.176V1.429c0-0.097-0.099-0.195-0.195-0.195H2.638v15.218h12.581V4.8z"/>
+	<path style="fill: currentColor;" d="M4.698,10.459h0.516l1.697,4.51h-0.57l-0.45-1.271H4.02l-0.45,1.271H3L4.698,10.459z M4.961,11.095H4.95l-0.762,2.147
+		h1.535L4.961,11.095z"/>
+	<path style="fill: currentColor;" d="M9.783,11.635c-0.024-0.366-0.3-0.804-1.02-0.804c-0.713,0-1.02,0.407-1.02,0.839c0,0.301,0.18,0.582,1.008,0.744
+		c1.133,0.223,1.643,0.498,1.643,1.283c0,0.678-0.48,1.355-1.649,1.355c-1.019,0-1.583-0.504-1.631-1.331h0.51
+		c0.09,0.593,0.492,0.876,1.145,0.876c0.774,0,1.085-0.451,1.085-0.852c0-0.492-0.276-0.648-1.073-0.816
+		c-1.038-0.216-1.541-0.504-1.541-1.26c0-0.736,0.605-1.295,1.517-1.295c1.11,0,1.452,0.605,1.542,1.26H9.783z"/>
+	<path style="fill: currentColor;" d="M10.912,10.459h0.594l1.261,2.303l1.146-2.303h0.594v4.51h-0.504v-3.598H13.99l-1.062,2.098h-0.324L11.428,11.4h-0.012
+		v3.568h-0.504V10.459z"/>
+</symbol>
+<symbol viewBox="0 0 32 32" id="icon-star">
+	<path d="M16,1l3.762,10.822l11.455,0.234l-9.13,6.922l3.318,10.966l-9.405,-6.544l-9.405,6.544l3.318,-10.966l-9.13,-6.922l11.455,-0.234l3.762,-10.822Z" fill="#D8C9A5" stroke="none" />
+</symbol>
+<symbol id="icon-joystick" viewBox="0 0 48 48">
+<g fill="none" stroke="#333"  style="stroke: currentColor;" stroke-width="0.825" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5"><path d="M5.988,33.776l0.581,7.349l35.521,-0.025l0.39,-7.595l-36.492,0.271Z"/><path d="M14.184,31.971c-0,-0 4.316,0.646 10.208,0.646c5.892,0 9.278,-0.713 9.278,-0.713l-0.002,-0.816c0,-0 -4.704,0.662 -9.303,0.662c-4.599,0 -10.147,-0.502 -10.147,-0.502l-0.034,0.723Z"/><path d="M15.796,31.271l0.017,-0.998c-0,0 4.922,0.613 8.627,0.613c3.706,-0 8.17,-0.622 8.17,-0.622l0.093,0.978"/><path d="M17.477,30.092l-0.003,-0.663c0,0 3.571,0.653 6.921,0.653c3.349,-0 6.633,-0.726 6.633,-0.726l0.017,0.732"/><path d="M19.509,29.049c-0,-0 2.544,0.507 4.846,0.507c2.302,-0 4.673,-0.444 4.673,-0.444l-0.028,-0.826c-0,-0 -2.73,0.519 -4.673,0.519c-1.942,-0 -4.704,-0.533 -4.704,-0.533l-0.114,0.777Z"/><path d="M19.646,28.233l0.95,-0.571l0.646,0.094l2.557,0.311l0.793,-0.028l2.591,-0.17l0.842,-0.389l0.897,0.724"/><path d="M20.686,27.662l0.987,-26.606l0.507,0.279l1.75,0.344l0.707,-0.012l1.848,-0.279l0.609,-0.324l-0.581,-0.479l-1.91,-0.189l-0.526,-0.021l-1.901,0.219l-0.503,0.462"/><path d="M24.682,28.015l-0.069,-26.289"/><path d="M27.993,27.51l-0.898,-26.394"/><path d="M9.018,32.366l0.013,-1.275c0,-0 1.148,0.226 2.64,0.226c1.491,-0 2.388,-0.221 2.388,-0.221l-0.041,1.342c-0,-0 -1.005,0.056 -2.415,0.056c-1.411,-0 -2.585,-0.128 -2.585,-0.128Z"/><path d="M9.031,31.091l0.625,-0.63c0,-0 0.916,0.253 2.068,0.255c1.153,0.002 1.818,-0.215 1.818,-0.215l0.517,0.595"/><path d="M9.765,30.443c0,0 1.296,-0.23 1.942,-0.209c0.646,0.021 1.848,0.166 1.848,0.166"/><path d="M5.983,33.549l1.341,-1.635l0.369,-0.178l1.322,-0.031"/><path d="M42.352,33.235l-1.586,-1.485l-0.334,-0.108l-6.697,-0.018"/><path d="M7.023,41.212c-0,0 0.235,3.578 0.336,4.506c0.186,1.694 1.357,1.528 1.357,1.528l31.178,-0.306c0,0 1.468,-0.018 1.555,-1.04c0.087,-1.023 0.268,-4.766 0.268,-4.766"/><path d="M15.876,30.17c0,-0 1.124,-0.214 1.544,-0.225"/><path d="M32.582,30.188c-0,0 -0.873,-0.277 -1.527,-0.324"/><path d="M14.22,31.223c-0,0 1.006,-0.354 1.543,-0.366"/><path d="M33.678,31.077c0,0 -0.586,-0.176 -0.997,-0.251"/><path d="M17.507,29.374c0,0 1.016,-0.502 2.04,-0.502"/><path d="M31.068,29.316c-0,-0 -0.792,-0.415 -2.029,-0.4"/></g>
+</symbol>
+<symbol id="icon-joystick-bg" viewBox="0 0 48 48">
+<path d="M5.966,33.755l0.618,7.431l0.47,0.041c0,0 0.223,3.526 0.305,4.563c0.082,1.037 1.547,1.591 1.547,1.591l31.067,-0.407c-0,0 1.21,0.226 1.446,-1.468c0.236,-1.695 0.317,-4.309 0.317,-4.309l0.319,-0.177l0.369,-7.483l-1.503,-1.671l-0.755,-0.256l-6.359,0.006l-0.257,-0.58l-0.738,-0.327l-0.177,-0.572l-1.439,-0.478l-0.348,-0.516l-1.7,-0.429l-0.152,-0.421l-0.962,-0.856l-0.856,-26.159l-0.559,-0.658l-2.262,-0.327l-2.082,0.28l-0.679,0.619l-1.027,26.445l-0.921,0.556l-0.251,0.73l-1.906,0.357l-0.09,0.65l-1.623,0.188l-0.168,0.764l-1.448,0.238l-0.535,-0.721l-1.94,-0.241l-2.217,0.166l-0.68,0.707l0.069,0.682l-1.216,0.075l-0.353,0.15l-1.324,1.817Z" stroke="none" fill="rgb(247,149,12)"/>
+</symbol>
+<symbol id="icon-keypad" viewBox="0 0 40 40">
+<g fill="none" stroke="#333" style="stroke: currentColor;" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5"><path d="M38.5,3.568c0,-1.969 -1.599,-3.568 -3.568,-3.568l-29.864,0c-1.969,0 -3.568,1.599 -3.568,3.568l-0,32.864c-0,1.969 1.599,3.568 3.568,3.568l29.864,0c1.969,0 3.568,-1.599 3.568,-3.568l0,-32.864Z" opacity="0.25"/><path d="M12.765,5.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,14.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,23.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,32.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M24.451,5.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M24.451,14.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M24.451,23.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,5.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,14.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,23.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/></g>
+</symbol>
+<symbol id="icon-keypad-bg" viewBox="0 0 40 40">
+<g fill="rgb(247,149,12)" stroke="none" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5"><path d="M38.5,3.568c0,-1.969 -1.599,-3.568 -3.568,-3.568l-29.864,0c-1.969,0 -3.568,1.599 -3.568,3.568l-0,32.864c-0,1.969 1.599,3.568 3.568,3.568l29.864,0c1.969,0 3.568,-1.599 3.568,-3.568l0,-32.864Z" opacity="0.25"/><path d="M12.765,5.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,14.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,23.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M12.765,32.5c-0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l-0,-3Z"/><path d="M24.451,5.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M24.451,14.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M24.451,23.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.764,0c-0.828,0 -1.5,0.672 -1.5,1.5l-0,3c-0,0.828 0.672,1.5 1.5,1.5l5.764,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,5.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,14.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/><path d="M36.138,23.5c0,-0.828 -0.672,-1.5 -1.5,-1.5l-5.765,0c-0.828,0 -1.5,0.672 -1.5,1.5l0,3c0,0.828 0.672,1.5 1.5,1.5l5.765,0c0.828,0 1.5,-0.672 1.5,-1.5l0,-3Z"/></g>
+</symbol>
+<symbol id="icon-print" viewBox="0 0 40 30">
+<g fill="none" stroke="#111" style="stroke: currentColor;" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<rect x="3" y="18" width="35" height="9" stroke-linejoin="miter" stroke-width="1.2" />
+<path d="M 6.5,27 l 0,1 l 3,0 l 0,-1" stroke-width="0.8" />
+<path d="M 31.5,27 l 0,1 l 3,0 l 0,-1" stroke-width="0.8" />
+<path d="M 9.5,18 L 9.5,0.5 L 32.5,0.5 L 32.5,18" />
+<circle cx="33" cy="23" r="1" stroke-width="0.8" />
+<path d="M 13,7 l 12,0" />
+<path d="M 13,11 l 8,0" />
+</g>
+</symbol>
+<symbol id="icon-download" viewBox="0 0 30 30">
+<g fill="none" stroke="#111" style="stroke: currentColor;" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<path d="M 6,20 L 6,24 L 6.5,25 L 23.5,25 L 24,24 L 24,20" opacity="0.75" stroke-linejoin="miter" />
+<path d="M 15,6 L 15,18.5 M 9,13.5 L 15,19 L 21,13.5" stroke-width="2" opacity="0.66" />
+</g>
+</symbol>
+<symbol id="mode-light" viewBox="0 0 65 65">
+<g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5" style="stroke: currentColor"><circle cx="32.583" cy="32.533" r="14.769"/><path d="M52.667,32.533l12.416,-0m-65,-0l12.186,-0"/><path d="M42.625,49.926l6.208,10.753m-32.5,-56.292l6.093,10.553"/><path d="M42.625,15.14l6.208,-10.753m-32.5,56.292l6.093,-10.553"/></g>
+</symbol>
+<symbol id="mode-dark" viewBox="0 0 65 65">
+<g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5" style="stroke: currentColor"><path d="M46.181,52.948c-11.471,3.073 -23.279,-3.744 -26.353,-15.215c-3.073,-11.471 3.744,-23.279 15.215,-26.352m11.138,41.567c-0,-0 -7.917,-1.712 -12.35,-18.511c-4.434,-16.799 1.212,-23.056 1.212,-23.056"/><path transform="scale(1.7),translate(-17.5 -8)" stroke-width="0.58" d="M48.5,19.671l0.98,3.074l3.187,0.499l-2.62,1.882l0.51,3.186l-2.6,-1.911l-2.872,1.469l1.014,-3.062l-2.285,-2.278l3.226,0.018l1.46,-2.877Z"/></g>
+</symbol>
+<symbol id="icon-debug" viewBox="0 0 40 40"><g style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;fill:none;stroke:currentColor;stroke-width:1.5px;"><path d="M10.859,18.511c-0,-0.008 -0,-0.017 -0,-0.026c-0,-5.022 4.077,-9.1 9.099,-9.1c5.022,0 9.1,4.078 9.1,9.1c-0,0.009 -0,0.018 -0,0.026l-18.199,0Z" /><path d="M10.859,22.122c-0,0.009 -0,0.018 -0,0.026c-0,5.023 4.077,9.1 9.099,9.1c5.022,-0 9.1,-4.077 9.1,-9.1c-0,-0.008 -0,-0.017 -0,-0.026l-18.199,-0Z" /><path d="M28.968,17.534l1.828,-0.006l5.114,-2.983" /><path d="M10.943,17.534l-1.828,-0.006l-5.114,-2.983" /><path d="M28.968,23.289l1.828,0.005l5.114,2.984" /><path d="M10.943,23.289l-1.828,0.005l-5.114,2.984" /><path d="M26.57,12.195l2.874,-3.378l-1.581,-3.749" /><path d="M13.342,12.195l-2.874,-3.378l1.581,-3.749" /><path d="M27.739,26.927l2.498,2.439l0.069,4.333" /><path d="M12.173,26.927l-2.498,2.439l-0.07,4.333" /><path d="M19.971,18.435l0,-9.015" /></g>
+</symbol>
+</defs>
+</svg>
+</body>
+</html>
