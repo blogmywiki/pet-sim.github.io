@@ -1,0 +1,849 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>PET Prgs</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="Assorted programs and disk images for the Commodore PET 2001 online emulator." />
+	<meta name="application-name" content="PET 2001 Program Library" />
+	<link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+<style>
+body
+{
+	max-width: 660px;
+	margin: 1em auto 4em auto;
+	line-height: 1.5;
+	font-family: sans-serif;
+	font-size: 14px;
+}
+p
+{
+	text-indent: -1.2em;
+	padding-left: 1.2em;
+	margin: 0.6em 0 0.5em 0;
+}
+p.pet
+{
+	text-indent: 0;
+	margin-top: 0;
+	padding-bottom: 0.5em;
+	border-bottom: 1px #ccc solid;
+}
+p.pet.cont { border-bottom: none; }
+p.pet.info { padding-bottom: 0.65em; }
+p.no-indent
+{
+	text-indent: 0;
+	padding-left: 0;
+}
+p.margin-before { margin-top: 1em; }
+h2.margin-before { margin-top: 2em; }
+h3 { margin-top: 1.5em; }
+
+a { font-weight: bold; text-decoration: none; }
+a.online { font-weight: normal; font-style: italic; }
+a.online, a.online:visited { color: #082; }
+a.online:active { color: #f00; }
+a.online big { margin-right: 0.25em; font-style: normal; text-decoration: none !important; }
+a:hover,a:focus,a:active { text-decoration: underline; }
+a:hover big,a:focus big,a:active big { text-decoration: none !important; }
+
+a.plain { font-weight: normal; text-decoration: underline; }
+
+span.separator { margin: auto 0.5em; color: #555; }
+
+blockquote
+{
+ margin: 0 0 0.5em 2em;
+ font-style: italic;
+}
+
+pre,code { font-size: 92%; }
+
+@font-face {font-family: "anticon";
+  src: url('iconfont/iconfont.eot'); /* IE9*/
+  src: url('iconfont/iconfont.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont/iconfont.woff') format('woff'), /* chrome, firefox */
+  url('iconfont/iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont/iconfont.svg#anticon') format('svg'); /* iOS 4.1- */
+}
+
+.file,.disk,.play,.toc_icon,.icon_pdf
+{
+  font-family:"anticon" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.1px;
+}
+.play
+{
+  font-size: 14px !important;
+}
+.file
+{
+  font-size: 13px !important;
+  -moz-osx-font-smoothing: grayscale;
+  color: #444;
+}
+.disk
+{
+  font-size: 19px !important;
+  color: #555;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: baseline;
+}
+.icon_pdf
+{
+  font-size: 15px !important;
+  -moz-osx-font-smoothing: grayscale;
+  color: #444;
+}
+
+h2 { color: #222; }
+h2 small
+{
+	font-size: 14px;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 0.25em;
+}
+
+ul.toc
+{
+	margin-bottom: 2.5em;
+	list-style-type: none;
+	padding-left: 1.5em;
+}
+ul.toc ul.toc { margin: 0.3em 0 0.3em 0; padding-left: 1.75em; }
+.toc { font-weight: normal; }
+a.toc,
+a.toc:visited,
+a.toc:focus,
+a.toc:hover
+{
+	text-decoration: none !important;
+	color: #082 !important;
+}
+.toc_icon
+{
+  margin-right: 0.5em;
+}
+
+.run_icon
+{
+	display: inline-block;
+	box-sizing: border-box;
+	width: 32px;
+	height: 32px;
+	background-image: url('../assets/run-icon.svg');
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	margin: 0 0.24em 0 0;
+	text-indent: -1000px;
+	position: relative;
+}
+
+pre
+{
+	white-space: pre-wrap;
+	margin-left: 1.2em;
+	color: #444;
+	font-size: 13px;
+	line-height: 18px;
+}
+
+</style>
+<script>
+function confirmDownload(link, filename) {
+	if (!filename) filename = link.textContent || link.innerHTML;
+	filename = filename.replace(/\?.*/, '');
+	return confirm('Download "'+filename+'"?');
+}
+
+function inlineLinkCall(event) {
+	event.preventDefault();
+	event.returnValue = false;
+	var params = this.href.replace(/^.*?\?/, '?').replace(/&amp;/g, '&');
+	parent.petCtrl.loadFromPrgLibrary(params, event.shiftKey);
+}
+
+function iosScrollToLinkTarget(event) {
+	event.preventDefault();
+	event.returnValue = false;
+	var el=document.querySelector(this.getAttribute('href'));
+	if (el && typeof parent.petCtrl.prgLibraryScrollToYiOS === 'function') {
+		parent.petCtrl.prgLibraryScrollToYiOS(el.offsetTop);
+	}
+}
+
+function initLinks() {
+	if (self != top && parent.petCtrl) { // loaded as iframe
+		var iOS = navigator.userAgent.match(/(iPod|iPhone|iPad|iOS)/),
+			anchors = document.getElementsByTagName('a');
+		for (var i = 0, l = anchors.length; i < l; i++) {
+			var a = anchors[i];
+			if (a.href) {
+				if (a.className === 'online') a.addEventListener('click', inlineLinkCall, false);
+				else if (a.className === 'no_inlining') a.style.pointerEvents = 'none';
+				else if (iOS && a.className === 'toc') a.addEventListener('click', iosScrollToLinkTarget, false);
+			}
+		}
+	}
+}
+
+if (document.readyState === 'loading') {
+	// wait for page to become interactive
+	document.addEventListener('DOMContentLoaded', initLinks, false);
+}
+else {
+	// DOM is available (page loaded or interactive)
+	initLinks();
+}
+
+</script>
+</head>
+<body>
+	<h1>Some Programs to Run on the <a href="../" class="no_inlining">PET 2001</a></h1>
+	<p class="no-indent" style="margin-bottom: 2.5em;"><em>Most programs are best run with a keyboard including a numeric keypad.</em><br />(If you don&rsquo;t have one, you may go to the joystick settings by clicking the tiny joystick icon and select the &ldquo;keyboard&rdquo; option. This will map the cursor keys to the virtual PET&rsquo;s numeric keypad, when <nobr>CAPS LOCK</nobr> is engaged.)</p>
+
+	<ul class="toc">
+	<li><a href="#demos" class="toc"><span class="toc_icon">&#xe6bf;</span>Inspirational Content (Demos)</a></li>
+	<li><a href="#games" class="toc"><span class="toc_icon">&#xe6bf;</span>Games</a>
+	<ul class="toc">
+		<li><a href="#games_classic" class="toc"><span class="toc_icon">&#xe6bf;</span>Classic PET Games</a></li>
+		<li><a href="#games_new" class="toc"><span class="toc_icon">&#xe6bf;</span>New PET Games</a></li>
+		<li><a href="#jim_orlando" class="toc"><span class="toc_icon">&#xe6bf;</span>New PET Games by Jim Orlando</a></li>
+	</ul></li>
+	<li><a href="#misc" class="toc"><span class="toc_icon">&#xe6bf;</span>Misc Programs</a></li>
+	<li><a href="#tests" class="toc"><span class="toc_icon">&#xe6bf;</span>Test Programs</a></li>
+	<li><a href="#d64" class="toc"><span class="toc_icon">&#xe6bf;</span>Disc Images (.D64, .D80)</a></li>
+	<li><a href="#roms" class="toc"><span class="toc_icon">&#xe6bf;</span>Option ROMs</a></li>
+	<li><a href="#util" class="toc"><span class="toc_icon">&#xe6bf;</span>Programming Utilities (assemblers, SuperMon&hellip;; .D64)</a></li>
+	<li><a href="#manuals" class="toc"><span class="toc_icon">&#xe6bf;</span>Manuals (PDF)</a></li>
+	</ul>
+
+	<h2 id="demos">Inspirational Content (Demos)</h2>
+	<p class="no-indent" style="font-style:italic; margin-bottom: 1.25em;">Lately, there have emerged some amazing programs that show what&rsquo;s possible on the humble PET. You can access these programs also inside the emulator by clicking the star icon next to the title. Or just use this <a href="../?demos">shortcut link</a>. (Mind that these programs require accurate hardware emulation and may not run as intended on other emulators.)</p>
+
+	<p><span class="file">&#xe664;</span> <a href="back2pet.prg" onclick="return confirmDownload({'textContent':'back2pet.prg'});">Back To The PET</a> &nbsp;by <em>shiru8bit,</em> 2022<br />
+	A &ldquo;proper demo&rdquo; that redefined dynamic content on the PET, especially for music!<br />
+	Here presented in a &ldquo;hot&rdquo; rendering mode with long persistence (see the context menu of the emulated screen, there&rsquo;s also an option for the pixel aspect ratio.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=back2pet&amp;screen=green&amp;persistence=long&amp;rom=4&amp;ram=32k&amp;autorun=true&amp;sound=true"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="gp_a_bright_shining_star.zip" onclick="return confirmDownload({'textContent':'gp_a_bright_shining_star.zip'});">A Bright Shining Star</a> &nbsp;by <em>Genesis Project,</em> 2022<br />
+	This shows what&rsquo;s possible with graphics on the PET, if you just try hard enough. Be assured, the PET still has character graphics only! (No sound.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=GP-a-bright-shining-star.prg&amp;screen=green&amp;persistence=normal&amp;rom=4&amp;ram=32k&amp;autorun=true&amp;sound=false"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="faulty_robots.zip" onclick="return confirmDownload({'textContent':'faulty_robots.zip'});">Faulty Robots</a> &nbsp;by <em>shiru8bit,</em> 2021<br />
+	A CB2 music album, and an attractive program, as well! Presented with kind permission by Shiru, head over to <a href="https://shiru8bit.bandcamp.com/album/faulty-robots" target="_blank" rel="noopener" title="'Faulty Robots' on shiru8bit's Bandcamp page">Shiru&rsquo;s Bandcamp page</a> in order to support him. You can read more about this album, the background story of the tracks, and music on the PET in general in this <a href="https://habr.com/en/post/650905/" target="_blank" rel="noopener">blog post</a>.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=frobots4&amp;rom=2&amp;ram=16k&amp;screen=green&amp;persistence=normal&amp;autorun=true&amp;sound=true"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+
+	<p>&nbsp;</p>
+
+	<h2 id="games">Games</h2>
+	<h3 id="games_classic">Classic PET Games</h3>
+
+	<p><span class="file">&#xe664;</span> <a href="invader.prg" onclick="return confirmDownload(this);">invader.prg</a> (original)<br />
+	Commercial Space Invaders clone for the 3032 and the 4032. Written in machine language.<br />Controls: 4, 6 and 'A'.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=invader&amp;repeat=off&amp;sound=true&amp;joystick=keyboard"><span class="run_icon">&gt;</span> Play it online</a> &hellip; <em>(Press any key to pass the first screen.)</em></p>
+	<p class="pet cont">See also:</p>
+	<p><span class="file">&#xe664;</span> <a href="invaders-joy.prg" onclick="return confirmDownload(this);">invader-joy.prg</a><br />
+	As above, but with added joystick support (PA0, PA1, PA5).<br />Keyboard controls: 4, 6 and 'A'.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=invaders-joy&amp;repeat=off&amp;sound=true&amp;joystick=simple"><span class="run_icon">&gt;</span> Play it online</a> &hellip; <em>(Press any key to pass the first screen.)</em></p>
+
+	<p><span class="file">&#xe664;</span> <a href="space_invader.prg" onclick="return confirmDownload(this);">space_invader.prg</a><br />
+	Free Space Invaders for the 2001 and the 3032.<br />Controls: '.', '=' and SPACE.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=space_invader&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+	<p class="pet cont">See also:</p>
+	<p><span class="file">&#xe664;</span> <a href="galaxy-invdr-joy.prg" onclick="return confirmDownload(this);">galaxy-invdr-joy.prg</a><br />
+	As above, but with added joystick support (PA0, PA1, PA5).<br />Keyboard Controls: '.', '=' and SPACE.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=galaxy-invdr-joy&amp;repeat=off&amp;sound=true&amp;joystick=simple"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="galaga.prg" onclick="return confirmDownload(this);">galaga.prg</a><br />
+	A great port of Galaga by Henrik Wening (1982), maybe the best arcade port for the PET ever.<br />Various control schemes selectable inside the program,<br />including an unusal joystick scheme (left: PA3, right: PA5, fire: PA0).</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=galaga&amp;repeat=off&amp;sound=true&amp;ram=16&amp;rom=4&amp;joystick=galaga"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="pac-man2.prg" onclick="return confirmDownload(this);">pac-man2.prg</a><br />
+	A great Pac-Man by Henrik Wening (1983) in the footsteps of his Galaga port.<br />Controls: number pad (2,4,6,8) or joystick (left: PA3, right: PA5, up: PA1, down: PA2, fire: PA0).</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=pac-man2&amp;repeat=off&amp;sound=true&amp;rom=2&amp;joystick=galaga"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="super-glooper.prg" onclick="return confirmDownload(this);">super-glooper.prg</a><br />
+	A Pac-Man port for 40-column PETs by D.E. Anthony 1981.<br />Controls: 8, 4, 6, 2 on the numeric keypad. You may also use '5' for moving down.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=super-glooper&amp;repeat=off&amp;sound=true&amp;joystick=keyboard"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="scramble2.prg" onclick="return confirmDownload(this);">scramble2.prg</a><br />
+	A port of Scramble by A. Jentzen (1981).<br />Controls: joystick (left: PA3, right: PA1, up: PA0, down: PA2, fire: PA5).<br />Keyboard controls requires the &ldquo;business&rdquo; keyboard: numeric keypad and TAB for fire.<br />(Note: The game doesn't switch to upper-case/graphics mode automatically. Be sure to be in graphics mode before starting the game.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=scramble2&amp;repeat=off&amp;sound=true&amp;rom=4&amp;joystick=scramble"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="miner.prg" onclick="return confirmDownload(this);">miner.prg</a><br />
+	Miner game for 40-column PETs from Cursor #19, copyright 1980 Ron Longfellow.<br />Controls: 2, 4, 6, 8 for movements.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=miner&amp;repeat=off&amp;sound=true&amp;joystick=keyboard"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="galactic_attack.prg" onclick="return confirmDownload(this);">galactic_attack.prg</a><br />
+	Arcade game reminiscent of Galaxian.<br />Controls: 4, 6 and SHIFT for fire. (SPACE to restart.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=galactic_attack&amp;repeat=off&amp;sound=true&amp;joystick=keyboard_shift"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="cosmiads_uni.prg" onclick="return confirmDownload(this);">cosmiads_uni.prg</a><br />
+	Cosmiads &mdash; Excellent implementation of Galaxian.<br />Controls: Q, E, &uarr; (Use TAB for the up-arrow in the emulator.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=cosmiads_uni&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="aliens!.prg" onclick="return confirmDownload(this);">aliens!.prg</a><br />
+	A cute, arcady shooter.<br />Controls: 4, 6, SHIFT</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=aliens!&amp;repeat=off&amp;sound=true&amp;joystick=keyboard_shift"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="phantom-fighter.prg" onclick="return confirmDownload(this);">phantom-fighter.prg</a><br />
+	A horizontally scrolling shooter, defend the Superstition Moantain from UFOs! (Magic Carpet Software, 1981)<br />Controls: 4: up, 6: down, SHIFT for fire</p>
+	<p class="pet cont">IMPORTANT: If your keyboard does not feature a numeric keypad, please either use a real joystick or the <em>keyboard joystick</em> with <kbd>CAPS-LOCK</kbd> engaged and the <kbd>LEFT</kbd> and <kbd>RIGHT</kbd> cursor keys. (Sadly, this great little game has issues with the key strokes sent by modern keyboards, when <knd>4</kbd> or <kbd>6</kbd> on the first key row are pressed together with <kbd>SHIFT</kbd>.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=phantom-fighter&amp;repeat=off&amp;sound=true&amp;joystick=keyboard_shift"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="vortex.prg" onclick="return confirmDownload(this);">vortex.prg</a><br />
+	A fun little shooter game, hunt the flying saucer! Not that easy as it is cute. (Magic Carpet Software, 1982)<br />Controls: 4: left, 6: right, SHIFT for fire</p>
+	<p class="pet cont">IMPORTANT: If your keyboard does not feature a numeric keypad, please either use a real joystick or the <em>keyboard joystick</em> with <kbd>CAPS-LOCK</kbd> engaged and the <kbd>LEFT</kbd> and <kbd>RIGHT</kbd> cursor keys. (Sadly, this great little game has issues with the key strokes sent by modern keyboards.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=vortex.prg&amp;repeat=off&amp;sound=true&amp;joystick=keyboard_shift"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="starspores.prg" onclick="return confirmDownload(this);">starspores.prg</a><br />
+	&ldquo;Star Spores&rdquo; is a space shooter game that was well known for its graphics. By Jim Summers, 1982.<br />Controls: &lt;, &gt;, SHIFT</p>
+	<p class="pet cont">NOTE: In the emulator, use either a game controller or activate the keyboard joystick emulation by engaging the CAPS-LOCK key and using the left and right cursor keys to move and SPACE to fire.</p>
+	<p class="pet cont">(Consider the <em>&ldquo;Hot&rdquo; Rendering</em> option in the screen&rsquo;s context menu for some translucency effects.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=starspores&amp;rom=4&amp;ram=32k&amp;keyboard=games&amp;sound=true&amp;joystick=custom,l:60,r:62:b:32,u:0,d:0"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="space.prg" onclick="return confirmDownload(this);">space.prg</a><br />
+	A tiny, 1<sup>st</sup> person space shooter in BASIC &mdash; modified version of game from Cursor #8.<br />Controls: numeric keypad, SHIFT</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=space&amp;repeat=off&amp;sound=true&amp;joystick=keyboard_shift"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="3d_star_trek.prg" onclick="return confirmDownload(this);">3d_star_trek.prg</a><br />
+	The excellent 3D Star Trek by M P McDonald and M H Clements for 3000 series 40-column PETs. Does not fully work on the 4000 series, and not at all on the 8000 series.<br />
+	Keys: D=damage report, I+number=impulse drive, L=long range scan, P+number=launch photon torpedo (steer with shift and normal steering keys), home=steer counter clockwise coarse, down=steer counter clockwise fine, del=steer clockwise coarse, right=steer clockwise fine, maybe other keys?<br />
+	Battle stations: number keys; space to fire.<br />
+	See the official manual: <a href="Pet_3D_StarTrek.pdf" target="_blank">Pet_3D_StarTrek.pdf</a>.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=3d_star_trek&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="pong-joysticks.prg" onclick="return confirmDownload(this);">pong-joysticks.prg</a><br />
+	Pong with several options.<br />Adapted for dual joysticks (&ldquo;Stupid PET Tricks&rdquo; adapter) by Jim64</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=pong-joysticks&amp;repeat=off&amp;sound=true&amp;joystick=stupidpettricks"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games_manbiki"><span class="file">&#xe664;</span> <a href="manbiki.d64" onclick="return confirmDownload(this);">manbiki.d64</a><br />
+	<strong>Manbiki Syonen</strong> (Shop Lifting Boy) by Hiroshi Suzuki is reportedly the first stealth game. Presented in Nov. 1979 at the Komaba Festival of the University of Tokyo and published as a BASIC type-in game in <a href="http://www.hardcoregaming101.net/books/the-untold-history-of-japanese-game-developers-volume-1/" target="_blank" rel="noopner" class="plain">Random Acceess Magazine, Feb. 1980</a>, it presents the player with the task of clearing the shelves of a shop before it closes without being spotted by the warden.</p>
+	<p class="pet cont">The game is here presented in two versions:</p>
+	<ul style="margin-top: -0.5em;">
+	<li>The original, using the rather unusual control scheme of 0, ., &minus;, 2 for movement and SPACE to grab any items:<br /><a class="online" target="at_masswerk_pet" href="../?run=manbiki.d64/manbiki%20syonen&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> play it online</a> &hellip;</li>
+	<li>And an optimized version, using rather the cursor keys for movement and the SPACE key, by Robin <i>@8-Bit Show And Tell</i> (2024), more suitable for use with modern keyboards:<br /><a class="online" target="at_masswerk_pet" href="../?run=manbiki.d64/shopliftingboy-c&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> play it online</a> &hellip;<br />
+	(Watch Robin&rsquo;s video on this on <a href="https://www.youtube.com/watch?v=reuCZf2Yhfk" target="_blank" rel="noopener" class="plain">YouTube</a>. You may also want to check out the links in the video description.)</li></ul>
+	<p class="pet">Or just start here and select your preferred version from a menu: <a class="online" target="at_masswerk_pet" href="../?run=manbiki.d64/menu&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> start online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="car%20race%202.prg" onclick="return confirmDownload(this);">car race 2.prg</a><br />
+	<strong>Car Race II</strong> (type-in game in BASIC) &mdash; what Saturo Iwata did before Nintendo.<br />Requires ROM 4.0. Controls: 4: left, 6: right, A: accelerate</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=car%20race%202&amp;keyboard=games&amp;rom=4&amp;sound=false&amp;joystick=keyboard_A"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<h3 id="games_new">New PET Games</h3>
+
+	<p id="iphonezombies"><span class="file">&#xe664;</span> <a href="iphonezombies-wip-mute.prg?v=2024-06-09" onclick="return confirmDownload(this);">iphonezombies-wip-mute.prg</a> &nbsp; <em>(Work in Progress, vers. 2024-06-09)</em><br />
+	<strong>The Abominable iPhone Zombies</strong> is a &ldquo;PETSCII Horror Doom Scroller&rdquo; for any 40 columns PET with at least 8K. This is work and progress and currently lacking sound.<br />Just as in real life, it&rsquo;s not easy, there is no guaranteed path to success, but it&rsquo;s astonishing where you can squeeze through.</p>
+	<p class="pet cont">(The game has been drafted and assembled using the emulator, exclusively.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=iphonezombies-wip-mute&amp;keyboard=games&amp;sound=false&ram=8k"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="iphonezombies"><span class="file">&#xe664;</span> <a href="wow.prg" onclick="return confirmDownload(this);">wow.prg</a><br />
+	<strong>Wizard of Wor for the Commodore PET</strong> is exactly what it sounds like (and it does have sound), the well-known arcade game, for one or two players. (40 or 80 columns PET, 32K of RAM required.) By Kornel Kolma (Ko-Ko), 2024.</p>
+	<p class="pet cont">Itch.io page: <a href="https://ko-ko74.itch.io/wizard-of-wor-for-the-commodore-pet" target="_blank" rel="noopener" class="plain">ko-ko74.itch.io/wizard-of-wor-for-the-commodore-pet</a>.</p>
+	<p class="pet cont">Controls:</p>
+	<ul style="margin-top: -0.75em;"><li>Player 1 &mdash; Move: WASD, Fire: X</li><li>Player 2 &mdash; Move: TMUO, Fire: Right Shift</li></ul>
+	<p class="pet cont">(Start with X for a 1 player game or Right Shift for two players.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=wow&amp;keyboard=games&amp;sound=true&amp;rom=4&ram=32k"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-computerspace2001"><span class="file">&#xe664;</span> <a href="computerspace2001.zip?v=1.1" onclick="return confirmDownload(this);">computerspace2001.zip</a> &nbsp; <em>(includes prg file for PET, 6502 assembler source, and a C64 version)</em><br />
+	<em>Computer Space 2001</em> &mdash; My own game for the PET 2001, a simulation of Computer Space, the very first arcade video game (1971), written in machine language in April/May 2017 (for RetroChallenge 2017/04). See here for <a href="/rc2017/04/release.html" target="_blank" class="plain">details</a>.<br />Controls: A, S (D), (J) K, L.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=computerspace2001&amp;color=white&amp;repeat=off&amp;sound=false"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-dragon"><span class="file">&#xe664;</span> <a href="dragon.d64?v=3.0" onclick="return confirmDownload(this);">dragon.d64</a><br />
+	<strong>Tower And Dragon</strong> is a new PET game (2023-2024) by Jason Cook and probably the most complex game to run on an 8K PET.  Tower And Dragon, a tribute to &lsquo;Dungeon&rsquo; from 1979, is a classic dungeon crawling adventure with primary and offhand weapon, armor, quest storyline, moving walls, teleportation, and unique tilesets and monsters for each dungeon level. Your character starts out just after landing a boat on the shore near an ancient ruin, discovered by following a dream.</p>
+	<p class="pet cont">The game is playable by disk drive or tape cassette on ROM1, ROM2, and ROM4 systems, and features full support for 40 columns and 80 columns screens (series 8000 PETs) and should be compatible with 8032, 8096, 8296, and SuperPET, as well as N and SK variants. Moreover, it introduces an entirely new music engine for the PET on its splash screen, the BuzzKick engine by <em>shiru8bit</em>, rendering audio at a previously unheard resolution.</p>
+	<p class="pet cont">In less than a year Jason has advanced from the initial launch to the vastly enhanced <strong>version 3</strong>, while not just adhering to the strict design goal of the game being playable on a stock PET 2001-8K, but even improving on it by adding better support for cassette operations.</p>
+	<details id="games-dragon" style="margin: 0.5em 0 1em 1em;"><summary style="font-weight: bold;">Release Notes &mdash; New Features</summary>
+	<p class="pet cont" style="margin-top: 1em;">Some notable features of version 3.0 are,</p>
+	<ul style="margin-top: -0.5em;">
+		<li>Animations for almost all monsters.</li>
+		<li>Named armor and weapons.</li>
+		<li>Trade gold with the vendor in the outdoor area.<br />
+			Among other things, you may purchase a heal enchant. (The enchant is expensive and activates only once per purchase. Press &quot;H&quot; to heal.)</li>
+		<li>Three new zones and a few boss mobs have been added.<br />The village is accessible from the outdoor area, the two oyther new zones are accessible from the ruin.</li>
+	</ul>
+	<p class="pet cont">Of note for users of previous versions, in Jason's own words:</p>
+	<ul style="margin-top: -0.5em;">
+		<li>If coming from version 2, The stairs down on level 1 are worth visiting.</li>
+		<li>Level 3 has been mostly restored to about 85% (possibly more) to its original state as I made it as a boy 40 years ago. Not that it is an awesome area or anything, but still neat. If coming from V2: Going to the stairs down on this level is significant.</li>
+		<li>There are better weapons available in the game than previously available. If coming from version 2, simply killing monsters on level 3 and 4 should upgrade.</li>
+		<li>The end is tougher if coming from v2. Let me know if you can beat it without any upgrades or leveling.</li>
+		<li>Completely enclosing character's avatar in any stairs/boat tile temporarily changes your spawn point to that location until you change zones or reload.</lI>
+		<li>While there is only so much you can do with text graphics, the dragon animation is worth viewing.</li>
+		<li>Added more help option on title screens.</li>
+		<li>When you have won, be sure to check out what is cooking on the stove. I used almost all available memory on the level to add some polish.</li>
+		<li>Rebalanced all the zones, painful. This required me exploring every room, and looting every gold on every level. I can't tell you the number of times I had to clear every mob from the new zones to thoroughly test.</li>
+		<li>A few Easter eggs have been added. Hint: A few things change based off of your progression.</li>
+		<li>Support for quests has been added.</li>
+	</ul>
+	<p class="pet cont">(See the release notes in the ZIP-archive for details.)</p>
+	</details>
+	<p class="pet cont">Watch the version 3 teaser video on <a href="https://www.youtube.com/watch?v=Cvzx7q3nFNc" target="_blank" rel="noopener" class="plain">YouTube</a>.<br />See also the original <a href="https://www.youtube.com/watch?v=a1YFQ-3sEsY" target="_blank" rel="noopener" class="plain">making-of video</a> (YouTube). <em style="margin-left: 0.3em;">(Yes, we do have audio! :-) )</em></p>
+	<p class="pet cont">Download the cassette version (and read-me): <span class="file">&#xe664;</span> <a href="TowerAndDragon30.zip" onclick="return confirmDownload(this);">TowerAndDragon30.zip</a><br />Release notes: <a href="https://hub.inktada.com/channel/toweranddragon" target="_blank" rel="noopener" class="plain">hub.inktada.com/channel/toweranddragon</a>.</p>
+	<p class="pet cont">The game supports SNES-type controllers.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=dragon.d64/dragon&amp;ram=8k&amp;repeat=off&amp;screen=white&amp;sound=true&amp;joystick=snes"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-tut-tut"><span class="file">&#xe664;</span> <a href="tut-tut.prg" onclick="return confirmDownload(this);">tut-tut.prg</a><br />
+	<strong>Tut-Tut</strong> is an Egyptian tomb themed action puzzle game, ported from an original Sinclair Spectrum version to the PET by Dave Curran (Tynemouth Software, 2021).<br /><span style="display: block; height: 5px;"></span>
+	Tut-Tut started life as a type-in BASIC program for the ZX Spectrum, by David Stephenson, published in Paleotronic magazine in November 2019, and an enhanced version was soon ported to other British micros and the TRS-80 MC-10. The PET version not only builds on this, but also adds sound, as well. Read more about the game and its background in this <a href="http://blog.tynemouthsoftware.co.uk/2022/09/tut-tut-for-commodore-pet.html" target="_blank" rel="noopener" class="plain">blog post</a> by Dave Curran.</p>
+	<p class="pet cont">Official game page &amp; download (name your price/donation): <a href="https://tynemouth.itch.io/tut-tut-commodore-pet" target="_blank" rel="noopener" class="plain">tynemouth.itch.io</a>.<br />
+	See the &ldquo;The Future was 8bit&rdquo; shop for <a href="https://www.tfw8b.com/product/tut-tut-pet-32k/" target="_blank" rel="noopener" class="plain">Tut-Tut on physical media</a> (casette).</p>
+	<p class="pet cont">The game is here provided by kind permission of Tynemouth Software /  Dave Curran.</p>
+	<p class="pet cont">Left: O or 4, right: P or 6, up: Q or 8, down: A or 2. (R resets a level, W for pause.)<br />
+	The game also works with the PET (Joe Travis) joystick interface.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=tut-tut&amp;ram=32k&amp;repeat=off&amp;sound=true&amp;joystick=pet"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-3d-monster-maze"><span class="file">&#xe664;</span> <a href="3d%20monster%20maze.prg" onclick="return confirmDownload(this);">3d monster maze.prg</a><br />
+	<strong>3D Monster Maze</strong> is an icon of British game development, originally programmed in 1981 by Malcolm Evans for the Sinclair ZX81 and brought to the Commodore PET by Dave Curran (Tynemouth Software) in 2021. Explore a randomly generated 3D maze and escape from a T-Rex and other inhabitants, appeal for your life, if Rex gets you&hellip; (A successful appeal resets you well and alive to BASIC, which is the intended behavior. But this is not necessarily the end&hellip;)</p>
+	<p class="pet cont">Requires a PET / CBM 4032 / PET 2001N (or a modern recreation) with 32K of RAM and BASIC 4.0.</p>
+	<p class="pet cont">Official game page &amp; download (name your price/donation): <a href="https://tynemouth.itch.io/pet-3d-monster-maze" target="_blank" rel="noopener" class="plain">tynemouth.itch.io</a>.<br />
+	See the &ldquo;The Future was 8bit&rdquo; shop for <a href="https://www.tfw8b.com/product/3d-monster-maze-pet-32k/" target="_blank" rel="noopener" class="plain">3D Monster Maze on physical media</a> (casette or cartridge). Read about the development process of this remake of a British classic at the <a href="http://blog.tynemouthsoftware.co.uk/2022/07/remaking-3d-monster-maze-for-the-commodore-pet.html" target="_blank" rel="noopener" class="plain">Tynemouth Blog</a>.</p>
+	<p class="pet cont">The game is here provided by kind permission of Tynemouth Software /  Dave Curran.</p>
+	<p class="pet cont">Controls: turn left &hellip; 4, turn right &hellip; 6, move forwards &hellip; 8.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=3d+monster+maze&amp;ram=32k&amp;rom=4&amp;keyboard=games&amp;sound=off&amp;joystick=keyboard"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-pet-tetris"><span class="file">&#xe664;</span> <a href="tetris.prg" onclick="return confirmDownload(this);">tetris.prg</a><br />
+	Pet Tetris V1.3 by Tim Howe 15, March 2010. (Requires at least 16K of memory.)<br />From the readme-file:</p>
+	<blockquote>&quot;This is probably the last game EVER to be written for the PET!<br />
+	It is 30% assembly code and 70% C, and has been compiled with<br />
+	cc65. Source code should be available via the cc65 website.<br /><span style="display: block; height: 5px;"></span>
+	It requires a 40 column machine with BASIC 2 ROMS. Unfortunately<br />
+	it does not run under BASIC 4 (4000 series). This may be something<br />
+	that I can rectify in due course.&quot;</blockquote>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=tetris&amp;ram=16k&amp;repeat=off&amp;sound=false"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p><span class="file">&#xe664;</span> <a href="10LineAdventure.d64" onclick="return confirmDownload(this);">10 Line Adventure</a> (d64-file, VIC 20)<br />
+	Einar Saukas' <em>&quot;Tenliner Cave Adventure&quot;</em> (2016) for the Sinclair ZX81 ported to the VIC 20 by Robin Harbron (2019).</p>
+	<p class="pet cont">An entire (while admittedly tiny) text adventure in just 10 lines of BASIC!<br />
+	For Einar Saukas' original entry to the BASIC Tenliners Competition 2016 see the entry at <a href="https://spectrumcomputing.co.uk/index.php?cat=96&amp;id=30392" target="_blank" rel="noopener" class="plain">spectrumcomputing.co.uk</a>,	for the port to Commodore Basic see <a href="http://psw.ca/robin/?p=301" target="_blank" rel="noopener" class="plain">Robin Harbron's site</a> and this <a href="https://www.youtube.com/watch?v=_d2g5BXdyfU" target="_blank" rel="noopener" class="plain">YouTube video</a>.</p>
+	<p class="pet cont">The VIC 20 BASIC code runs happily on the PET, since both machines share essentially the same BASIC and the start address is overwritten in BASIC mode. The first link below just loads the program (in order to allow you to list the source), type <code>RUN</code> + <TT>&lt;ENTER&gt;</tt> to start the game.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?load=10LineAdventure.d64/10%20LINE%20ADV&amp;asBasic=true"><span class="run_icon">&gt;</span> Explore it online</a> <em>&mdash; just loads the program &mdash;</em> or</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=10LineAdventure.d64/10%20LINE%20ADV&amp;asBasic=true"><span class="run_icon">&gt;</span> Run it online</a> <em>&mdash; loads and runs the program &mdash;</em></p>
+
+	<p><span class="file">&#xe664;</span> <a href="10line-canyonrun.prg" onclick="return confirmDownload(this);">Ten-Line Canyon Run</a><br />
+	A simple game of my own, demonstrating some <a href="/nowgobang/2020/pet2001-10line-canyonrun" target="_blank" class="plain">hacks exploiting strings</a> in Commodore BASIC.<br />
+	Follow the on-screen instructions. Requires ROM 2.<br />
+	Norbert Landsteiner, March 2020.</p>
+	<p class="pet cont">The game is available for download as a PRG-file (<span class="file">&#xe664;</span> <a href="10line-canyonrun.prg" onclick="return confirmDownload(this);">10line-canonrun.prg</a>) and as a text file with escaped PETSCII screen characters (<span class="file">&#xe664;</span> <a href="10line-canyonrun.txt" onclick="return confirmDownload(this);" target="_blank">10line-canonrun.txt</a>).</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=10line-canyonrun&amp;color=white&amp;repeat=off"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+
+	<h3 id="jim_orlando">New PET Games by Jim Orlando</h3>
+	<p class="no-indent">Jim Orlando may be the most prolific game developer for the PET at the moment. His games certainly deserve a section of their own:</p>
+
+	<p id="games-efpc"><span class="file">&#xe664;</span> <a href="efpc.prg" onclick="return confirmDownload(this);">efpc.prg</a><br />
+	<strong>Escape from PETSCII Castle</strong><br />As of 2024, the venerable Commore PET has a viable 3D-FPS game, courtesy of Jim Orlando.</p>
+	<p class="pet cont">Requirements: Any PET (40 or 80 columns), 32K RAM. Supports sound.</p>
+	<p class="pet cont">Details: <a href="https://jimbo.itch.io/escape-from-petscii-castle" target="_blank"  rel="noopener" class="plain">jimbo.itch.io/escape-from-petscii-castle</a>.</p>
+	<p class="pet cont">Controls: Keyboard or joystick with Texelec SNES adapter.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=efpc&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;joystick=SNES&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-defender2020"><span class="file">&#xe664;</span> <a href="defender2020.prg" onclick="return confirmDownload(this);">defender2020.prg</a><br />
+	Defender 2020 for Commodore PET.<br />A version of the arcade game Williams Defender for the PET written in 2020 by Jim Orlando. See the write-up at:
+	<a href="https://medium.com/@jim.orlando/a-new-forty-year-old-video-game-54a0cd1b5f00" target="_blank"  rel="noopener" class="plain">medium.com/@jim.orlando/a-new-forty-year-old-video-game-54a0cd1b5f00</a>.</p>
+	<p class="pet cont">The game supports various PET versions, the updated version presented here adds the 8032 to the list and includes a few bug fixes.</p>
+	<p class="pet cont">Requires ROM 2.0 and 32K of memory. Controls are configured at the start of the game.<br />Defaults: Q, A &hellip; up, down, Z &hellip; reverse direction, K &hellip; advance, L &hellip; fire laser, X &hellip; start.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=defender2020&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-twrdef2021"><span class="file">&#xe664;</span> <a href="twrdef2021.prg" onclick="return confirmDownload(this);">twrdef2021.prg</a><br />
+	A version of <a href="https://en.wikipedia.org/wiki/Desktop_Tower_Defense" target="_blank" rel="noopener" class="plain">DeskTop Tower Defense</a> for Commodore PET written by Jim Orlando over the 2020 holidays. See the write-up at:
+	<a href="https://jim-orlando.medium.com/another-new-game-for-my-forty-year-old-8-bit-computer-ba8436e52fe9" target="_blank"  rel="noopener" class="plain">jim-orlando.medium.com/another-new-game-for-my-forty-year-old-8-bit-computer-ba8436e52fe9</a>.</p>
+	<p class="pet cont">Requires ROM 2.0 and 32K of memory. Various PET versions are auto-detected by the game.<br />Controls are to be configured at the start of a game.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=twrdef2021&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-loderunner"><span class="file">&#xe664;</span> <a href="loderunner.prg" onclick="return confirmDownload(this);">loderunner.prg</a><br />
+	This is classic Lode Runner for the PET by Jim Orlando, 2021. A polished game including iris animations rarely seen on the PET.<br />
+	Have a look at this video for a preview and also for a few hints on how to beat the first five levels: <a href="https://www.youtube.com/watch?v=IAOgszOVq78" target="_blank" rel="noopener" class="plain">&quot;Lode Runner on Commodore PET levels 1-5&quot; (YouTube)</a>.</p>
+	<p class="pet cont">Requires ROM 2.0 and 32K of memory. The PET version is auto-detected by the game.<br />Controls are to be configured at the start of a game.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=loderunner&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-petportal"><span class="file">&#xe664;</span> <a href="petportal!.prg" onclick="return confirmDownload(this);">petportal!.prg</a><br />
+	This is, well, Portal for the PET, again by Jim Orlando, 2021. It's the PET version of <a href="https://chrome.google.com/webstore/detail/portal-2d/noeojpcnabfdkncikfpepcpcldcfmpeb?hl=en" target="_blank" rel="noopener" class="plain">Portal2D</a>, which itself was a tribute to the award winning game <a href="https://en.wikipedia.org/wiki/Portal_(video_game)" target="_blank" rel="noopener" class="plain">Portal</a> from Valve Software.</p>
+	<p class="pet cont">Requires 32K of memory. The PET version is auto-detected by the game.<br />Controls are to be configured at the start of a game.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=petportal!&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-pzlmgs"><span class="file">&#xe664;</span> <a href="pzlmgs.prg" onclick="return confirmDownload(this);">pzlmgs.prg</a><br />
+	<strong>PETSCII Zombie Lemmings</strong> for Commodore PET.<br />A Lemmings-like game done in PETSCII graphics for the Commodore PET computer. Coded for TOJam game jam weekend in May 2021. &mdash; Who says you need colour graphics,  3D,  multichannel sound and any more than 8-bits to have fun?<br />
+	See also: <a href="https://jimbo.itch.io/petscii-lemmings-for-commodore-pet" target="_blank" rel="noopener" class="plain">PETSCII Zombie Lemmings page at jimbo.itch.io</a> or this <a href="https://www.youtube.com/watch?v=d6aA5Y1SRd0" target="_blank" rel="noopener" class="plain">demo video</a> on YouTube.</p>
+	<p class="pet cont">Requires 32K of memory.<br />Controls: S,F,E,D to move cursor left, right, up, down. J,L to select ability. RETURN to give ability.<br />N to nuke all lemmings. SPACE BAR to pause the game.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=pzlmgs&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true&amp;joystick=snes"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-trekwar"><span class="file">&#xe664;</span> <a href="trekwar.prg" onclick="return confirmDownload(this);">trekwar.prg</a><br />
+	<strong>TrekWar!</strong> for Commodore PET.<br />A Star Trek action game for the Commodore PET.  Shoot those pesky Klingon ships, and gather dilithium crystals to drop them at their storage facilities &hellip; all while making sure you don't run out of energy or have your shields breached.<br />
+	See also: <a href="https://jimbo.itch.io/trekwar" target="_blank" rel="noopener" class="plain">TrekWar! page at jimbo.itch.io</a> or this <a href="https://youtu.be/e8pvqtTx-N8" target="_blank" rel="noopener" class="plain">demo video</a> on YouTube.</p>
+	<p class="pet cont">Requires 32K of memory.<br />Controls: W,A,S,D to move cursor left, right, up, down. Q,E to turn. J to warp forward. K to fire photon torpedos.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=trekwar&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p id="games-patpanic"><span class="file">&#xe664;</span> <a href="petpanic!.prg" onclick="return confirmDownload(this);">petpanic!.prg</a> (2023)<br />
+	<strong>PET Panic!</strong><br />The arcade game Space Panic was the first &ldquo;platformer&rdquo; game, and it inspired more popular games of the time such as Lode Runner and Donkey Kong. There were many different versions of Space Panic on the original 8-bit machines, including Apple Panic which won a number of game awards. This is an updated version for the Commodore PET.<br />
+	See also: <a href="https://jimbo.itch.io/pet-panic" target="_blank" rel="noopener" class="plain">PET Panic! page at jimbo.itch.io</a> or this <a href="https://youtu.be/GCvbKbaR5fI" target="_blank" rel="noopener" class="plain">demo video</a> on YouTube.</p>
+	<p class="pet cont">Requires 32K of memory. The PET version is auto-detected by the game.<br />Controls: W,A,S,D to move cursor left, right, up, down. J to dig. I to fill.</p>
+	<p id="games-pkong"><span class="file">&#xe664;</span> <a href="pkong.prg" onclick="return confirmDownload(this);">pkong.prg</a> (2023)<br />
+	<strong>PETSCII Kong</strong><br />This is right up my alley: as the name suggest, expect big apes, wandering cocnuts, and hammering Italian plumbers.<br />
+	See also: <a href="https://jimbo.itch.io/petscii-kong" target="_blank" rel="noopener" class="plain">PETSCII Kong page at jimbo.itch.io</a> or this <a href="https://www.youtube.com/watch?v=PtpsRcclM8I" target="_blank" rel="noopener" class="plain">demo video</a> on YouTube.</p>
+	<p class="pet cont">Requires 32K of memory. The PET version is auto-detected by the game.<br />Controls: W,A,S,D to move cursor left, right, up, down. J to jump.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=pkong&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true&amp;joystick=snes"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+	<p id="games-pssp"><span class="file">&#xe664;</span> <a href="pssp.prg?v=1.01" onclick="return confirmDownload(this);">pssp.prg</a> (2023)<br />
+	<strong>PETSCII Side-Scrolling Platformer</strong>: as the name suggests, the Commodore PET has finally a multi-level side-scrolling platformer of the Italian plumber and hedgehog variety! Run, jump, collect coins, crush henchmen, battle the bosses, rescue friends.<br />
+	See more here at <a href="https://www.indieretronews.com/2023/09/petscii-side-scrolling-platformer-new.html" target="_blank" rel="noopener" class="plain">Indie Retro News</a>.</p>
+	<p class="pet cont">Requires 32K of memory. The PET version is auto-detected by the game.<br />Controls are to be configured at the start of a game.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=pssp&amp;ram=32k&amp;rom=2&amp;repeat=off&amp;sound=true&amp;joystick=snes"><span class="run_icon">&gt;</span> Play it online</a> &hellip;</p>
+
+	<p>&nbsp;</p>
+
+	<h2 id="misc">Misc <small>(some programs by me, Norbert Landsteiner)</small></h2>
+
+	<h3 id="pet-globe">PET-GLOBE</h3>
+	<p><span class="file">&#xe664;</span> <a href="pet-globe.prg?v=1.4" onclick="return confirmDownload(this);" target="_blank">pet-globe.prg</a><br />
+	An avidly spinning globe for the PET (by me, N.L., 2025).<br />Machine language, any 40-columns PET, any ROM, requires 8K of RAM,.</p>
+	<p class="pet cont"><em>&mdash; Now even spinnier and with optional shadow! &mdash;</em></p>
+	<p class="pet cont">See this <a href="/nowgobang/2025/pet-globe" target="_blank" class="plain">blog post</a> for details.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=pet-globe&amp;ram=8k&amp;rom=2.0"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+
+	<h3 id="truchet">Truchet Tiles</h3>
+	<p id="truchet_pet">		<span class="file">&#xe664;</span> <a href="truchet-pet.prg" onclick="return confirmDownload(this);" target="_blank">truchet-pet</a><br />
+	The original 30 tile patterns as described in <i>&ldquo;M&eacute;moire sur les combinations&rdquo;</i> by S&eacute;bastien Truchet in 1704.</p>
+	<p class="pet cont">This is a port of an original C64 program by Robin from &ldquo;<a href="https://www.youtube.com/@8_Bit" target="_blank" rel="noopener" class="plain">8-Bit Show And Tell</a>&rdquo;, compare the related <a href="https://www.youtube.com/watch?v=MVQJykMJSH0" target="_blank" rel="noopener" class="plain">YouTube video</a>. The original program for the C64 can be found here (as a D64 disk image): <a href="https://8bitshowandtell.com/downloads/truchet.d64" class="plain">8bitshowandtell.com/downloads/truchet.d64</a></p>
+	<p class="pet cont">Port by me &ldquo;N.L.&ldquo;, for any 40-column PETs, press any key to cycle through the patterns.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=truchet-pet&amp;screen=white"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+<!--
+	<h3>Days of BASIC</h3>
+	<p><span class="file">&#xe664;</span> <a href="daysofbasic.txt" onclick="return confirmDownload(this);" target="_blank">daysofbasic.txt</a><br />
+	On the occasion of the 40<sup>th</sup> anniversary of BASIC, a program to find out how many days of BASIC there have actually been. Naturally, written in BASIC.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=daysofbasic.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+	<p class="pet">Click here to run it with the current date provided automatically as input: <a href="daysofbasic.html" target="_blank">Days of BASIC Today</a> &mdash; a useful bookmark for emergencies&hellip; ;-)</p>
+-->
+	<h3>Cooperative Ransomware Hoaxes (2017)</h3>
+	<p><span class="file">&#xe664;</span> <a href="wannapet.prg" onclick="return confirmDownload(this);">wannapet.prg</a><br />
+	WannaCry Decrypt0r for the PET ... ;-)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=wannapet&amp;clr=white"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(C64 version: <span class="file">&#xe664;</span> <a href="wannapet_c64.prg" onclick="return confirmDownload(this);">wannapet_c64.prg</a>.)</p>
+	<p><span class="file">&#xe664;</span> <a href="petrabbit.prg" onclick="return confirmDownload(this);">petrabbit.prg</a><br />
+	Bad Rabbit for the PET ... ;-)<br />
+	<em>(Not related to the &quot;PET Rabbit" cassette fast loader utility.)</em></p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=petrabbit&amp;clr=green"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	BASIC source code: <span class="file">&#xe664;</span> <a href="petrabbit.txt" target="_blank">petrabbit.txt</a><br />(For C64 ports see line 2999.)</p>
+
+	<h3>Digital Clock</h3>
+	<p><span class="file">&#xe664;</span> <a href="digital-clock.txt" onclick="return confirmDownload(this);" target="_blank">digital-clock.txt</a><br />
+	Who doesn't love a 7 segment display? Here you are, displaying a digital 24h clock.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=digital-clock.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+
+	<h3 id="busy_status">A &ldquo;Seriously Busy&rdquo; Status Display</h3>
+	<p><span class="file">&#xe664;</span> <a href="busy-status.prg" onclick="return confirmDownload(this);" target="_blank">busy-status.prg</a><br />
+	A fancy status display with updating binary numbers (think of movie props), written in BASIC.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=busy-status"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont">This program may be easily adopted for other 8-bit computers.<br />BASIC source text:</p>
+	<p class="pet"><span class="file">&#xe664;</span> <a href="busy-status.txt" onclick="return confirmDownload(this);" target="_blank">busy-status.txt</a><br />Adjust the variables at the beginning of the prgram to your needs. E.g., for a C64 set variable &lsquo;<code>V</code>&rsquo; (start address of video RAM) to <code>1024</code>, or, for a 80-columns machine, set variabel &lsquo;<code>W</code>&rsquo; (screen width in characters) to <code>80</code>. The display will be centered on the screen according to the chosen TAB-size (var. &lsquo;<code>T</code>&rsquo;, which must be at least 10.) The random function <code>RND(1)</code> is expected to return a value 0&thinsp;&lt;&thinsp;<i>n</i>&thinsp;&lt;&thinsp;1, which may need adjustment for other flavors of BASIC.</p>
+
+	<h3>Mandelbrot Sets for the PET</h3>
+	<p><span class="file">&#xe664;</span> <a href="mandelbrot.txt" onclick="return confirmDownload(this);" target="_blank">mandelbrot.txt</a><br />
+	BASIC source for rendering the Mandelbrot set.<br />(Originally meant as a demo for the text import and conversion feature of the emulator.)<br />Type RUN and hit ENTER to start it in the emulator.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=mandelbrot.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+	<p><span class="file">&#xe664;</span> <a href="mandelbrot2.txt" onclick="return confirmDownload(this);" target="_blank">mandelbrot2.txt</a><br />
+	An even prettier version of the Mandelbrot set featuring a configurable pattern string.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=mandelbrot2.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+	<p><span class="file">&#xe664;</span> <a href="mandelbrot3.txt" onclick="return confirmDownload(this);" target="_blank">mandelbrot3.txt</a><br />
+	Like &quot;mandelbrot2.txt&quot;, but extending over the maximum available screen space of the PET 2001, also marginally slower.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=mandelbrot3.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+	<p><span class="file">&#xe664;</span> <a href="mandelbrot-display.txt" onclick="return confirmDownload(this);" target="_blank">mandelbrot-display.txt</a><br />
+	Impress your friends by your PET's speed using this static renderer of the Mandelbrot set. :-)<br />(Replicates the output of &quot;mandelbrot3.txt&quot;.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?prg=mandelbrot-display.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(PRG-file: <span class="file">&#xe664;</span> <a href="mandelbrot-display.prg" onclick="return confirmDownload(this);">mandelbrot-static.prg</a>.)</p>
+
+	<h3>Conway&rsquo;s GAME of Life</h3>
+	<p><span class="file">&#xe664;</span> <a href="life.txt" onclick="return confirmDownload(this);" target="_blank">life.txt</a><br />
+	In memoriam <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener" class="plain">John Horton Conway</a> (26 Dec. 1937 &ndash; 11 Apr. 2020), written in BASIC.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=life.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+
+	<h3>PET 2001 Welcome Screen</h3>
+	<p><span class="file">&#xe664;</span> <a href="pet2001-logo.txt" onclick="return confirmDownload(this);" target="_blank">pet2001-logo.txt</a><br />
+	A welcome screen featuring the &quot;chicken lips&quot; logo and the name of the machine, written in BASIC.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=pet2001-logo.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(PRG-file: <span class="file">&#xe664;</span> <a href="pet2001-logo.prg" onclick="return confirmDownload(this);">pet2001-logo.prg</a>.)</p>
+
+	<p class="pet cont">&nbsp;</p>
+
+	<h3>Other Graphics</h3>
+	<p><span class="file">&#xe664;</span> <a href="lissajou.txt" onclick="return confirmDownload(this);" target="_blank">lissajou.txt</a><br />
+	Lissajou plots as a demo for emulated &quot;hi-res&quot; graphics, after &quot;Programming the PET/CBM&quot; by Raeto West (1982), p. 129.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=lissajou.txt"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p><span class="file">&#xe664;</span> <a href="3d-business-graphics.txt" onclick="return confirmDownload(this);" target="_blank">3d-business-graphics.txt</a><br />
+	BASIC source for the famous 3D business graphics featured on the box art of the Europe/PAL version of the Commodore 64, here optimized for the PET.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=3d-business-graphics.txt"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p><span class="file">&#xe664;</span> <a href="bouncingball.txt" onclick="return confirmDownload(this);" target="_blank">bouncingball.txt</a><br />
+	A simple (but fast) bouncing ball program demonstrating the use of Unicode characters and tags for PETSCII characters in BASIC sources.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=bouncingball.txt"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+
+	<p class="pet cont">&nbsp;</p>
+
+	<h3 id="seasonsgreetings">Season's Greetings / Christmas Demo</h3>
+	<p><span class="file">&#xe664;</span> <a href="seasonsgreetings2024.txt" onclick="return confirmDownload(this);" target="_blank">seasonsgreetings2024.txt</a><br />
+	Recreating one of the animated screens of the 1982 Christmas Demo for the Commodore 64 as a BASIC program for the PET.<br />Requires a PET with 40 columns screen. Adjust variable &ldquo;Y&rdquo; at the start of the program for the year.</p>
+	<p class="pet cont">(Updated version of the original <a href="seasonsgreetings2017.prg" onclick="return confirmDownload(this, 'seasonsgreetings2017.prg');"><span class="file">&#xe664;</span> Season's Greetings 2017</a> BASIC program.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=seasonsgreetings2024&amp;ram=8&amp;color=white"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(PRG-file: <span class="file">&#xe664;</span> <a href="seasonsgreetings2024.prg" onclick="return confirmDownload(this);">seasonsgreetings2024.prg</a>.)</p>
+
+	<h3 id="xmasdemo2024">2024 X-Mas Demo</h3>
+	<p><span class="file">&#xe664;</span> <a href="xmas-demo-2024.prg" onclick="return confirmDownload(this);" target="_blank">xmas-demo-2024.prg</a><br />
+	Another Christmas demo, based on a popular chross-stitch pattern.<br />For any 40-columns PET (4K of RAM or better, ROM 1 or higher).</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=xmas-demo-2024&amp;ram=8&amp;sound=true"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+
+	<p class="pet cont">&nbsp;</p>
+
+	<h3 id="simple-maze">Simple Maze Generators</h3>
+	<p><span class="file">&#xe664;</span> <a href="maze.txt" onclick="return confirmDownload(this);" target="_blank">maze.txt</a><br />
+	The well known BASIC one-liner, generating a maze from just two characters.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=maze.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(PRG-file: <span class="file">&#xe664;</span> <a href="maze.prg" onclick="return confirmDownload(this);">maze.prg</a>.)</p>
+	<p><span class="file">&#xe664;</span> <a href="maze2.txt" onclick="return confirmDownload(this);" target="_blank">maze2.txt</a><br />
+	A variant from the book <a href="https://10print.org" target="_blank" rel="noopener">&quot;10 PRINT CHR$(205.5+RND(1)); : GOTO 10&quot;</a> (Nick Montfort et al.; MIT Press, 2013). <em>Yes, the title of the book is the one-line program listed above!</em></p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=maze2.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(PRG-file: <span class="file">&#xe664;</span> <a href="maze2.prg" onclick="return confirmDownload(this);">maze2.prg</a>.)</p>
+	<p><span class="file">&#xe664;</span> <a href="maze3.txt" onclick="return confirmDownload(this);" target="_blank">maze3.txt</a><br />
+	And yet another variant, providing just a bit of more variety.</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?run=maze3.txt"><span class="run_icon">&gt;</span> Try it online</a> &hellip;<br /><br />
+	(PRG-file: <span class="file">&#xe664;</span> <a href="maze3.prg" onclick="return confirmDownload(this);">maze3.prg</a>.)
+	<h3 id="asm-maze">Simple Maze in 6502 Assembler</h3>
+	<p><span class="file">&#xe664;</span> <a href="asm-maze.txt" onclick="return confirmDownload(this);" target="_blank">asm-maze.txt</a><br />
+	A 6502 assembler version of the &ldquo;TEN-PRINT&rdquo; maze.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=asm-maze.txt"><span class="run_icon">&gt;</span> assemble from source and run online</a> &hellip; (<a href="asm-maze.txt" target="_blank" class="plain">download</a> and drag&amp;drop it to see the assembler listing)</p>
+	<p class="pet cont">Mind how the <code>CHROUT</code> routine at <code>$FFD2</code> performs vastly different under ROM 2 and ROM 4:</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=asm-maze-bin&amp;rom=2"><span class="run_icon">&gt;</span> run with ROM 2</a> &hellip;</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?run=asm-maze-bin&amp;rom=4"><span class="run_icon">&gt;</span> run with ROM 4</a> &hellip;</p>
+	<p class="pet cont">(Readily assembled PRG-file: <span class="file">&#xe664;</span> <a href="asm-maze-bin.prg" onclick="return confirmDownload(this);">asm-maze-bin.prg</a>.)</p>
+
+	<p class="pet cont">&nbsp;</p>
+
+	<h3 id="kenatron">The &ldquo;Kenatron&rdquo;</h3>
+	<p class="pet cont"><span class="file">&#xe664;</span> <a href="kenatron.prg" onclick="return confirmDownload(this);" target="_blank">kenatron.prg</a><br />
+	The <strong>Kenatron</strong> is a simple but effective kaleidoscope-like graphics program in BASIC by <a href="https://www.righto.com/2025/04/commodore-pet-repair.html" target="_blank" rel="noopener" title="See the original post on Ken Shirriff's website 'righto.com'&hellip;">Ken Shirriff</a> (April 2025), here in an optimized version (by me, N.L.)</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=kenatron"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont">BASIC source texts:</p>
+	<p class="pet cont"><span class="file">&#xe664;</span> <a href="kenatron-original.txt" onclick="return confirmDownload(this);" target="_blank">kenatron-original.txt</a> &hellip; the original version by &ldquo;Master Ken&rdquo;.<br />(This is a typical &ldquo;as we merrily go along&rdquo; BASIC program by virtue of the Commodore screen editor.)</p>
+	<p class="pet cont"><span class="file">&#xe664;</span> <a href="kenatron.txt" onclick="return confirmDownload(this);" target="_blank">kenatron.txt</a> &hellip; my optimized version.<br />You may replace line 35 by, &ldquo;<code style="white-space: pre;">35 C=A(RND(1)*3)</code>&rdquo;, which will result in a slight speed-up, but also in a slightly different pattern.</p>
+	<p class="pet cont">(To adapt this to different types of BASIC computers, edit variables `<code>V</code>` for the start of the screen memory, `<code>W</code>` for the width of the screen in characters, and `<code>H</code>` for the size of the graphics, which must be an even number and not more than the height of the screen in characters. Array `<code>A</code>` holds three screen codes: one for the blank, one for an inverted blank, and another one for a shaded character in-between.<br />Function `<code>RND(1)</code>` is supposed to return a floating point random number (REAL): 0 &lt; <i>n</i> &lt; 1.<br />The <code>DIM</code> statement in line 15, listing simple variable names, defines variables in an order that is helpful for any flavor of MS BASIC. This may not be applicable to other types of BASIC and can be omitted.)</p>
+	<p class="pet cont">The &ldquo;Kenatron&rdquo; for the C64 (binary of the optimized version, D64 disk image):<br /><span class="disk">&#xe669;</span> <a href="kenatron-c64.d64" onclick="return confirmDownload(this);">kenatron-c64.d64</a> &hellip; C64 version of the &ldquo;Kenatron&rdquo;.</p>
+
+	<p id="cursor18-hires" class="pet cont">&nbsp;</p>
+
+	<h3 id="cursor18-highres">Hi-Res Graphics from Cursor Magazine #18, March 1980</h3>
+	<p class="pet cont"><span class="file">&#xe664;</span> <a href="cursor18-hires.prg" onclick="return confirmDownload(this);" target="_blank">cursor18-hires.prg</a><br />
+	An amazing high-resolution graphics program for the PET 2001 (by Glen Fisher and Dave Dixon, 1980), drawing high-res pixel graphics into a 9 &times; 5 character grid. (Supports all ROMs.)</p>
+	<p class="pet cont">For instructions regarding drawing commands, see the description in <a href="https://www.tierceron.com/commodore/cursor/issues/cursor_18.pdf" target="_blank" rel="noopener" class="plain">Cursor #18</a>.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=cursor18-hires"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont">BASIC source text (as exported by the emulator):</p>
+	<p class="pet cont"><span class="file">&#xe664;</span> <a href="cursor18-hires.txt" onclick="return confirmDownload(this);" target="_blank">cursor18-hires.txt</a>.</p>
+
+	<p class="pet cont">&nbsp;</p>
+
+	<h2 id="tests">Test Programs</h2>
+	<p><span class="file">&#xe664;</span> <a href="joystick-test.prg" onclick="return confirmDownload(this);" target="_blank">joystick-test.prg</a><br />
+	A simple program to test the PET (Joe Travis) dual joystick adapter.</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=joystick-test&amp;repeat=off&amp;joystick=pet"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont" style="padding-bottom: 0;"><strong>Adapter Info</strong></p>
+	<p class="pet cont">Pinout, Port A (User Port):</p>
+	<pre style="margin:-0.75em 0 1em 1.75em;">Player 1  Up    ....... PA0 (C)
+Player 1  Down  ....... PA1 (D)
+Player 1  Left  ....... PA2 (E)
+Player 1  Right ....... PA3 (F)
+Player 1  Fire  ....... PA0 + PA1 (C + D)
+Player 2  Up    ....... PA4 (H)
+Player 2  Down  ....... PA5 (J)
+Player 2  Left  ....... PA6 (K)
+Player 2  Right ....... PA7 (L)
+Player 2  Fire  ....... PA4 + PA5 (H + J)</pre>
+	<p class="pet info">Read joystick state from VIA data register A (DRA: <code>0xE841</code>).<br />Pins are <em>active low</em> (<code>0xFF</code> = no button pressed).<br />(Make sure the data direction register DDRA at <code>0xE843</code> is set to <code>0</code> = <em>all pins read</em>.)</p>
+	<p><span class="file">&#xe664;</span> <a href="joystick-test-spt.prg" onclick="return confirmDownload(this);" target="_blank">joystick-test-spt.prg</a><br />
+	A simple program to test the &ldquo;Stupid PET Tricks&rdquo; dual joystick adapter.<br />(This uses the same signals as the above, but with different assignments. If the above works for you, this one should as well, and <em>vice versa</em>.)</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=joystick-test-spt&amp;repeat=off&amp;joystick=stupidpettricks"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont" style="padding-bottom: 0;"><strong>Adapter Info</strong></p>
+	<p class="pet cont">Pinout, Port A (User Port):</p>
+	<pre style="margin:-0.75em 0 1em 1.75em;">Player 1  Left  ....... PA0 (C)
+Player 1  Right ....... PA1 (D)
+Player 1  Up    ....... PA2 (E)
+Player 1  Down  ....... PA3 (F)
+Player 1  Fire  ....... PA2 + PA3 (E + F)
+Player 2  Left  ....... PA4 (H)
+Player 2  Right ....... PA5 (J)
+Player 2  Up    ....... PA6 (K)
+Player 2  Down  ....... PA7 (L)
+Player 2  Fire  ....... PA6 + PA7 (K + L)</pre>
+	<p class="pet info">Read joystick state as above (PET dual joystick adapter).</p>
+	<p><span class="file">&#xe664;</span> <a href="joystick-test-cj.prg" onclick="return confirmDownload(this);" target="_blank">joystick-test-cj.prg</a><br />
+	A simple program to test the &ldquo;Chuck Johnson&rdquo; dual joystick adapter as found in &ldquo;Compute&rdquo; Issue 4, May/June 1980, p.90. Again, this uses the user port / VIA port A, but with different signal assignments.<br />This is similar to the &ldquo;Stupid PET Tricks&rdquo; adapter, but left/right and up/down are swapped, respectively.<br /><em>(I don&lsquo;t know any game using this, but there must be some software written for this.)</em></p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=joystick-test-cj&amp;repeat=off&amp;joystick=chuck_johnson"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont" style="padding-bottom: 0;"><strong>Adapter Info</strong></p>
+	<p class="pet cont">Pinout, Port A (User Port):</p>
+	<pre style="margin:-0.75em 0 1em 1.75em;">Player 1  Right ....... PA0 (C)
+Player 1  Left  ....... PA1 (D)
+Player 1  Down  ....... PA2 (E)
+Player 1  Up    ....... PA3 (F)
+Player 1  Fire  ....... PA2 + PA3 (E + F)
+Player 2  Right ....... PA4 (H)
+Player 2  Left  ....... PA5 (J)
+Player 2  Down  ....... PA6 (K)
+Player 2  Up    ....... PA7 (L)
+Player 2  Fire  ....... PA6 + PA7 (K + L)</pre>
+	<p class="pet info">Read joystick state as described for the PET dual joystick adapter above.</p>
+	<p><span class="file">&#xe664;</span> <a href="snes-test.prg" onclick="return confirmDownload(this);" target="_blank">snes-test.prg</a><br />
+	A simple program to test the TexElec SNES adapter for serial SNES controllers.<br />This one uses the full range of the 12 buttons of the classic SNES controller (4 directions and 8 action/function buttons).</p>
+	<p class="pet cont"><a class="online" target="at_masswerk_pet" href="../?prg=snes-test&amp;repeat=off&amp;joystick=snes"><span class="run_icon">&gt;</span> Run it online</a> &hellip;</p>
+	<p class="pet cont" style="padding-bottom: 0;"><strong>Adapter Info</strong></p>
+	<p class="pet cont">Pinout:</p>
+	<pre style="margin:-0.75em 0 1em 1.75em;">User port F (PA3) ..... Clock
+User port J (PA5) ..... Latch
+User port K (PA6) ..... Data</pre>
+	<p class="pet cont">SNES serial controller polling sequence:<br /><span style="display: block; height: 2px;"></span>B, Y, Select, Start, Up, Down, Left, Right, A, X, Left-Shoulder, Right-Shoulder</p>
+	<p class="pet info">How to poll (using VIA data register A):<br /><span style="display: block; height: 2px;"></span>0) Set up data direction in DDRA (<code>0xE843</code>) to <code>0x28</code> (PA3 and PA5: <em>write</em>, others: <em>read</em>), once<br />1) Latch controller state by writing <code>0x20</code> to DRA (<code>0xE841</code>): PA5 = <em>high</em><br />2) Instruct the controller to apply the (first) button state by writing <code>0</code> to DRA (<code>0xE841</code>): PA3+PA5 = <em>low</em><br />3) Read button state from DRA (<code>0xE841</code>) bit 6 (PA6): state &amp; <code>0x40 == 0</code> &rarr; pressed <em>(active low)</em><br />3) Clock the controller by writing <code>0x08</code> to DRA (<code>0xE841</code>): PA3 = <em>high</em><br />4) Continue with (2) for 12 button states in total<br />For the next polling sequence start over at (1).</p>
+	<p>&nbsp;</p>
+
+	<h2 id="d64">Disk Images</h2>
+	<p><span class="disk">&#xe669;</span> <a href="petdemo.d64" onclick="return confirmDownload(this);">petdemo.d64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=petdemo.d64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+
+	<p style="text-indent: 0; padding-left: 0;"><span style="display: inline-block; position: relative;color: #f00; font-size: 150%;line-height:1;">&#x25B3;<span style="display:block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; vertical-align: middle; text-align: center; color: black; font-weight: bold; font-size: 60%; margin: 0;padding:0;line-height:1.6;">!</span></span> <em>Caution: If you're using these files on a real machine with a CRTC chip, be aware that some of the programs may use the KILLER POKE.</em></p>
+	<p>Some programs may require more than the standard 8K of RAM, have a look at the respective file size.</p>
+
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS01.D64" onclick="return confirmDownload(this);">PETGMS01.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS01.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS02.D64" onclick="return confirmDownload(this);">PETGMS02.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS02.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS03.D64" onclick="return confirmDownload(this);">PETGMS03.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS03.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS04.D64" onclick="return confirmDownload(this);">PETGMS04.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS04.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS05.D64" onclick="return confirmDownload(this);">PETGMS05.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS05.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS06.D64" onclick="return confirmDownload(this);">PETGMS06.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS06.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS07.D64" onclick="return confirmDownload(this);">PETGMS07.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS07.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS07.D64" onclick="return confirmDownload(this);">PETGMS08.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS08.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS09.D64" onclick="return confirmDownload(this);">PETGMS09.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS09.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS10.D64" onclick="return confirmDownload(this);">PETGMS10.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS10.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS11.D64" onclick="return confirmDownload(this);">PETGMS11.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS11.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS12.D64" onclick="return confirmDownload(this);">PETGMS12.D64</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=PETGMS12.D64&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<p style="margin-top: 1.5em;">A D80 disk image, containing mostly games:</p>
+	<p><span class="disk">&#xe669;</span> <a href="PETGMS12.D64" onclick="return confirmDownload(this);">system_2001-8050.d80</a> <span class="separator">&hellip;</span> <a class="online" target="at_masswerk_pet" href="../?disk=system_2001-8050.d80&amp;repeat=off"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+
+	<p>&nbsp;</p>
+	<h2 id="roms">Option ROMs</h2>
+	<p id="toolkit"><strong>PET BASIC Toolkit</strong> is a helpful extension for working with BASIC programs on the PET 2001N / CBM 30xx.</p>
+	<p><span class="file">&#xe664;</span> <a href="toolkit-b000.bin" onclick="return confirmDownload(this);" target="_blank">toolkit-b000.bin</a><br />
+	PET Toolkit for BASIC New ROM (AKA, ROM 2.0), address $B000.<br />Inialize with &quot;<code>SYS 45056</code>&quot;.<br />(Using the link below, this is issued automatically by the emulator.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?rom=2&amp;bin=toolkit-b000.bin&amp;exec=SYS%2045056"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+	<p><span class="file">&#xe664;</span> <a href="toolkit4.0_alt-a000.bin" onclick="return confirmDownload(this);" target="_blank">toolkit4.0_alt-a000.bin</a><br />
+	PET Toolkit for BASIC 4.0, address $A000.<br />Inialize with &quot;<code>SYS 40960</code>&quot;.<br />(Using the link below, this is issued automatically by the emulator.)</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?rom=4&amp;bin=toolkit4.0_alt-a000.bin&amp;exec=SYS%2040960"><span class="run_icon">&gt;</span> Try it online</a> &hellip;</p>
+	<p>Notes:</p>
+	<pre><em>The BASIC Programmer's ToolKit  (PET 3032 version)</em>
+
+Installing
+
+  The file toolkit-b000.bin contains the 2K ROM image of the ToolKit which sits
+  in PET memory at $B000.
+
+  To initialise the ToolKit type:    
+
+  SYS 45056
+  or 
+  SYS 11*4096
+
+  You should see:
+
+  ( C ) 1979 PAICS
+  READY.
+
+  For a PET 2001 / PET 3032 with BASIC 4.0 use the file toolkit4.0_alt-a000.bin
+  and inialize with &quot;SYS 40960&quot;.
+  With the BASIC 4 verion you'll see:
+  
+  ( C ) 1980 PAICS
+  READY.
+
+
+Commands
+
+  AUTO (First Line Number) , (Line Number Interval)
+
+  RENUMBER (First Line Number) , (Line Number Interval)
+
+  DELETE (Line Number) - (Line Number)
+
+  APPEND  (Program Name) --- cassette only 
+
+  FIND (BASIC code) , (Line Number) - (Line Number)
+   or
+  FIND &quot;(String)&quot; , (Line Number) - (Line Number)
+
+  DUMP --- displays all of the non-array variables present in memory
+
+  HELP --- if an error is encountered then the error is displayed
+
+  TRACE --- displays executed line numbers
+
+  STEP --- same as TRACE but [Shift] key controls program execution 
+
+  OFF --- turns off the &quot;tracer&quot; which TRACE and STEP activate
+
+
+Acknowledgements
+
+  Chuck Bond is the creator and main implementor of the BASIC
+  Programmer's ToolKit.
+
+  BASIC Programmer's ToolKit is a trademark of Palo Alto ICs a
+  division of Nestar Systems, Inc.
+
+  (c) Copyright 1979 by Palo Alto ICs</pre>
+
+	<p>&nbsp;</p>
+	<h2 id="util">Programming Utilities</h2>
+	<p><span class="disk">&#xe669;</span> <a href="assemblers.d64" onclick="return confirmDownload(this);">assemblers.d64</a><br />A disk image including all kind of programming utilities, like 6502 Assembler &amp; Disassembler, Micro Assembler &amp; Disassembler, and SuperMon &hellip;</p>
+	<p class="pet"><a class="online" target="at_masswerk_pet" href="../?disk=assemblers.d64"><span class="run_icon">&gt;</span> Explore disk image online</a> &hellip;</p>
+	<pre><em>Note: SuperMon Commands</em>
+.A     SIMPLE ASSEMBLER
+   .A 2000 LDA #$12
+.D     DISASSEMBLER: disassembles 22 lines of instructions (can modify first 3 bytes with cursor/return keys)
+   .D 2000
+.P     PRINTING DISASSEMBLER: prints disassembly, set up printer beforehand (OPEN 4,4:CMD4)
+  .P 2000,2040
+.I     SINGLE STEP: run step by step, call register display with .R and set the PC to the desired first instruction
+            &lt; for single step
+            RVS for slow step
+            SPACE for fast step
+            STOP to return to monitor
+.F    FILL MEMORY
+     .F 1000 1100 FF fills the memory from $1000 to $1100 with FF
+.G     GO RUN: go to address in the PC register display and begin run
+  .G 1000
+.H     HUNT MEMORY: hunt thru memory for specified string or instructions (32 bytes max)
+  .H C000 D000 20 D2 FF
+.L     LOAD: load first program from cassette #1
+  .L "RAM TEST" loads program named RAM TEST from cassette #1 this command leaves the BASIC pointers unchanged
+.M     MEMORY DISPLAY: display memory in specified range (can modify with cursor/return keys)
+  .M 0000 0080
+.R     REGISTER DISPLAY: displays the register values saved when SUPERMON was entered (can modify with cursor/return keys)
+.S     SAVE: save specified program name to cassette #1 from specified address
+  .S "PROGRAM NAME",01,0800,0C80
+.T     TRANSFER MEMORY: transfer memory in range 1000 to 1100 to addresses starting at $5000
+  .T 1000 1100 5000
+.X     EXIT TO BASIC: return to BASIC. the stack value saved when entered will be restored. Care should be taken that this value is the same as when the monitor was entered. A CLR in BASIC will fix any stack problems.</pre>
+
+
+	<p>&nbsp;</p>
+	<p class="no-indent margin-before">For further programs see <a href="http://www.zimmers.net/anonftp/pub/cbm/pet/ALLFILES.html" target="_blank" rel="noopener">www.zimmers.net/anonftp/pub/cbm/pet/ALLFILES.html</a>.</p>
+	<p class="no-indent">(You may drag and drop a downloaded file onto the <a href="../" class="no_inlining">emulator</a>'s screen to run it.)</p>
+
+	<h2 id="manuals" class="margin-before">PET 2001 Manuals</h2>
+	<p><span class="icon_pdf">&#xe6b3;</span> <a href="../manuals/PET_User_Manual_(2001-8).pdf" target="_blank">PET_User_Manual_(2001-8).pdf</a><br />
+	PET 2001-8 Personal Computer User Manual<br />Commodore Business Machines, Inc., October 1978</p>
+	<p><span class="icon_pdf">&#xe6b3;</span> <a href="../manuals/Commodore_PET_2001_Quick_Reference.pdf" target="_blank">Commodore_PET_2001_Quick_Reference.pdf</a><br />
+	Pocket Reference Guide to Commodore's 2001 PET,<br />
+	Leading Edge Computer Products, 1979</p>
+
+	<p class="no-indent margin-before">The manuals were retrieved from public archives at <a href="http://www.zimmers.net/anonftp/pub/cbm/manuals/pet/" target="_blank" rel="noopener">www.zimmers.net/anonftp/pub/cbm/manuals/pet/</a> and <a href="http://www.commodore.ca/commodore-manuals/" target="_blank" rel="noopener">www.commodore.ca/commodore-manuals/</a>.</p>
+
+</body>
+</html>
