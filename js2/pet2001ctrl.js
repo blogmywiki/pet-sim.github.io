@@ -39,9 +39,9 @@ var petCtrl = (function() {
 
 	var config = {
 		VIDRAM_SIZE:      0x0400,
-		RAM_SIZE:         0x4000, //8K: 0x2000, 16k: 0x4000, 32k: 0x8000 
+		RAM_SIZE:         0x2000, //8K: 0x2000, 16k: 0x4000, 32k: 0x8000 
 		ROM_VERSION:         '2',
-		SCREEN_COLOR:    'green',
+		SCREEN_COLOR:    'white',
 		KEYBOARD_REPEAT:    true,
 		USE_AUDIO:          true
 	};
